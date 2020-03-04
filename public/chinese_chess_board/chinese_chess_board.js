@@ -22,6 +22,7 @@
     
     basicLine();
     cornerLine();
+    drawText();
 
     function basicLine() {
         for (var i = 0; i < 10; i++) {
@@ -71,6 +72,26 @@
                 drawCornerLine(item.x, item.y, jtem);
             });
         });
+    }
+
+    function drawText() {
+        drawTxt('楚', 1.5, 4.5, false);
+        drawTxt('河', 3, 4.5, false);
+        drawTxt('漢', 6.5, 4.5, true);
+        drawTxt('界', 5, 4.5, true);
+    }
+
+    function drawTxt(txt, x, y, flag) {
+        context.save();
+        context.translate(x * option.gridWidth, y * option.gridWidth);
+        var ro = flag ? Math.PI / 2 : -Math.PI / 2;
+        context.rotate(ro);
+        context.fillStyle = '#000';
+        context.textAlign = 'center';
+        context.textBaseline = 'middle';
+        context.font = 'bold 50px cursive';
+        context.fillText(txt, 0, 0);
+        context.restore();
     }
 
     function drawCornerLine(ox, oy, n) {
