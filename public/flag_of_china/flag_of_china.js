@@ -89,6 +89,4 @@
         context.fill();
         context.restore();
     }
-})(600);
-
-2 * Math.PI / 5
+})(900);
