@@ -1,0 +1,18 @@
+#showLineBtn {
+    display: inline-block;
+    position: absolute;
+    right: 2em;
+    top: 2em;
+    width: 120px;
+    height: 40px;
+    font-size: 14px;
+    font-family: cursive;
+    border: none;
+    background: #6cbea6;
+    color: #fff;
+    cursor: pointer;
+    outline: none;
+}
+#showLineBtn:hover {
+    background: #32af8a;
+}
