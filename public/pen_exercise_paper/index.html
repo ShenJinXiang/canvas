@@ -12,17 +12,24 @@
     <meta content="telephone=no" name="format-detection">
     <meta name="renderer" content="webkit">
     <link rel="icon" href="/images/title.ico" type="image/x-ico">
-    <link rel="stylesheet" type="text/css" href='./css/common.css' />
-    <title>MYCANVAS</title>
+    <link rel="stylesheet" type="text/css" href='../css/common.css' />
+    <link rel="stylesheet" type="text/css" href='./pen_exercise_paper.css' />
+    <title>硬笔练习纸</title>
 </head>
 <body>
-    <div class="main-container">
-        <h1>CANVAS</h1>
-        <ul>
-            <li><a href="./flag_of_china">1. 中国国旗</a></li>
-            <li><a href="./chinese_chess_board">2. 象棋棋盘</a></li>
-            <li><a href="./pen_exercise_paper">3. 硬笔练习纸</a></li>
-        </ul>
+    <canvas id='canvas' class='common_border'></canvas>
+    <div class="op-container">
+        <div>
+            <div id='redBtn' class='op-color'></div>
+            <div id='blackBtn' class='op-color'></div>
+        <div>
+        <div>
+            <div id='miBtn' class='op-btn'>米字</div>
+            <div id='tianBtn' class='op-btn'>田字</div>
+        <div>
     </div>
+<script src='/js/common.js'></script>
+<script src='/js/canvas.js'></script>
+<script src='./pen_exercise_paper.js'></script>
 </body>
 </html>

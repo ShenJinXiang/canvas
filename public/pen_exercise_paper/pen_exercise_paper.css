@@ -1,0 +1,30 @@
+.op-container {
+    display: block;
+    width: 100px;
+    position: fixed;
+    right: 10px;
+    top: 200px;
+}
+
+.op-container .op-color {
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+#redBtn {
+    background: #f55;
+    margin-right: 20px;
+}
+#redBtn:hover {
+    background: #f00;
+}
+#blackBtn {
+    margin-left: 20px;
+    background: #777;
+}
+#blackBtn:hover {
+    background: #000;
+}
