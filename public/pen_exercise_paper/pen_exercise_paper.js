@@ -1,8 +1,9 @@
 (function() {
     var option = {
         gridWidth: 80,
-        // lineColor: '#f00',
-         lineColor: '#555',
+        lineColor: '#f00',
+        // lineColor: '#555',
+        gridStyle: 'mi',
         xn: 11,
         yn: 14
     };
@@ -13,6 +14,36 @@
 
     draw();
 
+    var redBtn = document.getElementById('redBtn');
+    var blackBtn = document.getElementById('blackBtn');
+    addEvent(redBtn, 'click', function() {
+        option.lineColor = '#f00';
+        removeClass(blackBtn, 'active');
+        addClass(redBtn, 'active');
+        draw();
+    });
+
+    addEvent(blackBtn, 'click', function() {
+        option.lineColor = '#555';
+        removeClass(redBtn, 'active');
+        addClass(blackBtn, 'active');
+        draw();
+    });
+
+    var miBtn = document.getElementById('miBtn');
+    var tianBtn = document.getElementById('tianBtn');
+    addEvent(miBtn, 'click', function() {
+        option.gridStyle = 'mi';
+        removeClass(tianBtn, 'active');
+        addClass(miBtn, 'active');
+        draw();
+    });
+    addEvent(tianBtn, 'click', function() {
+        option.gridStyle = 'tian';
+        removeClass(miBtn, 'active');
+        addClass(tianBtn, 'active');
+        draw();
+    });
     function draw() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         drawGrids();
@@ -21,10 +52,17 @@
 
     function drawGrids() {
         ctx.save();
-        ctx.translate(0.5 * option.gridWidth, 2 * option.gridWidth);
         ctx.strokeStyle = option.lineColor;
-        //drawMiLines();
-        drawTianLines();
+        // ctx.lineWidth = 8;
+        // ctx.strokeRect(0, 0, canvas.width, canvas.height);
+        ctx.lineWidth = 1;
+
+        ctx.translate(0.5 * option.gridWidth, 2 * option.gridWidth);
+        if (option.gridStyle == 'tian') {
+            drawTianLines();
+        } else {
+            drawMiLines();
+        }
         for (var i = 1; i < option.xn; i++) {
             drawGridLine(i, 0, i, option.yn);
         }

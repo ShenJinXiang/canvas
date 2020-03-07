@@ -1,3 +1,4 @@
+* {margin: 0px; padding: 0px;}
 .op-container {
     display: block;
     width: 100px;
@@ -10,21 +11,57 @@
     width: 20px;
     height: 20px;
     display: inline-block;
-    border-radius: 10px;
     cursor: pointer;
+    margin-right: 20px;
 }
 
 #redBtn {
-    background: #f55;
-    margin-right: 20px;
+    background: #fff;
+    border: 1px solid #f55;
 }
 #redBtn:hover {
     background: #f00;
+    border-color: #f00;
+}
+#redBtn.active {
+    border: 1px solid #f00;
+    background: #f00;
 }
 #blackBtn {
-    margin-left: 20px;
-    background: #777;
+    background: #fff;
+    border: 1px solid #777;
 }
 #blackBtn:hover {
     background: #000;
+    border-color: #000;
+}
+#blackBtn.active {
+    border: 1px solid #000;
+    background: #000;
+}
+
+.op-container .op-btn {
+    display: block;
+    width: 60px;
+    height: 28px;
+    line-height: 28px;
+    font-size: 12px;
+    cursor: pointer;
+    margin: 10px 20px 10px 0;
+    border: 1px solid #ccc;
+    text-align: center;
+    border-radius: 3px;
+}
+
+.op-container .op-btn:hover {
+    border-color: #000;
+}
+
+.op-container .op-btn.active {
+    background: #33aec3;
+    border: 1px solid #33aec3;
+    color: #fff;
+}
+.op-container .op-btn.active:hover {
+    border-color: #038da5;
 }

@@ -9,3 +9,22 @@ function addEvent(obj, type, handle) {
         }
     }
 }
+
+function addClass(obj, name) {
+    var cn = obj.className;
+    var reg = /\S+/g
+    var arr = cn.match(reg);
+    if (arr.indexOf(name) < 0) {
+        arr.push(name);
+        obj.className = arr.join(' ');
+    }
+}
+
+function removeClass(obj, name) {
+    var cn = obj.className;
+    var reg = /\S+/g
+    var arr = cn.match(reg);
+    obj.className = arr.filter(function(val) {
+        return name != val;
+    }).join(' ');
+}
