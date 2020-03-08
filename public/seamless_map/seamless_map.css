@@ -1,0 +1,25 @@
+*{margin:0px; padding: 0px;}
+.imgbtn-container {
+    position: fixed;
+    bottom: 20px;
+    height: 20px;
+    width: 100%;
+    text-align: center;
+}
+
+.imgbtn-container .img-btn{
+    width: 15px;
+    height: 15px;
+    margin: 0px 10px;
+    border: 1px solid #444;
+    border-radius: 10px;
+    display: inline-block;
+    cursor: pointer;
+}
+.imgbtn-container .img-btn.active{
+    background: #33aec3;
+    border-color: #33aec3;
+}
+.imgbtn-container .img-btn:hover{
+    border-color: #33aec3;
+}
