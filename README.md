@@ -6,3 +6,4 @@
 * [象棋棋盘](https://canvas.shenjinxiang.com/chinese_chess_board/)
 * [硬笔练习纸](https://canvas.shenjinxiang.com/pen_exercise_paper/)
 * [无缝贴图](https://canvas.shenjinxiang.com/seamless_map/)
+* [随机显示小球](https://canvas.shenjinxiang.com/random_ball/)
