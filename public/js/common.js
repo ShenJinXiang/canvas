@@ -28,3 +28,19 @@ function removeClass(obj, name) {
         return name != val;
     }).join(' ');
 }
+
+function random() {
+    if (arguments.length == 0) {
+        return Math.random();
+    }
+    if (arguments.length == 1) {
+        return Math.random() * arguments[0];
+    }
+    var min = Math.min(...arguments);
+    var max = Math.max(...arguments);
+    return (max - min) * Math.random() + min;
+}
+
+function randomInt() {
+    return Math.floor(random(...arguments));
+}
