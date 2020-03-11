@@ -30,35 +30,43 @@
     }
 
 	var canvas = document.getElementById('canvas');
-	// var markCanvas = getMarkCanvas();
-	canvas.width = window.innerWidth;
-	canvas.height = window. innerHeight;
+	var markCanvas = getMarkCanvas();
 	var context = canvas.getContext('2d');
 
-	var balls = [];
-    /*
-    for (var i = 0; i < 100; i++) {
-        var len = colors.length;
-        console.log('len = ' + len);
-        var r = randomInt(len)
-        console.log(r);
-    }
-    */
-    loadBalls();
+    var balls = [];
+    var timer;
+    start();
 
-    var timer = setInterval(function() {
-        drawBalls();
-        update();
-    }, 20);
+    $(window).resize(function() {
+        if (timer) {
+            clearInterval(timer);
+        }
+        start();
+    });
+
+    function start() {
+        balls = [];
+        canvas.width = window.innerWidth;
+        canvas.height = window. innerHeight;
+        loadBalls();
+
+        timer = setInterval(function() {
+            draw();
+            update();
+        }, 20);
+    }
     
-    function drawBalls() {
+    function draw() {
         context.clearRect(0, 0, canvas.width, canvas.height);
+        context.fillStyle = '#000';
+        context.fillRect(0, 0, canvas.width, canvas.height);
         balls.forEach(function(item) {
             context.beginPath();
             context.fillStyle = item.color;
             context.arc(item.x, item.y, item.r, 0, 2 * Math.PI, false);
             context.fill();
         });
+		context.drawImage(markCanvas, canvas.width - markCanvas.width, canvas.height - markCanvas.height);
     }
     function update() {
         balls.forEach(function(item) {

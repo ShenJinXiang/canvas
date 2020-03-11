@@ -44,3 +44,17 @@ function random() {
 function randomInt() {
     return Math.floor(random(...arguments));
 }
+
+function getMarkCanvas() {
+    var markCanvas = document.createElement('canvas');
+    markCanvas.width = 300;
+    markCanvas.height = 100;
+    var ctx = markCanvas.getContext('2d');
+    
+    ctx.fillStyle = 'rgba(204, 204, 204, 0.5)';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.font = '40px cursive';
+    ctx.fillText('shenjinxiang.com', markCanvas.width / 2, markCanvas.height / 2 );
+    return markCanvas;
+}
