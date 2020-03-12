@@ -25,41 +25,33 @@
         num: 80,
         minR: 10,
         maxR: 20,
-        maxV: 0.8,
+        maxV: 2,
         bufWidth: 10
     }
 
 	var canvas = document.getElementById('canvas');
+    canvas.width = window.innerWidth;
+    canvas.height = window. innerHeight;
 	var markCanvas = getMarkCanvas();
 	var context = canvas.getContext('2d');
 
     var balls = [];
-    var timer;
-    start();
+    loadBalls();
 
     $(window).resize(function() {
-        if (timer) {
-            clearInterval(timer);
-        }
-        start();
+        canvas.width = window.innerWidth;
+        canvas.height = window. innerHeight;
     });
 
     function start() {
-        balls = [];
-        canvas.width = window.innerWidth;
-        canvas.height = window. innerHeight;
-        loadBalls();
-
-        timer = setInterval(function() {
-            draw();
-            update();
-        }, 20);
+        draw();
+        update();
+        requestAnimationFrame(start);
     }
+    requestAnimationFrame(start);
     
     function draw() {
         context.clearRect(0, 0, canvas.width, canvas.height);
-        context.fillStyle = '#000';
-        context.fillRect(0, 0, canvas.width, canvas.height);
         balls.forEach(function(item) {
             context.beginPath();
             context.fillStyle = item.color;
@@ -72,10 +64,18 @@
         balls.forEach(function(item) {
             item.x += item.vx;
             item.y += item.vy;
-            if (item.x < 0 || item.x > canvas.width) {
+            if (item.x < 0) {
+                item.x = 0;
+                item.vx = -item.vx;
+            } else if (item.x > canvas.width) {
+                item.x = canvas.width;
                 item.vx = -item.vx;
             }
-            if (item.y < 0 || item.y > canvas.height) {
+            if (item.y < 0) {
+                item.y = 0;
+                item.vy = -item.vy;
+            } else if (item.y > canvas.height) {
+                item.y = canvas.height;
                 item.vy = -item.vy;
             }
         });
