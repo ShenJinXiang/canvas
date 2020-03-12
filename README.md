@@ -8,3 +8,4 @@
 * [无缝贴图](https://canvas.shenjinxiang.com/seamless_map/)
 * [随机显示小球](https://canvas.shenjinxiang.com/random_ball/)
 * [乱撞的小球](https://canvas.shenjinxiang.com/blindly_ball/)
+* [彩色微粒](https://canvas.shenjinxiang.com/multicolor_particle/)
