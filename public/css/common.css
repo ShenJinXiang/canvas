@@ -23,6 +23,7 @@ body {margin: 0px; padding: 0px;}
     text-decoration: none;
     padding: 10px 15px;
     cursor: pointer;
+    color:#f72b07;
 }
 h1 {padding-bottom: .3em; border-bottom: 1px solid #eaecef; font-size: 2em; margin-bottom: 16px; font-weight: 600; line-height: 1.25;}
 ul li {list-style: none;}
