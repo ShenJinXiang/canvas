@@ -47,7 +47,7 @@ function randomInt() {
 
 function getMarkCanvas() {
     var markCanvas = document.createElement('canvas');
-    markCanvas.width = 300;
+    markCanvas.width = 340;
     markCanvas.height = 100;
     var ctx = markCanvas.getContext('2d');
     
