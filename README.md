@@ -9,3 +9,4 @@
 * [随机显示小球](https://canvas.shenjinxiang.com/random_ball/)
 * [乱撞的小球](https://canvas.shenjinxiang.com/blindly_ball/)
 * [彩色微粒](https://canvas.shenjinxiang.com/multicolor_particle/)
+* [散漫小球](https://canvas.shenjinxiang.com/desultory_ball/)
