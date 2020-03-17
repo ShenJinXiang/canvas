@@ -23,6 +23,7 @@
             letterParticle.tempCanvas.width = window.innerWidth;
             letterParticle.tempCanvas.height = window.innerHeight;
             letterParticle.tempContext = letterParticle.tempCanvas.getContext('2d');
+            letterParticle.markCanvas = getMarkCanvas();
             letterParticle.particles = [];
             letterParticle.particlePositions = [];
             letterParticle.letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890".split("");
@@ -77,7 +78,7 @@
         animate: function() {
             requestAnimationFrame(letterParticle.animate);
             letterParticle.context.clearRect(0, 0, letterParticle.canvas.width, letterParticle.canvas.height);
-            letterParticle.context.fillStyle = 'rgba(23, 41, 58, .8)';
+            letterParticle.context.fillStyle = 'rgba(10, 10, 10, .8)';
             letterParticle.context.fillRect(0, 0, letterParticle.canvas.width, letterParticle.canvas.height);
             let p, pPos;
             for (let i = 0; i < letterParticle.particles.length; i++) {
@@ -89,9 +90,8 @@
                     p.draw(letterParticle.context);
                 }
             }
+            letterParticle.context.drawImage(letterParticle.markCanvas, letterParticle.canvas.width - letterParticle.markCanvas.width, letterParticle.canvas.height - letterParticle.markCanvas.height);
         }
     };
-
     letterParticle.init();
-    
 })();
