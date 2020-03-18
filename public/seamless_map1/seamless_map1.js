@@ -19,6 +19,11 @@
             mosaicMaps.grid(mosaicMaps.tempContext, mosaicMaps.tempCanvas.width / 2, mosaicMaps.tempCanvas.height / 2);
             mosaicMaps.background();
 
+            $(window).resize(function() {
+                mosaicMaps.w = mosaicMaps.canvas.width = win.innerWidth;
+                mosaicMaps.h = mosaicMaps.canvas.height = win.innerHeight;
+                mosaicMaps.background();
+            });
 
         },
         grid: function(ctx, x, y) {
