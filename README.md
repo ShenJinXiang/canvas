@@ -1,6 +1,6 @@
 # Canvas
 
-我的一些canvas练习
+一些canvas练习，看到或想到一些感兴趣的canvas作品后，尝试模仿。练习练习！
 
 * [中国国旗](https://canvas.shenjinxiang.com/flag_of_china/)
 * [象棋棋盘](https://canvas.shenjinxiang.com/chinese_chess_board/)
