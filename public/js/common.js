@@ -45,13 +45,13 @@ function randomInt() {
     return Math.floor(random(...arguments));
 }
 
-function getMarkCanvas() {
+function getMarkCanvas(style) {
     var markCanvas = document.createElement('canvas');
     markCanvas.width = 340;
     markCanvas.height = 100;
     var ctx = markCanvas.getContext('2d');
     
-    ctx.fillStyle = 'rgba(204, 204, 204, 0.5)';
+    ctx.fillStyle = style || 'rgba(204, 204, 204, 0.5)';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.font = '40px cursive';
