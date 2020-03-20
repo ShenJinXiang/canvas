@@ -29,12 +29,13 @@
             letterParticle.letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890".split("");
             letterParticle.currentPos = 0;
 
-            setInterval(function() {
-                letterParticle.createParticlePostions();
-                letterParticle.changeLetter();
-            }, 2000);
             letterParticle.createParticles();
             letterParticle.animate();
+            letterParticle.createParticlePostions();
+            setInterval(function() {
+                letterParticle.changeLetter();
+                letterParticle.createParticlePostions();
+            }, 1200);
 
             $(window).resize(function() {
                 letterParticle.canvas.width = window.innerWidth;

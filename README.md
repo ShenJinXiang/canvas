@@ -13,3 +13,4 @@
 * [散漫小球](https://canvas.shenjinxiang.com/散漫小球/)
 * [随机射线](https://canvas.shenjinxiang.com/随机射线/)
 * [字母变换](https://canvas.shenjinxiang.com/字母变换/)
+* [星空背景](https://canvas.shenjinxiang.com/星空背景/)
