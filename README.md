@@ -15,3 +15,4 @@
 * [字母变换](https://canvas.shenjinxiang.com/字母变换/)
 * [星空背景](https://canvas.shenjinxiang.com/星空背景/)
 * [无限扫描特效](https://canvas.shenjinxiang.com/无限扫描特效/)
+* [激光特效](https://canvas.shenjinxiang.com/激光特效/)
