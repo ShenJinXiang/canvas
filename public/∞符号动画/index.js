@@ -16,7 +16,6 @@
             drawer.currentIndex = 0;
             drawer.mark = drawer.getMarkCanvas();            
             drawer.animate();
-            
         },
         animate: function() {
             drawer.update();

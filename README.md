@@ -17,3 +17,4 @@
 * [无限扫描特效](https://canvas.shenjinxiang.com/无限扫描特效/)
 * [激光特效](https://canvas.shenjinxiang.com/激光特效/)
 * [∞符号动画](https://canvas.shenjinxiang.com/∞符号动画/)
+* [旋转动画](https://canvas.shenjinxiang.com/旋转动画/)
