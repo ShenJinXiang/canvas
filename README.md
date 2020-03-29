@@ -18,3 +18,4 @@
 * [激光特效](https://canvas.shenjinxiang.com/激光特效/)
 * [∞符号动画](https://canvas.shenjinxiang.com/∞符号动画/)
 * [旋转动画](https://canvas.shenjinxiang.com/旋转动画/)
+* [几何颗粒动画](https://canvas.shenjinxiang.com/几何颗粒动画/)
