@@ -19,3 +19,4 @@
 * [∞符号动画](https://canvas.shenjinxiang.com/∞符号动画/)
 * [旋转动画](https://canvas.shenjinxiang.com/旋转动画/)
 * [几何颗粒动画](https://canvas.shenjinxiang.com/几何颗粒动画/)
+* [排序动画-冒泡排序](https://canvas.shenjinxiang.com/排序动画-冒泡排序/)
