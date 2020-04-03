@@ -21,9 +21,11 @@
             drawer.currentStatus = 0;
             drawer.count = 0;
             drawer.plans = [];
-            drawer.plans.push(new drawer.Plan(0));
-            drawer.algorithm();
-            console.log(drawer.plans);
+            //drawer.plans.push(new drawer.Plan(0));
+            //drawer.algorithm();
+            //drawer.plans.push(new drawer.Plan(1, 2, 3));
+            drawer.addGroupPlan(2, 3);
+            //console.log(drawer.plans);
             drawer.currentPlan = drawer.plans.shift();
             
         },
@@ -61,7 +63,7 @@
             //console.log('status:', drawer.currentPlan['status'], 'cnt:', drawer.count);
             drawer.currentPlan.update();
             drawer.count++;
-            if (drawer.count >= drawer.currentPlan.count) {
+            if (drawer.count > drawer.currentPlan.count) {
                 drawer.currentPlan = drawer.plans.shift();
                 drawer.count = 0;
                 if (!drawer.currentPlan) {
@@ -96,8 +98,7 @@
         Element: function(val, index, color) {
             this.val = val;
             this.r = val2r(val);
-            this.index = index;
-            this.sx = drawer.getXByIndex(this.index);
+            this.sx = drawer.getXByIndex(index);
             this.sy = drawer.c.height / 2;
             this.color = color;
             this.active = false;
@@ -128,26 +129,68 @@
         Plan: function(planStatus, index, jndex) {
             var thisPlan = this;
             this['status'] = planStatus;
-            this.i = index;
-            this.j = jndex;
             this.count = drawer.option.counts[planStatus];
+            if (index || jndex) {
+                this.swap = true;
+                this.i = index;
+                this.j = jndex;
+                this.mx = (drawer.elements[this.i].sx + drawer.elements[this.j].sx) / 2;
+                this.my = (drawer.elements[this.i].sy + drawer.elements[this.j].sy) / 2;
+            } else {
+                this.swap = false;
+            }
+            if (this['status'] == 2) {
+                this.roStep = Math.PI / this.count;
+            }
             this.update = function() {
                 drawer.elements.forEach(function(item, index, arr) {
-                    item.active = (index == thisPlan.i || index == thisPlan.j);
+                    if (thisPlan.swap) {
+                        item.active = (index == thisPlan.i || index == thisPlan.j);
+                    } else {
+                        item.active = false;
+                    }
                 });
+
+                if (this.swap) {
+                    if (this['status'] == 1 || this['status'] == 3) {
+                        this.ro = 0;
+                        if (this['status'] == 3 && drawer.count == 0) {
+                            var temp = drawer.elements[this.i];
+                            drawer.elements[this.i] = drawer.elements[this.j];
+                            drawer.elements[this.j] = temp;
+                            drawer.elements[this.i].sx = drawer.getXByIndex(this.i);
+                            drawer.elements[this.j].sx = drawer.getXByIndex(this.j);
+                        }
+                    } else if (this['status'] == 2) {
+                        this.ro = drawer.count * this.roStep;
+                    }
+                    drawer.elements[this.i].ax = drawer.elements[this.i].sx - this.mx;
+                    drawer.elements[this.i].ay = drawer.elements[this.i].sy - this.my;
+                    drawer.elements[this.j].ax = drawer.elements[this.j].sx - this.mx;
+                    drawer.elements[this.j].ay = drawer.elements[this.j].sy - this.my;
+                }
             };
             this.draw = function() {
+                var ctx = drawer.ctx;
+                if (this.swap) {
+                    console.log(this.ro);
+                    ctx.save();
+                    ctx.translate(this.mx, this.my);
+                    ctx.rotate(this.ro);
+                    ctx.beginPath();
+                    ctx.arc(drawer.elements[this.i].ax, drawer.elements[this.i].ay, 1.1 * drawer.elements[this.i].r, 0, 2 * Math.PI, false);
+                    ctx.arc(drawer.elements[this.j].ax, drawer.elements[this.j].ay, 1.1 * drawer.elements[this.j].r, 0, 2 * Math.PI, true);
+                    ctx.stroke();
+                    drawer.elements[this.i].draw(ctx, this['status']);
+                    drawer.elements[this.j].draw(ctx, this['status']);
+                    ctx.restore();
+                }
                 drawer.elements.forEach(function(item) {
                     if (!item.active) {
-                        item.draw(drawer.ctx, thisPlan['status']);
+                        item.draw(ctx, thisPlan['status']);
                     } 
                 });
-                var ix = drawer.elements[this.i].x,
-                    iy = drawer.elements[this.i].y,
-                    jx = drawer.elements[this.j].x,
-                    jy = drawer.elements[this.j].y;
-
-            }
+            };
         }
 
     };
