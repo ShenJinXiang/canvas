@@ -21,3 +21,4 @@
 * [几何颗粒动画](https://canvas.shenjinxiang.com/几何颗粒动画/)
 * [排序动画-冒泡排序](https://canvas.shenjinxiang.com/排序动画/冒泡排序/)
 * [排序动画-选择排序](https://canvas.shenjinxiang.com/排序动画/选择排序/)
+* [排序动画-快速排序](https://canvas.shenjinxiang.com/排序动画/快速排序/)
