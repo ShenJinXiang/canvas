@@ -22,4 +22,4 @@
 * [排序动画-冒泡排序](https://canvas.shenjinxiang.com/排序动画/冒泡排序/)
 * [排序动画-选择排序](https://canvas.shenjinxiang.com/排序动画/选择排序/)
 * [排序动画-快速排序](https://canvas.shenjinxiang.com/排序动画/快速排序/)
-* [新年倒计时](https://canvas.shenjinxiang.com/新年倒计时/)
+* [新年倒计时雪花效果](https://canvas.shenjinxiang.com/新年倒计时雪花效果/)
