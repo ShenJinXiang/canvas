@@ -114,28 +114,26 @@
             }
         },
         runTime: function() {
-            drawer.timer = setInterval(function() {
-                console.log(drawer.des);
-                var now = new Date();
-                var year = now.getFullYear();
-                var target = new Date();
-                target.setFullYear(year + 1);
-                target.setMonth(0);
-                target.setDate(1);
-                target.setHours(0);
-                target.setMinutes(0);
-                target.setSeconds(0);
-                var nowTime = now.getTime();
-                var targetTime = target.getTime();
-                var des = targetTime - nowTime;
-                drawer.des = {
-                    year: year + 1,
-                    days: Math.floor(des / (1000 * 60 * 60 * 24)),
-                    hours: Math.floor((des % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
-                    mins: Math.floor((des % (1000 * 60 * 60)) / (1000 * 60)),
-                    secs: Math.floor((des % (1000 * 60)) / 1000)
-                };
-            }, 1000);
+            var now = new Date();
+            var year = now.getFullYear();
+            var target = new Date();
+            target.setFullYear(year + 1);
+            target.setMonth(0);
+            target.setDate(1);
+            target.setHours(0);
+            target.setMinutes(0);
+            target.setSeconds(0);
+            var nowTime = now.getTime();
+            var targetTime = target.getTime();
+            var des = targetTime - nowTime;
+            drawer.des = {
+                year: year + 1,
+                days: Math.floor(des / (1000 * 60 * 60 * 24)),
+                hours: Math.floor((des % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
+                mins: Math.floor((des % (1000 * 60 * 60)) / (1000 * 60)),
+                secs: Math.floor((des % (1000 * 60)) / 1000)
+            };
+            setTimeout(drawer.runTime, 1000);
         },
         getMarkCanvas: function(fillStyle) {
             var markCanvas = document.createElement('canvas');
