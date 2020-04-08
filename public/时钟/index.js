@@ -32,8 +32,8 @@
 	var currentDateObj;
 
 	var img = new Image();
-	//img.src = './zq02.png';
-	img.src = './001.jpeg';
+	img.src = './zq02.png';
+	//img.src = './001.jpeg';
 
 	img.onload = function () {
 		setInterval(function(){
@@ -330,7 +330,7 @@
 				markCanvas.height = 60;
 				var ctx = markCanvas.getContext('2d');
 			
-				ctx.fillStyle = 'rgba(80, 80, 80, 0.5)';
+				ctx.fillStyle = 'rgba(250, 250, 250, 0.5)';
 				ctx.textAlign = 'center';
 				ctx.textBaseline = 'middle';
 				ctx.font = '30px cursive';
