@@ -1,7 +1,7 @@
 (function() {
     var drawer = {
         option: {
-            sideNum: 6,
+            sideNum: 5,
             pointNum: 20,
             radius: 200,
             pointRadius: 2,
@@ -24,7 +24,8 @@
             requestAnimationFrame(drawer.animate);
         },
         update: function() {
-            this.n += 0.01;
+            //this.n += 0.01;
+            this.n = performance.now() / 1000;
             drawer.points.forEach(function(item) {
                 item.update();
             });
@@ -84,7 +85,7 @@
             this.index = index;
             this.update = function() {
                 this.targetPoint = drawer.points[this.target];
-                this.target++;
+                this.target+=2;
                 if (this.target >= drawer.points.length) {
                     this.target = 0;
                 }
