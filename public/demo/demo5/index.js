@@ -17,6 +17,17 @@
             this.initPoints(drawer.option);
             console.log(this.points);
             this.animate();
+            this.bindEvent();
+        },
+        bindEvent: function() {
+            $("#sidesRange").mousemove(function() {
+                $("#sides_span").text($(this).val());
+                drawer.option.sideNum = ~~$(this).val();
+            });
+            $("#pointsRange").mousemove(function() {
+                $("#points_span").text($(this).val());
+                drawer.option.pointNum = ~~$(this).val();
+            });
         },
         animate: function() {
             drawer.update();

@@ -1,4 +1,33 @@
 *{margin: 0px; padding: 0px;}
-body {overflow: hidden;}
+body {overflow: hidden;background: rgb(54, 54, 54);}
 canvas {display: block; margin: 0px auto;}
-
+.info-txt{
+    position: absolute;
+    left: 10px;
+    display: block;
+    font-size: 24px;
+    font-weight: bold;
+    padding-left: 10px;
+    color: #fff;
+    height: 48px;
+    line-height: 48px;
+}
+.range {
+    position: absolute;
+    display: block;
+    left: 10px;
+    width: 280px;
+    border-color: #fff;
+}
+.info-txt.sides{
+    top: 20px;
+}
+.range.sides{
+    top: 70px;
+}
+.info-txt.points{
+    top: 120px;
+}
+.range.points{
+    top: 170px;
+}
