@@ -36,12 +36,13 @@
         },
         update: function() {
             //this.n += 0.01;
-            this.n = performance.now() / 1000;
+            this.n = performance.now() / 2000;
             drawer.points.forEach(function(item) {
                 item.update();
             });
         },
         draw: function() {
+            console.log(drawer.n);
             drawer.ctx.clearRect(0, 0, drawer.w, drawer.h);
             /*
             drawer.points.forEach(function(item) {
