@@ -41,7 +41,7 @@
             requestAnimationFrame(drawer.animate);
         },
         update: function() {
-            this.n = performance.now() / 2000;
+            drawer.n = performance.now() / 2000;
         },
         draw: function() {
             drawer.ctx.clearRect(0, 0, drawer.w, drawer.h);
