@@ -29,6 +29,11 @@
                 drawer.option.pointNum = ~~$(this).val();
                 drawer.initPoints(drawer.option);
             });
+            $(window).resize(function() {
+                drawer.w = drawer.c.width = window.innerWidth <= 900 ? 900 : window.innerWidth;
+                drawer.h = drawer.c.height = window.innerHeight <= 600 ? 600 : window.innerHeight;
+                drawer.initPoints(drawer.option);
+            });
         },
         animate: function() {
             drawer.update();

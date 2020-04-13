@@ -1,6 +1,6 @@
 *{margin: 0px; padding: 0px;}
-body {overflow: hidden;background: rgb(54, 54, 54);}
-canvas {display: block; margin: 0px auto;}
+body {background: rgb(54, 54, 54);}
+canvas {display: block; margin: 0px auto; min-width: 900px; min-height: 600px;}
 .info-txt{
     position: absolute;
     left: 10px;
