@@ -45,6 +45,7 @@ body {margin: 0px; padding: 0px;}
     margin: 0px 0px 0px 5px;
 }
 h1 {padding-bottom: .3em; border-bottom: 1px solid #eaecef; font-size: 2em; margin-bottom: 16px; font-weight: 600; line-height: 1.25;}
+ul {margin-bottom: 40px;}
 ul li {list-style: none;}
 a {display: block; color: rgb(54, 65, 73); text-decoration: none; padding: 10px 15px;}
 a:hover {color: #000;}
