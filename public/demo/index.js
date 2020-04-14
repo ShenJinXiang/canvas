@@ -73,7 +73,6 @@
                     this.y += this.vy;
                     this.vx += this.ax;
                     this.vy += this.ay;
-                    
                 }
             };
         }
