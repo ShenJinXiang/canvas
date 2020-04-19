@@ -5,6 +5,7 @@
 * [中国国旗](https://canvas.shenjinxiang.com/中国国旗/)
 * [象棋棋盘](https://canvas.shenjinxiang.com/象棋棋盘/)
 * [硬笔练习纸](https://canvas.shenjinxiang.com/硬笔练习纸/)
+* [旋转八卦图](https://canvas.shenjinxiang.com/旋转八卦图/)
 * [无缝贴图(图片)](https://canvas.shenjinxiang.com/无缝贴图(图片)/)
 * [无缝贴图(canvas)](https://canvas.shenjinxiang.com/无缝贴图(canvas)/)
 * [随机显示小球](https://canvas.shenjinxiang.com/随机显示小球/)
