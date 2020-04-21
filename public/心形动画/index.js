@@ -41,19 +41,19 @@
             drawer.h = drawer.c.height = window.innerHeight;
             drawer.outer = Math.min(drawer.w, drawer.h);
             drawer.refreshElements();
-            drawer.elments.forEach(item => item.update());
+            drawer.elements.forEach(item => item.update());
         },
         draw: function() {
             let ctx = drawer.ctx;
             ctx.clearRect(0, 0, drawer.w, drawer.h);
             ctx.save();
             ctx.translate(drawer.w / 2, drawer.h / 2);
-            drawer.elments.forEach(item => item.draw(ctx));
+            drawer.elements.forEach(item => item.draw(ctx));
             ctx.restore();
             drawer.drawMark(drawer.ctx, drawer.mark);
         },
         initElements: function() {
-            drawer.elments = [];
+            drawer.elements = [];
             let step = 2 * Math.PI / drawer.option.num,
                 r = drawer.outer * drawer.option.radius,
                 color = drawer.option.colors;
@@ -63,16 +63,16 @@
                     roundRadius = drawer.random(drawer.option.minRoundRadius, drawer.option.maxRoundRadius),
                     roundTime = drawer.random(drawer.option.minRoundTime, drawer.option.maxRoundTime);
                 if (Math.random() > 0.6) {
-                    drawer.elments.push(new drawer.RectElement(p.x, p.y, c, roundRadius, roundTime));
+                    drawer.elements.push(new drawer.RectElement(p.x, p.y, c, roundRadius, roundTime));
                 } else {
-                    drawer.elments.push(new drawer.CircleElement(p.x, p.y, c, roundRadius, roundTime));
+                    drawer.elements.push(new drawer.CircleElement(p.x, p.y, c, roundRadius, roundTime));
                 }
             }
         },
         refreshElements: function() {
             let step = 2 * Math.PI / drawer.option.num,
                 r = drawer.outer * drawer.option.radius;
-            drawer.elments.forEach(function(item, i) {
+            drawer.elements.forEach(function(item, i) {
                 let p = drawer.heartXY(i * step, r / 16);
                 item.x = p.x;
                 item.y = p.y;
