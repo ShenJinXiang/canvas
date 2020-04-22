@@ -1,8 +1,6 @@
-body {margin: 0; padding: 0; overflow: auto;background: #000;}
+body {margin: 0; padding: 0; overflow: auto;background: #fff;}
 canvas {
     display: block;
     margin: 0 auto;
     padding: 0;
-    min-width: 600px;
-    min-height:600px;
 }

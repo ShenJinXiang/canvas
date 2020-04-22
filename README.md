@@ -29,3 +29,4 @@
 * [彩色旋转线条](https://canvas.shenjinxiang.com/彩色旋转线条/)
 * [彩色烟花动画](https://canvas.shenjinxiang.com/彩色烟花动画/)
 * [心形动画](https://canvas.shenjinxiang.com/心形动画/)
+* [心形环形动画](https://canvas.shenjinxiang.com/心形环形动画/)
