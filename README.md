@@ -24,6 +24,7 @@
 * [排序动画-选择排序](https://canvas.shenjinxiang.com/排序动画/选择排序/)
 * [排序动画-快速排序](https://canvas.shenjinxiang.com/排序动画/快速排序/)
 * [新年倒计时雪花效果](https://canvas.shenjinxiang.com/新年倒计时雪花效果/)
+* [下雨动画](https://canvas.shenjinxiang.com/下雨动画/)
 * [时钟](https://canvas.shenjinxiang.com/时钟/)
 * [旋转线条动画](https://canvas.shenjinxiang.com/旋转线条动画/)
 * [彩色旋转线条](https://canvas.shenjinxiang.com/彩色旋转线条/)

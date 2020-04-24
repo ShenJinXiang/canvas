@@ -1,25 +1,84 @@
 (function() {
+    let option = {
+        elementStrokeColor: 'rgba(255, 255, 255, 0.5)',
+        marksLength: 10000,
+        minWidth: 1200,
+        minHeight: 800,
+        rightXStep: 3,
+        cs: [
+            {radius: 200, beginAngle: 0, angleStep: Math.PI / 360, counterclockwise: false},
+            {radius: 80, beginAngle: 0, angleStep: Math.PI / 50, counterclockwise: false}
+        ]
+    };
+    function Point(x, y) {
+        this.x = x;
+        this.y = y;
+    }
+    function linePoint(ctx, point1, point2, lineWidth, color) {
+        line(ctx, point1.x, point1.y, point2.x, point2.y, lineWidth, color);
+    }
+    function line(ctx, sx, sy, ex, ey, lineWidth, color) {
+        ctx.save();
+        ctx.beginPath();
+        ctx.lineWidth = lineWidth || 1;
+        ctx.strokeStyle = !!color ? color : 'rgba(0, 0, 0, 0.5)';
+        ctx.moveTo(sx, sy);
+        ctx.lineTo(ex, ey);
+        ctx.stroke();
+        ctx.restore();
+    }
+    function Element(radius, beginAngle, angleStep, counterclockwise) {
+        this.radius = radius;
+        this.beginAngle = beginAngle;
+        this.angle = this.beginAngle;
+        this.angleStep = angleStep;
+        this.counterclockwise = !!counterclockwise;
+    }
+    Element.prototype.setOrigin = function (origin) {
+        this.origin = origin;
+    };
+    Element.prototype.setNext = function(next) {
+        this.next = next;
+    };
+    Element.prototype.update = function (arr) {
+        this.currentPoint = new Point(
+            this.origin.x + this.radius * Math.cos(this.angle),
+            this.origin.y + this.radius * Math.sin(this.angle)
+        );
+        if(!this.next) {
+            arr.push(this.currentPoint);
+            if (arr.length > option.marksLength) {
+                arr.shift();
+            }
+        } else {
+            this.next.setOrigin(this.currentPoint);
+        }
+        if (this.counterclockwise) {
+            this.angle -= this.angleStep;
+        } else {
+            this.angle += this.angleStep;
+        }
+    };
+    Element.prototype.draw = function (ctx) {
+        ctx.save();
+        ctx.beginPath();
+        ctx.strokeStyle = option.elementStrokeColor;
+        ctx.arc(this.origin.x, this.origin.y, this.radius, 0, 2 * Math.PI, false);
+        ctx.stroke();
+        ctx.restore();
+        linePoint(ctx, this.origin, this.currentPoint, 1, option.elementStrokeColor);
+    };
+
     let drawer = {
-        option: {
-            background: '#061928',
-            color: 'rgba(174,194,224,0.5)'
-        },
-        init: function() {
-            this.c = document.getElementById('canvas');
-            this.w = this.c.width = window.innerWidth;
-            this.h = this.c.height = window.innerHeight;
-            this.ctx = this.c.getContext('2d');
-            this.initElements();
-            this.mark = drawer.getMarkCanvas();
-            this.bindEvent();
-            return this;
-        },
-        bindEvent: function() {
-            window.onresize = function() {
-                drawer.w = drawer.c.width = window.innerWidth;
-                drawer.h = drawer.c.height = window.innerHeight;
-                drawer.initElements();
-            };
+        start: function() {
+            drawer.c = document.getElementById('canvas');
+            drawer.w = drawer.c.width = drawer.getWidth();
+            drawer.h = drawer.c.height = drawer.getHeight();
+            drawer.ctx = drawer.c.getContext('2d');
+            drawer.initElements();
+            drawer.marks = [];
+            drawer.rmarks = [];
+            drawer.animate();
         },
         animate: function() {
             drawer.update();
@@ -27,79 +86,50 @@
             requestAnimationFrame(drawer.animate);
         },
         update: function() {
-            drawer.elements.forEach(item => item.update());
+            this.elements.forEach(item => item.update(drawer.marks));
         },
         draw: function() {
             let ctx = drawer.ctx;
             ctx.clearRect(0, 0, drawer.w, drawer.h);
-            drawer.elements.forEach(item => item.draw(ctx));
-            drawer.drawMark(drawer.ctx, drawer.mark);
+            this.elements.forEach(item => item.draw(ctx));
+            drawer.drawMarks(ctx);
+            line(ctx, option.minHeight, 0, option.minHeight, drawer.h, 2, 'rgb(255, 255, 255)');
+        },
+        drawMarks: function(ctx) {
+            ctx.save();
+            ctx.beginPath();
+            ctx.strokeStyle = 'red';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            for(let i = 0; i < drawer.marks.length; i++ ) {
+                ctx.lineTo(drawer.marks[i].x, drawer.marks[i].y);
+            }
+            ctx.stroke();
+            ctx.restore();
         },
         initElements: function() {
             drawer.elements = [];
-            for (let x = 0; x < drawer.w; x++) {
-                for (let y = 0; y < drawer.h; y++) {
-                    if(Math.round(Math.random() * 1000) == 1) {
-                        drawer.elements.push(
-                            new drawer.Element(
-                                x,
-                                y,
-                                drawer.random(-2, 2),
-                                drawer.random(5, 10),
-                                drawer.random(0, 1)
-                            )
-                        );
-
-                    }
+            option.cs.forEach(function (item, index) {
+                let elment = new Element(item.radius, item.beginAngle, item.angleStep, item.counterclockwise);
+                if (index == 0) {
+                    elment.setOrigin(new Point(option.minHeight / 2, option.minHeight / 2));
+                } else {
+                    let prev = drawer.elements[index - 1];
+                    prev.setNext(elment);
+                    elment.setOrigin(new Point(
+                        prev.origin.x + prev.radius * Math.cos(prev.angle),
+                        prev.origin.y + prev.radius * Math.sin(prev.angle)
+                    ));
                 }
-            }
+                drawer.elements.push(elment);
+            });
         },
-        Element: function(x, y, vx, vy, l) {
-            this.x = x;
-            this.y = y;
-            this.vx = vx;
-            this.vy = vy;
-            this.l = l;
-            this.color = drawer.option.color;
-            this.update = function() {
-                this.x += vx;
-                this.y += vy;
-                if (this.x < 0 || this.x > drawer.w || this.y - this.l > drawer.h) {
-                    this.x = drawer.random(0, drawer.w);
-                    this.y = -20;
-                }
-            };
-            this.draw = function(ctx) {
-                ctx.save();
-                ctx.beginPath();
-                ctx.strokeStyle = this.color;
-                ctx.lineCap = "round";
-                ctx.moveTo(this.x, this.y);
-                ctx.lineTo(this.x + this.l * this.vx, this.y + this.l * this.vy);
-                ctx.stroke();
-                ctx.restore();
-            }
+        getWidth: function () {
+            return window.innerWidth <= option.minWidth ? option.minWidth : window.innerWidth;
         },
-        random: function(min, max) {
-            return min + Math.random() * (max - min);
-        },
-        getMarkCanvas: function(fillStyle) {
-            var markCanvas = document.createElement('canvas');
-            markCanvas.width = 240;
-            markCanvas.height = 60;
-            var ctx = markCanvas.getContext('2d');
-
-            ctx.fillStyle = fillStyle || 'rgba(250, 250, 250, 0.5)';
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'middle';
-            ctx.font = '30px cursive';
-            ctx.fillText('shenjinxiang.com', markCanvas.width / 2, markCanvas.height / 2 );
-            return markCanvas;
-        },
-        drawMark: function(ctx, mark) {
-            ctx.drawImage(mark, ctx.canvas.width - mark.width, ctx.canvas.height - mark.height);
+        getHeight: function () {
+            return window.innerHeight <= option.minHeight ? option.minHeight : window.innerHeight;
         }
-
     };
-    drawer.init().animate();
+    drawer.start();
 })();
