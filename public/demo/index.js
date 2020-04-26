@@ -1,13 +1,15 @@
 (function() {
     let option = {
         elementStrokeColor: 'rgba(255, 255, 255, 0.5)',
-        marksLength: 10000,
+        marksLength: 5000,
         minWidth: 1200,
         minHeight: 800,
-        rightXStep: 3,
+        rightXStep: .2,
         cs: [
-            {radius: 200, beginAngle: 0, angleStep: Math.PI / 360, counterclockwise: false},
-            {radius: 80, beginAngle: 0, angleStep: Math.PI / 50, counterclockwise: false}
+            {radius: 200, beginAngle: 0, angleStep: Math.PI / 360, counterclockwise: false}
+            // , {radius: 50, beginAngle: Math.PI / 4, angleStep: Math.PI / 180, counterclockwise: false}
+            // , {radius: 25, beginAngle: 0, angleStep: Math.PI / 120, counterclockwise: false}
+            , {radius: 30, beginAngle: 0, angleStep: Math.PI /18 , counterclockwise: false}
         ]
     };
     function Point(x, y) {
@@ -45,12 +47,7 @@
             this.origin.x + this.radius * Math.cos(this.angle),
             this.origin.y + this.radius * Math.sin(this.angle)
         );
-        if(!this.next) {
-            arr.push(this.currentPoint);
-            if (arr.length > option.marksLength) {
-                arr.shift();
-            }
-        } else {
+        if(this.next) {
             this.next.setOrigin(this.currentPoint);
         }
         if (this.counterclockwise) {
@@ -86,23 +83,34 @@
             requestAnimationFrame(drawer.animate);
         },
         update: function() {
-            this.elements.forEach(item => item.update(drawer.marks));
+            drawer.elements.forEach(item => item.update(drawer.marks));
+            drawer.rmarks.forEach(item => item.x += option.rightXStep);
+            drawer.rmarks = drawer.rmarks.filter(item => item.x <= drawer.w);
+            let last = drawer.elements[drawer.elements.length - 1];
+            drawer.marks.push(last.currentPoint);
+            drawer.rmarks.push(new Point(option.minHeight, last.currentPoint.y));
+            if (drawer.elements.length > option.marksLength) {
+                drawer.elements.shift();
+            }
+
         },
         draw: function() {
             let ctx = drawer.ctx;
             ctx.clearRect(0, 0, drawer.w, drawer.h);
             this.elements.forEach(item => item.draw(ctx));
-            drawer.drawMarks(ctx);
+            drawer.drawMarks(ctx, drawer.marks);
+            drawer.drawMarks(ctx, drawer.rmarks);
+            linePoint(ctx, drawer.marks[drawer.marks.length - 1], drawer.rmarks[drawer.rmarks.length - 1], 1, 'rgba(255, 0, 0, 1)');
             line(ctx, option.minHeight, 0, option.minHeight, drawer.h, 2, 'rgb(255, 255, 255)');
         },
-        drawMarks: function(ctx) {
+        drawMarks: function(ctx, arr) {
             ctx.save();
             ctx.beginPath();
             ctx.strokeStyle = 'red';
             ctx.lineWidth = 2;
             ctx.beginPath();
-            for(let i = 0; i < drawer.marks.length; i++ ) {
-                ctx.lineTo(drawer.marks[i].x, drawer.marks[i].y);
+            for(let i = 0; i < arr.length; i++ ) {
+                ctx.lineTo(arr[i].x, arr[i].y);
             }
             ctx.stroke();
             ctx.restore();
