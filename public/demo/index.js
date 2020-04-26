@@ -4,12 +4,43 @@
         marksLength: 5000,
         minWidth: 1200,
         minHeight: 800,
-        rightXStep: .2,
+        rightXStep: .5,
+        // cs: [
+        //     {radius: 400 / Math.PI, beginAngle: 0, angleStep: Math.PI / 360, counterclockwise: false}
+        // ]
+        // cs: [
+        //     {radius: 400 / Math.PI, beginAngle: 0, angleStep: Math.PI / 360, counterclockwise: false}
+        //     , {radius: 400 / (3 * Math.PI), beginAngle: 0, angleStep: 3 * Math.PI / 360, counterclockwise: false}
+        // ]
+        // cs: [
+        //     {radius: 400 / Math.PI, beginAngle: 0, angleStep: Math.PI / 360, counterclockwise: false}
+        //     , {radius: 400 / (3 * Math.PI), beginAngle: 0, angleStep: 3 * Math.PI / 360, counterclockwise: false}
+        //     , {radius: 400 / (5 * Math.PI), beginAngle: 0, angleStep: 5 * Math.PI / 360, counterclockwise: false}
+        // ]
+        // cs: [
+        //     {radius: 400 / Math.PI, beginAngle: 0, angleStep: Math.PI / 360, counterclockwise: false}
+        //     , {radius: 400 / (3 * Math.PI), beginAngle: 0, angleStep: 3 * Math.PI / 360, counterclockwise: false}
+        //     , {radius: 400 / (5 * Math.PI), beginAngle: 0, angleStep: 5 * Math.PI / 360, counterclockwise: false}
+        //     , {radius: 400 / (7 * Math.PI), beginAngle: 0, angleStep: 7 * Math.PI / 360, counterclockwise: false}
+        // ]
         cs: [
-            {radius: 200, beginAngle: 0, angleStep: Math.PI / 360, counterclockwise: false}
-            // , {radius: 50, beginAngle: Math.PI / 4, angleStep: Math.PI / 180, counterclockwise: false}
-            // , {radius: 25, beginAngle: 0, angleStep: Math.PI / 120, counterclockwise: false}
-            , {radius: 30, beginAngle: 0, angleStep: Math.PI /18 , counterclockwise: false}
+            {radius: 400 / Math.PI, beginAngle: 0, angleStep: Math.PI / 360, counterclockwise: false}
+            , {radius: 400 / (3 * Math.PI), beginAngle: 0, angleStep: 3 * Math.PI / 360, counterclockwise: false}
+            , {radius: 400 / (5 * Math.PI), beginAngle: 0, angleStep: 5 * Math.PI / 360, counterclockwise: false}
+            , {radius: 400 / (7 * Math.PI), beginAngle: 0, angleStep: 7 * Math.PI / 360, counterclockwise: false}
+            , {radius: 400 / (9 * Math.PI), beginAngle: 0, angleStep: 9 * Math.PI / 360, counterclockwise: false}
+            , {radius: 400 / (11 * Math.PI), beginAngle: 0, angleStep: 11 * Math.PI / 360, counterclockwise: false}
+            , {radius: 400 / (13 * Math.PI), beginAngle: 0, angleStep: 13 * Math.PI / 360, counterclockwise: false}
+            , {radius: 400 / (15 * Math.PI), beginAngle: 0, angleStep: 15 * Math.PI / 360, counterclockwise: false}
+            , {radius: 400 / (17 * Math.PI), beginAngle: 0, angleStep: 17 * Math.PI / 360, counterclockwise: false}
+            , {radius: 400 / (19 * Math.PI), beginAngle: 0, angleStep: 19 * Math.PI / 360, counterclockwise: false}
+            , {radius: 400 / (21 * Math.PI), beginAngle: 0, angleStep: 21 * Math.PI / 360, counterclockwise: false}
+            , {radius: 400 / (23 * Math.PI), beginAngle: 0, angleStep: 23 * Math.PI / 360, counterclockwise: false}
+            , {radius: 400 / (25 * Math.PI), beginAngle: 0, angleStep: 25 * Math.PI / 360, counterclockwise: false}
+            , {radius: 400 / (27 * Math.PI), beginAngle: 0, angleStep: 27 * Math.PI / 360, counterclockwise: false}
+            , {radius: 400 / (29 * Math.PI), beginAngle: 0, angleStep: 29 * Math.PI / 360, counterclockwise: false}
+            , {radius: 400 / (31 * Math.PI), beginAngle: 0, angleStep: 31 * Math.PI / 360, counterclockwise: false}
+            , {radius: 400 / (33 * Math.PI), beginAngle: 0, angleStep: 33 * Math.PI / 360, counterclockwise: false}
         ]
     };
     function Point(x, y) {
@@ -100,8 +131,21 @@
             this.elements.forEach(item => item.draw(ctx));
             drawer.drawMarks(ctx, drawer.marks);
             drawer.drawMarks(ctx, drawer.rmarks);
-            linePoint(ctx, drawer.marks[drawer.marks.length - 1], drawer.rmarks[drawer.rmarks.length - 1], 1, 'rgba(255, 0, 0, 1)');
-            line(ctx, option.minHeight, 0, option.minHeight, drawer.h, 2, 'rgb(255, 255, 255)');
+            // linePoint(ctx, drawer.marks[drawer.marks.length - 1], drawer.rmarks[drawer.rmarks.length - 1], 1, 'rgba(255, 0, 0, 1)');
+            // line(ctx, option.minHeight, 0, option.minHeight, drawer.h, 2, 'rgb(255, 255, 255)');
+            drawer.drawMarkLink(ctx, drawer.marks[drawer.marks.length - 1], drawer.rmarks[drawer.rmarks.length - 1]);
+        },
+        drawMarkLink(ctx, markPoint, rmarkPoint) {
+            linePoint(ctx, markPoint, rmarkPoint, 1, 'rgba(255, 0, 0, 1)');
+            ctx.save();
+            ctx.beginPath();
+            ctx.fillStyle = 'rgba(255, 0, 0, 1)';
+            ctx.moveTo(rmarkPoint.x, rmarkPoint.y);
+            ctx.lineTo(rmarkPoint.x - 20, rmarkPoint.y - 5);
+            ctx.lineTo(rmarkPoint.x - 20, rmarkPoint.y + 5);
+            ctx.closePath();
+            ctx.fill();
+            ctx.restore();
         },
         drawMarks: function(ctx, arr) {
             ctx.save();
