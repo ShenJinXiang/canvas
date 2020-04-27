@@ -1,10 +1,12 @@
 (function() {
     let option = {
+        background: '#061928',
         elementStrokeColor: 'rgba(255, 255, 255, 0.5)',
         marksLength: 5000,
         minWidth: 1200,
         minHeight: 800,
         rightXStep: .5,
+        rightWidth: 0.3,
         // cs: [
         //     {radius: 400 / Math.PI, beginAngle: 0, angleStep: Math.PI / 360, counterclockwise: false}
         // ]
@@ -23,25 +25,71 @@
         //     , {radius: 400 / (5 * Math.PI), beginAngle: 0, angleStep: 5 * Math.PI / 360, counterclockwise: false}
         //     , {radius: 400 / (7 * Math.PI), beginAngle: 0, angleStep: 7 * Math.PI / 360, counterclockwise: false}
         // ]
-        cs: [
-            {radius: 400 / Math.PI, beginAngle: 0, angleStep: Math.PI / 360, counterclockwise: false}
-            , {radius: 400 / (3 * Math.PI), beginAngle: 0, angleStep: 3 * Math.PI / 360, counterclockwise: false}
-            , {radius: 400 / (5 * Math.PI), beginAngle: 0, angleStep: 5 * Math.PI / 360, counterclockwise: false}
-            , {radius: 400 / (7 * Math.PI), beginAngle: 0, angleStep: 7 * Math.PI / 360, counterclockwise: false}
-            , {radius: 400 / (9 * Math.PI), beginAngle: 0, angleStep: 9 * Math.PI / 360, counterclockwise: false}
-            , {radius: 400 / (11 * Math.PI), beginAngle: 0, angleStep: 11 * Math.PI / 360, counterclockwise: false}
-            , {radius: 400 / (13 * Math.PI), beginAngle: 0, angleStep: 13 * Math.PI / 360, counterclockwise: false}
-            , {radius: 400 / (15 * Math.PI), beginAngle: 0, angleStep: 15 * Math.PI / 360, counterclockwise: false}
-            , {radius: 400 / (17 * Math.PI), beginAngle: 0, angleStep: 17 * Math.PI / 360, counterclockwise: false}
-            , {radius: 400 / (19 * Math.PI), beginAngle: 0, angleStep: 19 * Math.PI / 360, counterclockwise: false}
-            , {radius: 400 / (21 * Math.PI), beginAngle: 0, angleStep: 21 * Math.PI / 360, counterclockwise: false}
-            , {radius: 400 / (23 * Math.PI), beginAngle: 0, angleStep: 23 * Math.PI / 360, counterclockwise: false}
-            , {radius: 400 / (25 * Math.PI), beginAngle: 0, angleStep: 25 * Math.PI / 360, counterclockwise: false}
-            , {radius: 400 / (27 * Math.PI), beginAngle: 0, angleStep: 27 * Math.PI / 360, counterclockwise: false}
-            , {radius: 400 / (29 * Math.PI), beginAngle: 0, angleStep: 29 * Math.PI / 360, counterclockwise: false}
-            , {radius: 400 / (31 * Math.PI), beginAngle: 0, angleStep: 31 * Math.PI / 360, counterclockwise: false}
-            , {radius: 400 / (33 * Math.PI), beginAngle: 0, angleStep: 33 * Math.PI / 360, counterclockwise: false}
-        ]
+        // cs: [
+        //     {radius: 400 / Math.PI, beginAngle: 0, angleStep: Math.PI / 360, counterclockwise: false}
+        //     , {radius: 400 / (3 * Math.PI), beginAngle: 0, angleStep: 3 * Math.PI / 360, counterclockwise: false}
+        //     , {radius: 400 / (5 * Math.PI), beginAngle: 0, angleStep: 5 * Math.PI / 360, counterclockwise: false}
+        //     , {radius: 400 / (7 * Math.PI), beginAngle: 0, angleStep: 7 * Math.PI / 360, counterclockwise: false}
+        //     , {radius: 400 / (9 * Math.PI), beginAngle: 0, angleStep: 9 * Math.PI / 360, counterclockwise: false}
+        //     , {radius: 400 / (11 * Math.PI), beginAngle: 0, angleStep: 11 * Math.PI / 360, counterclockwise: false}
+        //     , {radius: 400 / (13 * Math.PI), beginAngle: 0, angleStep: 13 * Math.PI / 360, counterclockwise: false}
+        //     , {radius: 400 / (15 * Math.PI), beginAngle: 0, angleStep: 15 * Math.PI / 360, counterclockwise: false}
+        //     , {radius: 400 / (17 * Math.PI), beginAngle: 0, angleStep: 17 * Math.PI / 360, counterclockwise: false}
+        //     , {radius: 400 / (19 * Math.PI), beginAngle: 0, angleStep: 19 * Math.PI / 360, counterclockwise: false}
+        //     , {radius: 400 / (21 * Math.PI), beginAngle: 0, angleStep: 21 * Math.PI / 360, counterclockwise: false}
+        //     , {radius: 400 / (23 * Math.PI), beginAngle: 0, angleStep: 23 * Math.PI / 360, counterclockwise: false}
+        //     , {radius: 400 / (25 * Math.PI), beginAngle: 0, angleStep: 25 * Math.PI / 360, counterclockwise: false}
+        //     , {radius: 400 / (27 * Math.PI), beginAngle: 0, angleStep: 27 * Math.PI / 360, counterclockwise: false}
+        //     , {radius: 400 / (29 * Math.PI), beginAngle: 0, angleStep: 29 * Math.PI / 360, counterclockwise: false}
+        //     , {radius: 400 / (31 * Math.PI), beginAngle: 0, angleStep: 31 * Math.PI / 360, counterclockwise: false}
+        //     , {radius: 400 / (33 * Math.PI), beginAngle: 0, angleStep: 33 * Math.PI / 360, counterclockwise: false}
+        //     , {radius: 400 / (35 * Math.PI), beginAngle: 0, angleStep: 35 * Math.PI / 360, counterclockwise: false}
+        //     , {radius: 400 / (37 * Math.PI), beginAngle: 0, angleStep: 37 * Math.PI / 360, counterclockwise: false}
+        //     , {radius: 400 / (39 * Math.PI), beginAngle: 0, angleStep: 39 * Math.PI / 360, counterclockwise: false}
+        //     , {radius: 400 / (41 * Math.PI), beginAngle: 0, angleStep: 41 * Math.PI / 360, counterclockwise: false}
+        //     , {radius: 400 / (43 * Math.PI), beginAngle: 0, angleStep: 43 * Math.PI / 360, counterclockwise: false}
+        //     , {radius: 400 / (45 * Math.PI), beginAngle: 0, angleStep: 45 * Math.PI / 360, counterclockwise: false}
+        //     , {radius: 400 / (47 * Math.PI), beginAngle: 0, angleStep: 47 * Math.PI / 360, counterclockwise: false}
+        //     , {radius: 400 / (49 * Math.PI), beginAngle: 0, angleStep: 49 * Math.PI / 360, counterclockwise: false}
+        // ]
+
+        /**
+         * 三角波形
+         */
+        // cs: [
+        //     {radius: 1600 / Math.pow(Math.PI, 2), beginAngle: 0, angleStep: Math.PI / 360, counterclockwise: false}
+        //     , {radius: 1600 / Math.pow(3 * Math.PI, 2), beginAngle: 0, angleStep: 3 * Math.PI / 360, counterclockwise: true}
+        //     , {radius: 1600 / Math.pow(5 * Math.PI, 2), beginAngle: 0, angleStep: 5 * Math.PI / 360, counterclockwise: false}
+        //     , {radius: 1600 / Math.pow(7 * Math.PI, 2), beginAngle: 0, angleStep: 7 * Math.PI / 360, counterclockwise: true}
+        //     , {radius: 1600 / Math.pow(9 * Math.PI, 2), beginAngle: 0, angleStep: 9 * Math.PI / 360, counterclockwise: false}
+        //     , {radius: 1600 / Math.pow(11 * Math.PI, 2), beginAngle: 0, angleStep: 11 * Math.PI / 360, counterclockwise: true}
+        //     , {radius: 1600 / Math.pow(13 * Math.PI, 2), beginAngle: 0, angleStep: 13 * Math.PI / 360, counterclockwise: false}
+        //     , {radius: 1600 / Math.pow(15 * Math.PI, 2), beginAngle: 0, angleStep: 15 * Math.PI / 360, counterclockwise: true}
+        //     , {radius: 1600 / Math.pow(17 * Math.PI, 2), beginAngle: 0, angleStep: 17 * Math.PI / 360, counterclockwise: false}
+        //     , {radius: 1600 / Math.pow(19 * Math.PI, 2), beginAngle: 0, angleStep: 19 * Math.PI / 360, counterclockwise: true}
+        // ]
+
+        // cs: [
+        //     {radius: 100 / 1, beginAngle: 0, angleStep:  Math.PI / 360, counterclockwise: true}
+        //     , {radius: 100 / 2, beginAngle: 0, angleStep: 2 * Math.PI / 360, counterclockwise: true}
+        //     , {radius: 100 / 3, beginAngle: 0, angleStep: 3 * Math.PI / 360, counterclockwise: true}
+        //     , {radius: 100 / 4, beginAngle: 0, angleStep: 4 * Math.PI / 360, counterclockwise: true}
+        //     , {radius: 100 / 5, beginAngle: 0, angleStep: 5 * Math.PI / 360, counterclockwise: true}
+        //     , {radius: 100 / 6, beginAngle: 0, angleStep: 6 * Math.PI / 360, counterclockwise: true}
+        //     , {radius: 100 / 7, beginAngle: 0, angleStep: 7 * Math.PI / 360, counterclockwise: true}
+        //     , {radius: 100 / 8, beginAngle: 0, angleStep: 8 * Math.PI / 360, counterclockwise: true}
+        //     , {radius: 100 / 9, beginAngle: 0, angleStep: 9 * Math.PI / 360, counterclockwise: true}
+        //     , {radius: 100 / 10, beginAngle: 0, angleStep: 10 * Math.PI / 360, counterclockwise: true}
+        //     , {radius: 100 / 11, beginAngle: 0, angleStep: 11 * Math.PI / 360, counterclockwise: true}
+        //     , {radius: 100 / 12, beginAngle: 0, angleStep: 12 * Math.PI / 360, counterclockwise: true}
+        //     , {radius: 100 / 13, beginAngle: 0, angleStep: 13 * Math.PI / 360, counterclockwise: true}
+        //     , {radius: 100 / 14, beginAngle: 0, angleStep: 14 * Math.PI / 360, counterclockwise: true}
+        //     , {radius: 100 / 15, beginAngle: 0, angleStep: 15 * Math.PI / 360, counterclockwise: true}
+        //     , {radius: 100 / 16, beginAngle: 0, angleStep: 16 * Math.PI / 360, counterclockwise: true}
+        //     , {radius: 100 / 17, beginAngle: 0, angleStep: 17 * Math.PI / 360, counterclockwise: true}
+        //     , {radius: 100 / 18, beginAngle: 0, angleStep: 18 * Math.PI / 360, counterclockwise: true}
+        //     , {radius: 100 / 19, beginAngle: 0, angleStep: 19 * Math.PI / 360, counterclockwise: true}
+        // ]
     };
     function Point(x, y) {
         this.x = x;
@@ -103,7 +151,13 @@
             drawer.w = drawer.c.width = drawer.getWidth();
             drawer.h = drawer.c.height = drawer.getHeight();
             drawer.ctx = drawer.c.getContext('2d');
+            // 右侧的canvas
+            drawer.rc = document.createElement('canvas');
+            drawer.rw = drawer.rc.width = drawer.w * option.rightWidth;
+            drawer.rh = drawer.rc.height = drawer.h;
+            drawer.rctx = drawer.rc.getContext('2d');
             drawer.initElements();
+            console.log(this.elements);
             drawer.marks = [];
             drawer.rmarks = [];
             drawer.animate();
@@ -116,33 +170,38 @@
         update: function() {
             drawer.elements.forEach(item => item.update(drawer.marks));
             drawer.rmarks.forEach(item => item.x += option.rightXStep);
-            drawer.rmarks = drawer.rmarks.filter(item => item.x <= drawer.w);
+            drawer.rmarks = drawer.rmarks.filter(item => item.x <= drawer.rw);
             let last = drawer.elements[drawer.elements.length - 1];
             drawer.marks.push(last.currentPoint);
-            drawer.rmarks.push(new Point(option.minHeight, last.currentPoint.y));
+            drawer.rmarks.push(new Point(0, last.currentPoint.y));
             if (drawer.elements.length > option.marksLength) {
                 drawer.elements.shift();
             }
 
         },
         draw: function() {
-            let ctx = drawer.ctx;
+            let ctx = drawer.ctx,
+                rctx = drawer.rctx;
             ctx.clearRect(0, 0, drawer.w, drawer.h);
             this.elements.forEach(item => item.draw(ctx));
             drawer.drawMarks(ctx, drawer.marks);
-            drawer.drawMarks(ctx, drawer.rmarks);
-            // linePoint(ctx, drawer.marks[drawer.marks.length - 1], drawer.rmarks[drawer.rmarks.length - 1], 1, 'rgba(255, 0, 0, 1)');
-            // line(ctx, option.minHeight, 0, option.minHeight, drawer.h, 2, 'rgb(255, 255, 255)');
             drawer.drawMarkLink(ctx, drawer.marks[drawer.marks.length - 1], drawer.rmarks[drawer.rmarks.length - 1]);
+
+            rctx.fillStyle = option.background;
+            rctx.clearRect(0, 0, drawer.rw, drawer.rh);
+            rctx.fillRect(0, 0, drawer.rw, drawer.rh);
+            drawer.drawMarks(rctx, drawer.rmarks);
+            ctx.drawImage(drawer.rc, drawer.w - drawer.rw, 0);
         },
-        drawMarkLink(ctx, markPoint, rmarkPoint) {
-            linePoint(ctx, markPoint, rmarkPoint, 1, 'rgba(255, 0, 0, 1)');
+        drawMarkLink(ctx, markPoint) {
+            let rx = drawer.w - drawer.rw;
+            line(ctx, markPoint.x, markPoint.y, rx, markPoint.y, 1, 'rgba(255, 0, 0, 1)');
             ctx.save();
             ctx.beginPath();
             ctx.fillStyle = 'rgba(255, 0, 0, 1)';
-            ctx.moveTo(rmarkPoint.x, rmarkPoint.y);
-            ctx.lineTo(rmarkPoint.x - 20, rmarkPoint.y - 5);
-            ctx.lineTo(rmarkPoint.x - 20, rmarkPoint.y + 5);
+            ctx.moveTo(rx, markPoint.y);
+            ctx.lineTo(rx - 20, markPoint.y - 5);
+            ctx.lineTo(rx - 20, markPoint.y + 5);
             ctx.closePath();
             ctx.fill();
             ctx.restore();
@@ -164,7 +223,8 @@
             option.cs.forEach(function (item, index) {
                 let elment = new Element(item.radius, item.beginAngle, item.angleStep, item.counterclockwise);
                 if (index == 0) {
-                    elment.setOrigin(new Point(option.minHeight / 2, option.minHeight / 2));
+                    debugger;
+                    elment.setOrigin(new Point((drawer.w - drawer.rw) / 2, drawer.h / 2));
                 } else {
                     let prev = drawer.elements[index - 1];
                     prev.setNext(elment);
