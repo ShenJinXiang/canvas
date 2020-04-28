@@ -156,11 +156,42 @@
             drawer.rw = drawer.rc.width = drawer.w * option.rightWidth;
             drawer.rh = drawer.rc.height = drawer.h;
             drawer.rctx = drawer.rc.getContext('2d');
+
+            this.mark = drawer.getMarkCanvas();
+            drawer.num = 5;
+            drawer.refreshCs(drawer.num);
+            console.log(drawer.cs);
             drawer.initElements();
-            console.log(this.elements);
             drawer.marks = [];
             drawer.rmarks = [];
             drawer.animate();
+            drawer.bindEvent();
+        },
+        bindEvent: function() {
+            $("#numRange").mousemove(function() {
+                let val = ~~$(this).val();
+                $("#num_span").text(val);
+                if (drawer.num != val) {
+                    drawer.num = ~~$(this).val();
+                    drawer.refreshCs(drawer.num);
+                    drawer.initElements();
+                    drawer.marks = [];
+                    drawer.rmarks = [];
+                }
+            });
+        },
+        refreshCs: function(num) {
+            drawer.cs = [];
+            for (let i = 0; i <= num; i++) {
+                let n = 2 * i + 1;
+                drawer.cs.push({
+                    radius: 400 / (n * Math.PI),
+                    beginAngle: 0,
+                    angleStep: (n * Math.PI) / 360,
+                    counterclockwise: false
+                })
+            }
+
         },
         animate: function() {
             drawer.update();
@@ -192,6 +223,8 @@
             rctx.fillRect(0, 0, drawer.rw, drawer.rh);
             drawer.drawMarks(rctx, drawer.rmarks);
             ctx.drawImage(drawer.rc, drawer.w - drawer.rw, 0);
+
+            drawer.drawMark(drawer.ctx, drawer.mark);
         },
         drawMarkLink(ctx, markPoint) {
             let rx = drawer.w - drawer.rw;
@@ -219,11 +252,11 @@
             ctx.restore();
         },
         initElements: function() {
+            debugger
             drawer.elements = [];
-            option.cs.forEach(function (item, index) {
+            drawer.cs.forEach(function (item, index) {
                 let elment = new Element(item.radius, item.beginAngle, item.angleStep, item.counterclockwise);
                 if (index == 0) {
-                    debugger;
                     elment.setOrigin(new Point((drawer.w - drawer.rw) / 2, drawer.h / 2));
                 } else {
                     let prev = drawer.elements[index - 1];
@@ -241,6 +274,22 @@
         },
         getHeight: function () {
             return window.innerHeight <= option.minHeight ? option.minHeight : window.innerHeight;
+        },
+        getMarkCanvas: function(fillStyle) {
+            var markCanvas = document.createElement('canvas');
+            markCanvas.width = 240;
+            markCanvas.height = 60;
+            var ctx = markCanvas.getContext('2d');
+
+            ctx.fillStyle = fillStyle || 'rgba(250, 250, 250, 0.5)';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.font = '30px cursive';
+            ctx.fillText('shenjinxiang.com', markCanvas.width / 2, markCanvas.height / 2 );
+            return markCanvas;
+        },
+        drawMark: function(ctx, mark) {
+            ctx.drawImage(mark, ctx.canvas.width - mark.width, ctx.canvas.height - mark.height);
         }
     };
     drawer.start();
