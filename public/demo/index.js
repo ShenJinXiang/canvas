@@ -1,9 +1,9 @@
 (function() {
     let option = {
-        deepNum: 6,
+        deepNum: 5,
         sideNum: 6,
         // color: '#0075c9',
-        color: '#fff',
+        color: '#000',
         timeStep: 100
     };
     function Element(x, y, radius, color, sideNum) {
@@ -63,7 +63,6 @@
             requestAnimationFrame(drawer.animate);
         },
         update: function() {
-            console.log('count: ' + drawer.currentTime + '  current: ' + drawer.current);
             drawer.currentTime++;
             if (drawer.currentTime >= option.timeStep) {
                 drawer.currentTime = 0;
