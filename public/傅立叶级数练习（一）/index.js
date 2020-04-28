@@ -7,52 +7,6 @@
         minHeight: 800,
         rightXStep: .5,
         rightWidth: 0.3,
-        // cs: [
-        //     {radius: 400 / Math.PI, beginAngle: 0, angleStep: Math.PI / 360, counterclockwise: false}
-        // ]
-        // cs: [
-        //     {radius: 400 / Math.PI, beginAngle: 0, angleStep: Math.PI / 360, counterclockwise: false}
-        //     , {radius: 400 / (3 * Math.PI), beginAngle: 0, angleStep: 3 * Math.PI / 360, counterclockwise: false}
-        // ]
-        // cs: [
-        //     {radius: 400 / Math.PI, beginAngle: 0, angleStep: Math.PI / 360, counterclockwise: false}
-        //     , {radius: 400 / (3 * Math.PI), beginAngle: 0, angleStep: 3 * Math.PI / 360, counterclockwise: false}
-        //     , {radius: 400 / (5 * Math.PI), beginAngle: 0, angleStep: 5 * Math.PI / 360, counterclockwise: false}
-        // ]
-        // cs: [
-        //     {radius: 400 / Math.PI, beginAngle: 0, angleStep: Math.PI / 360, counterclockwise: false}
-        //     , {radius: 400 / (3 * Math.PI), beginAngle: 0, angleStep: 3 * Math.PI / 360, counterclockwise: false}
-        //     , {radius: 400 / (5 * Math.PI), beginAngle: 0, angleStep: 5 * Math.PI / 360, counterclockwise: false}
-        //     , {radius: 400 / (7 * Math.PI), beginAngle: 0, angleStep: 7 * Math.PI / 360, counterclockwise: false}
-        // ]
-        // cs: [
-        //     {radius: 400 / Math.PI, beginAngle: 0, angleStep: Math.PI / 360, counterclockwise: false}
-        //     , {radius: 400 / (3 * Math.PI), beginAngle: 0, angleStep: 3 * Math.PI / 360, counterclockwise: false}
-        //     , {radius: 400 / (5 * Math.PI), beginAngle: 0, angleStep: 5 * Math.PI / 360, counterclockwise: false}
-        //     , {radius: 400 / (7 * Math.PI), beginAngle: 0, angleStep: 7 * Math.PI / 360, counterclockwise: false}
-        //     , {radius: 400 / (9 * Math.PI), beginAngle: 0, angleStep: 9 * Math.PI / 360, counterclockwise: false}
-        //     , {radius: 400 / (11 * Math.PI), beginAngle: 0, angleStep: 11 * Math.PI / 360, counterclockwise: false}
-        //     , {radius: 400 / (13 * Math.PI), beginAngle: 0, angleStep: 13 * Math.PI / 360, counterclockwise: false}
-        //     , {radius: 400 / (15 * Math.PI), beginAngle: 0, angleStep: 15 * Math.PI / 360, counterclockwise: false}
-        //     , {radius: 400 / (17 * Math.PI), beginAngle: 0, angleStep: 17 * Math.PI / 360, counterclockwise: false}
-        //     , {radius: 400 / (19 * Math.PI), beginAngle: 0, angleStep: 19 * Math.PI / 360, counterclockwise: false}
-        //     , {radius: 400 / (21 * Math.PI), beginAngle: 0, angleStep: 21 * Math.PI / 360, counterclockwise: false}
-        //     , {radius: 400 / (23 * Math.PI), beginAngle: 0, angleStep: 23 * Math.PI / 360, counterclockwise: false}
-        //     , {radius: 400 / (25 * Math.PI), beginAngle: 0, angleStep: 25 * Math.PI / 360, counterclockwise: false}
-        //     , {radius: 400 / (27 * Math.PI), beginAngle: 0, angleStep: 27 * Math.PI / 360, counterclockwise: false}
-        //     , {radius: 400 / (29 * Math.PI), beginAngle: 0, angleStep: 29 * Math.PI / 360, counterclockwise: false}
-        //     , {radius: 400 / (31 * Math.PI), beginAngle: 0, angleStep: 31 * Math.PI / 360, counterclockwise: false}
-        //     , {radius: 400 / (33 * Math.PI), beginAngle: 0, angleStep: 33 * Math.PI / 360, counterclockwise: false}
-        //     , {radius: 400 / (35 * Math.PI), beginAngle: 0, angleStep: 35 * Math.PI / 360, counterclockwise: false}
-        //     , {radius: 400 / (37 * Math.PI), beginAngle: 0, angleStep: 37 * Math.PI / 360, counterclockwise: false}
-        //     , {radius: 400 / (39 * Math.PI), beginAngle: 0, angleStep: 39 * Math.PI / 360, counterclockwise: false}
-        //     , {radius: 400 / (41 * Math.PI), beginAngle: 0, angleStep: 41 * Math.PI / 360, counterclockwise: false}
-        //     , {radius: 400 / (43 * Math.PI), beginAngle: 0, angleStep: 43 * Math.PI / 360, counterclockwise: false}
-        //     , {radius: 400 / (45 * Math.PI), beginAngle: 0, angleStep: 45 * Math.PI / 360, counterclockwise: false}
-        //     , {radius: 400 / (47 * Math.PI), beginAngle: 0, angleStep: 47 * Math.PI / 360, counterclockwise: false}
-        //     , {radius: 400 / (49 * Math.PI), beginAngle: 0, angleStep: 49 * Math.PI / 360, counterclockwise: false}
-        // ]
-
         /**
          * 三角波形
          */
