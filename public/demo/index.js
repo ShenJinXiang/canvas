@@ -1,9 +1,7 @@
 (function() {
     let option = {
-        deepNum: 5,
-        sideNum: 6,
-        // color: '#0075c9',
-        color: '#000',
+        deepNum: 6,
+        color: '#0075c9',
         timeStep: 100
     };
     function Element(x, y, radius, color, sideNum) {
@@ -12,6 +10,7 @@
         this.radius = radius;
         this.color = color;
         this.sideNum = ~~sideNum;
+        this.rotate = -Math.PI / 2;
     }
     Element.prototype.draw = function(ctx) {
         ctx.save();
@@ -21,7 +20,7 @@
         ctx.fillStyle = this.color;
         let step = 2 * Math.PI / this.sideNum;
         for (let i = 0; i < this.sideNum; i++) {
-            ctx.lineTo(Math.cos(i * step), Math.sin(i * step));
+            ctx.lineTo(Math.cos(this.rotate + i * step), Math.sin(this.rotate + i * step));
         }
         ctx.fill();
         ctx.restore();
@@ -33,8 +32,8 @@
         arr.push(new Element(this.x, this.y, r, this.color, this.sideNum));
         for (let i = 0; i < this.sideNum; i++) {
             arr.push(new Element(
-                this.x + r * 2 * Math.cos(i * step),
-                this.y + r * 2 * Math.sin(i * step),
+                this.x + r * 2 * Math.cos(this.rotate + i * step),
+                this.y + r * 2 * Math.sin(this.rotate + i * step),
                 r,
                 this.color,
                 this.sideNum
@@ -48,18 +47,36 @@
             drawer.w = drawer.c.width = window.innerWidth;
             drawer.h = drawer.c.height = window.innerHeight;
             drawer.ctx = drawer.c.getContext('2d');
-            drawer.mark = drawer.getMarkCanvas();
+            drawer.mark = drawer.getMarkCanvas('#999');
+            drawer.sideNum = 6;
             drawer.initElementGroups();
             drawer.current = 0;
             drawer.currentTime = 0;
             drawer.animate();
-            // drawer.bindEvent();
+            drawer.bindEvent();
         },
         bindEvent: function() {
+            $(window).resize(function() {
+                drawer.w = drawer.c.width = window.innerWidth;
+                drawer.h = drawer.c.height = window.innerHeight;
+                drawer.initElementGroups();
+                drawer.draw();
+            });
+            $("#numRange").mousemove(function() {
+                let val = ~~$(this).val();
+                $("#num_span").text(val);
+                if (drawer.sideNum !== val) {
+                    drawer.sideNum = ~~$(this).val();
+                    drawer.initElementGroups();
+                    drawer.draw();
+                }
+            });
         },
         animate: function() {
+            if (drawer.currentTime === 0) {
+                drawer.draw();
+            }
             drawer.update();
-            drawer.draw();
             requestAnimationFrame(drawer.animate);
         },
         update: function() {
@@ -83,13 +100,9 @@
             for (let i = 0; i < option.deepNum; i++) {
                 let eles = [];
                 if (i == 0) {
-                    eles.push(new Element(drawer.w / 2, drawer.h / 2, Math.min(drawer.w, drawer.h) * 0.45, option.color, option.sideNum));
+                    eles.push(new Element(drawer.w / 2, drawer.h / 2, Math.min(drawer.w, drawer.h) * 0.45, option.color, drawer.sideNum));
                 } else {
-                    // drawer.elements[i - 1].forEach(item => eles.push(item.children()));
-                    drawer.elements[i - 1].forEach(function (item) {
-                        let children = item.children();
-                        eles = eles.concat(children);
-                    })
+                    drawer.elements[i - 1].forEach(item => eles.push(eles = eles.concat(item.children())));
                 }
                 drawer.elements.push(eles);
             }
