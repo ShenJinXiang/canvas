@@ -32,3 +32,4 @@
 * [心形动画](https://canvas.shenjinxiang.com/心形动画/)
 * [心形环形动画](https://canvas.shenjinxiang.com/心形环形动画/)
 * [傅立叶级数练习（一）](https://canvas.shenjinxiang.com/傅立叶级数练习（一）/)
+* [分形图（一）](https://canvas.shenjinxiang.com/分形图（一）/)
