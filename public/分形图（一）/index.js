@@ -50,6 +50,7 @@
             drawer.mark = drawer.getMarkCanvas('#999');
             drawer.sideNum = 6;
             drawer.initElementGroups();
+            console.log(drawer.elements);
             drawer.current = 0;
             drawer.currentTime = 0;
             drawer.animate();

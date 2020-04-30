@@ -1,14 +1,11 @@
 (function() {
     let option = {
-        deepNum: 10,
-        ratio: 0.71,
+        deepNum: 13,
+        ratio: 0.7,
         color: '#0075c9',
         lineWidth: 1,
         timeStep: 100
     };
-    // function Element(x, y, len, angle, width, color) {
-    //     this.x =
-    // }
     class Element {
         constructor(x, y, len, angle, width, color, ratio) {
             this.x = x;
@@ -63,7 +60,8 @@
             drawer.h = drawer.c.height = window.innerHeight;
             drawer.ctx = drawer.c.getContext('2d');
             drawer.mark = drawer.getMarkCanvas('#999');
-            drawer.currentDeep = 9;
+            drawer.currentDeep = 0;
+            drawer.currentTime = 0;
             drawer.initElementGroup();
             console.log(drawer.elements);
             drawer.animate();
@@ -74,13 +72,21 @@
             });
         },
         animate: function() {
-            // if (drawer.currentTime === 0) {
+            if (drawer.currentTime === 0) {
                 drawer.draw();
-            // }
-            // drawer.update();
-            // requestAnimationFrame(drawer.animate);
+            }
+            drawer.update();
+            requestAnimationFrame(drawer.animate);
         },
         update: function() {
+            drawer.currentTime++;
+            if (drawer.currentTime >= option.timeStep) {
+                drawer.currentTime = 0;
+                drawer.currentDeep++;
+                if (drawer.currentDeep >= option.deepNum) {
+                    drawer.currentDeep = 0;
+                }
+            }
         },
         draw: function() {
             let ctx = drawer.ctx;
