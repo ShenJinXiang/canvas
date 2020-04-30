@@ -1,8 +1,60 @@
 (function() {
     let option = {
+        deepNum: 10,
+        ratio: 0.71,
+        color: '#0075c9',
+        lineWidth: 1,
         timeStep: 100
     };
-    function Element(x, y, radius, color, sideNum) {
+    // function Element(x, y, len, angle, width, color) {
+    //     this.x =
+    // }
+    class Element {
+        constructor(x, y, len, angle, width, color, ratio) {
+            this.x = x;
+            this.y = y;
+            this.len = len;
+            this.angle = angle;
+            this.width = width;
+            this.color = color;
+            this.ratio = ratio;
+        }
+        draw(ctx) {
+            ctx.save();
+            ctx.lineWidth = this.width;
+            ctx.strokeStyle = this.color;
+            ctx.translate(this.x, this.y);
+            ctx.rotate(this.angle);
+            ctx.beginPath();
+            ctx.moveTo(- this.len / 2, 0);
+            ctx.lineTo(this.len / 2, 0);
+            ctx.stroke();
+            ctx.restore();
+        }
+        children() {
+            let arr = [],
+                len = this.len * this.ratio,
+                angle = this.angle + Math.PI / 2;
+            arr.push(new Element(
+                this.x + 0.5 * this.len * Math.cos(this.angle),
+                this.y + 0.5 * this.len * Math.sin(this.angle),
+                len,
+                angle,
+                this.width,
+                this.color,
+                this.ratio
+                ));
+            arr.push(new Element(
+                this.x - 0.5 * this.len * Math.cos(this.angle),
+                this.y - 0.5 * this.len * Math.sin(this.angle),
+                len,
+                angle,
+                this.width,
+                this.color,
+                this.ratio
+            ));
+            return arr;
+        }
     }
     let drawer = {
         start: function() {
@@ -11,6 +63,9 @@
             drawer.h = drawer.c.height = window.innerHeight;
             drawer.ctx = drawer.c.getContext('2d');
             drawer.mark = drawer.getMarkCanvas('#999');
+            drawer.currentDeep = 9;
+            drawer.initElementGroup();
+            console.log(drawer.elements);
             drawer.animate();
             drawer.bindEvent();
         },
@@ -28,7 +83,26 @@
         update: function() {
         },
         draw: function() {
+            let ctx = drawer.ctx;
+            ctx.clearRect(0, 0, drawer.w, drawer.h);
+            drawer.elements.forEach(function(item, index) {
+                if (drawer.currentDeep >= index) {
+                    item.forEach(ele => ele.draw(ctx));
+                }
+            });
             drawer.drawMark(drawer.ctx, drawer.mark);
+        },
+        initElementGroup: function() {
+            drawer.elements = [];
+            for (let i = 0; i < option.deepNum; i++) {
+                let eles = [];
+                if (i == 0) {
+                    eles.push(new Element(drawer.w / 2, drawer.h / 2, drawer.w / 2, 0, option.lineWidth, option.color, option.ratio));
+                } else {
+                    drawer.elements[i - 1].forEach(item => eles.push(eles = eles.concat(item.children())));
+                }
+                drawer.elements.push(eles);
+            }
         },
         getMarkCanvas: function(fillStyle) {
             let markCanvas = document.createElement('canvas');
