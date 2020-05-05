@@ -4,10 +4,10 @@
         ratio: 0.7,
         color: '#0075c9',
         lineWidth: 1,
-        timeStep: 100
+        timeStep: 50
     };
     class Element {
-        constructor(x, y, len, angle, width, color, ratio) {
+        constructor(x, y, len, angle, width, color, ratio, time) {
             this.x = x;
             this.y = y;
             this.len = len;
@@ -15,6 +15,12 @@
             this.width = width;
             this.color = color;
             this.ratio = ratio;
+            this.current = 0;
+            this.time = time;
+            this.step = this.len / (2 * this.time);
+        }
+        setCurrent(current) {
+            this.current = current;
         }
         draw(ctx) {
             ctx.save();
@@ -23,10 +29,15 @@
             ctx.translate(this.x, this.y);
             ctx.rotate(this.angle);
             ctx.beginPath();
-            ctx.moveTo(- this.len / 2, 0);
-            ctx.lineTo(this.len / 2, 0);
+            ctx.moveTo(- this.step * this.current, 0);
+            ctx.lineTo(this.step * this.current, 0);
             ctx.stroke();
             ctx.restore();
+        }
+        update() {
+            if (this.current < this.time) {
+                this.current++;
+            }
         }
         children() {
             let arr = [],
@@ -39,7 +50,8 @@
                 angle,
                 this.width,
                 this.color,
-                this.ratio
+                this.ratio,
+                this.time
                 ));
             arr.push(new Element(
                 this.x - 0.5 * this.len * Math.cos(this.angle),
@@ -48,8 +60,9 @@
                 angle,
                 this.width,
                 this.color,
-                this.ratio
-            ));
+                this.ratio,
+                this.time
+        ));
             return arr;
         }
     }
@@ -69,22 +82,31 @@
         },
         bindEvent: function() {
             $(window).resize(function() {
+                drawer.w = drawer.c.width = window.innerWidth;
+                drawer.h = drawer.c.height = window.innerHeight;
+                drawer.initElementGroup();
             });
         },
         animate: function() {
-            if (drawer.currentTime === 0) {
-                drawer.draw();
-            }
             drawer.update();
+            drawer.draw();
             requestAnimationFrame(drawer.animate);
         },
         update: function() {
+            drawer.elements.forEach(function(item, index) {
+                if (drawer.currentDeep >= index) {
+                    item.forEach(ele => ele.update());
+                }
+            });
             drawer.currentTime++;
             if (drawer.currentTime >= option.timeStep) {
                 drawer.currentTime = 0;
                 drawer.currentDeep++;
                 if (drawer.currentDeep >= option.deepNum) {
                     drawer.currentDeep = 0;
+                    drawer.elements.forEach(function (item) {
+                        item.forEach(ele => ele.setCurrent(0))
+                    })
                 }
             }
         },
@@ -103,7 +125,7 @@
             for (let i = 0; i < option.deepNum; i++) {
                 let eles = [];
                 if (i == 0) {
-                    eles.push(new Element(drawer.w / 2, drawer.h / 2, drawer.w / 2, 0, option.lineWidth, option.color, option.ratio));
+                    eles.push(new Element(drawer.w / 2, drawer.h / 2, drawer.w / 2.5, 0, option.lineWidth, option.color, option.ratio, option.timeStep));
                 } else {
                     drawer.elements[i - 1].forEach(item => eles.push(eles = eles.concat(item.children())));
                 }
