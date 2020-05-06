@@ -12,14 +12,24 @@
     <meta content="telephone=no" name="format-detection">
     <meta name="renderer" content="webkit">
     <link rel="icon" href="/images/title.ico" type="image/x-ico">
-    <link rel="stylesheet" type="text/css" href='../css/common.css' />
-    <link rel="stylesheet" type="text/css" href='./index.css' />
-    <title>CANVAS-中国国旗</title>
+    <link rel="stylesheet" type="text/css" href='/css/common.css' />
+    <link rel="stylesheet" type="text/css" href='./pen_exercise_paper.css' />
+    <title>CANVAS-硬笔练习纸</title>
 </head>
 <body>
-    <h1 class='center'>中国国旗</h1>
-    <button type='button' id='showLineBtn'>显示辅助线</button>
     <canvas id='canvas' class='common_border'></canvas>
-<script src='./index.js'></script>
+    <div class="op-container">
+        <div>
+            <div id='redBtn' class='op-color active'></div>
+            <div id='blackBtn' class='op-color'></div>
+        <div>
+        <div>
+            <div id='miBtn' class='op-btn active'>米字格</div>
+            <div id='tianBtn' class='op-btn'>田字格</div>
+        <div>
+    </div>
+<script src='/js/common.js'></script>
+<script src='/js/canvas.js'></script>
+<script src='./pen_exercise_paper.js'></script>
 </body>
 </html>
