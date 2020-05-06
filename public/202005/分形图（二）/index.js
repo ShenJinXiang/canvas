@@ -16,11 +16,15 @@
             this.color = color;
             this.ratio = ratio;
             this.current = 0;
+            this.complete = false;
             this.time = time;
             this.step = this.len / (2 * this.time);
         }
         setCurrent(current) {
             this.current = current;
+        }
+        setComplete() {
+            this.current = this.time;
         }
         draw(ctx) {
             ctx.save();
@@ -94,8 +98,11 @@
         },
         update: function() {
             drawer.elements.forEach(function(item, index) {
-                if (drawer.currentDeep >= index) {
+                if (drawer.currentDeep === index) {
                     item.forEach(ele => ele.update());
+                }
+                if (drawer.currentDeep > index) {
+                    item.forEach(ele => ele.setComplete());
                 }
             });
             drawer.currentTime++;
@@ -124,7 +131,7 @@
             drawer.elements = [];
             for (let i = 0; i < option.deepNum; i++) {
                 let eles = [];
-                if (i == 0) {
+                if (i === 0) {
                     eles.push(new Element(drawer.w / 2, drawer.h / 2, drawer.w / 2.5, 0, option.lineWidth, option.color, option.ratio, option.timeStep));
                 } else {
                     drawer.elements[i - 1].forEach(item => eles.push(eles = eles.concat(item.children())));
