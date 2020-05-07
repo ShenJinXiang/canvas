@@ -1,71 +1,74 @@
 (function() {
     let option = {
-        deepNum: 13,
+        deepNum: 8,
         ratio: 0.7,
         color: '#0075c9',
         lineWidth: 1,
         timeStep: 50
     };
     class Element {
-        constructor(x, y, len, angle, width, color, ratio, time) {
+        constructor(x, y, radius, color, time) {
             this.x = x;
             this.y = y;
-            this.len = len;
-            this.angle = angle;
-            this.width = width;
+            this.radius = radius;
             this.color = color;
-            this.ratio = ratio;
-            this.current = 0;
             this.time = time;
-            this.step = this.len / (2 * this.time);
+            this.r = 0;
+            this.current = 0;
+            this.angleStep =  Math.PI / this.time;
+            this.rStep = this.radius / this.time;
+            this.angle =  0;
+            this.startAngle = Math.PI;
         }
-        setCurrent(current) {
-            this.current = current;
+        setStart() {
+            this.current = 0;
+            this.r = 0;
+            this.angle = 0;
         }
-        draw(ctx) {
-            ctx.save();
-            ctx.lineWidth = this.width;
-            ctx.strokeStyle = this.color;
-            ctx.translate(this.x, this.y);
-            ctx.rotate(this.angle);
-            ctx.beginPath();
-            ctx.moveTo(- this.step * this.current, 0);
-            ctx.lineTo(this.step * this.current, 0);
-            ctx.stroke();
-            ctx.restore();
+        setComplete() {
+            this.angle =  2 * Math.PI;
+            this.r = this.radius;
         }
         update() {
             if (this.current < this.time) {
                 this.current++;
+                this.r = this.current * this.rStep;
+                this.angle = this.startAngle + this.current * this.angleStep;
             }
         }
+        draw(ctx) {
+            fillTriangle(ctx, this.x, this.y, this.r, .5 * Math.PI + this.angle, this.color);
+        }
         children() {
-            let arr = [],
-                len = this.len * this.ratio,
-                angle = this.angle + Math.PI / 2;
-            arr.push(new Element(
-                this.x + 0.5 * this.len * Math.cos(this.angle),
-                this.y + 0.5 * this.len * Math.sin(this.angle),
-                len,
-                angle,
-                this.width,
-                this.color,
-                this.ratio,
-                this.time
+            let arr = [];
+            for (let i = 0; i < 3; i++) {
+                arr.push(new Element(
+                    this.x + this.radius * Math.cos(-0.5 * Math.PI + 2 * i * Math.PI / 3 ),
+                    this.y + this.radius * Math.sin(-0.5 * Math.PI + 2 * i * Math.PI / 3 ),
+                    this.radius / 2,
+                    this.color,
+                    this.time
                 ));
-            arr.push(new Element(
-                this.x - 0.5 * this.len * Math.cos(this.angle),
-                this.y - 0.5 * this.len * Math.sin(this.angle),
-                len,
-                angle,
-                this.width,
-                this.color,
-                this.ratio,
-                this.time
-        ));
+            }
             return arr;
         }
     }
+
+    function fillTriangle(ctx, x, y, radius, angle, color) {
+        ctx.save();
+        ctx.translate(x, y);
+        ctx.rotate(angle);
+        ctx.scale(radius, radius);
+        ctx.beginPath();
+        ctx.fillStyle = color;
+        ctx.moveTo(Math.cos(0), Math.sin(0));
+        ctx.lineTo(Math.cos(2 * Math.PI / 3), Math.sin(2 * Math.PI / 3));
+        ctx.lineTo(Math.cos(4 * Math.PI / 3), Math.sin(4 * Math.PI / 3));
+        ctx.closePath();
+        ctx.fill();
+        ctx.restore();
+    }
+
     let drawer = {
         start: function() {
             drawer.c = document.getElementById('canvas');
@@ -94,10 +97,14 @@
         },
         update: function() {
             drawer.elements.forEach(function(item, index) {
-                if (drawer.currentDeep >= index) {
+                if (drawer.currentDeep === index) {
                     item.forEach(ele => ele.update());
                 }
+                if (drawer.currentDeep > index) {
+                    item.forEach(ele => ele.setComplete());
+                }
             });
+            console.log('currentTime:' + drawer.currentTime + " currentDeep:" + drawer.currentDeep);
             drawer.currentTime++;
             if (drawer.currentTime >= option.timeStep) {
                 drawer.currentTime = 0;
@@ -105,7 +112,7 @@
                 if (drawer.currentDeep >= option.deepNum) {
                     drawer.currentDeep = 0;
                     drawer.elements.forEach(function (item) {
-                        item.forEach(ele => ele.setCurrent(0))
+                        item.forEach(ele => ele.setStart())
                     })
                 }
             }
@@ -113,6 +120,7 @@
         draw: function() {
             let ctx = drawer.ctx;
             ctx.clearRect(0, 0, drawer.w, drawer.h);
+            fillTriangle(ctx, .5 * drawer.w, .65 * drawer.h , drawer.h * .6, -Math.PI / 2, option.color);
             drawer.elements.forEach(function(item, index) {
                 if (drawer.currentDeep >= index) {
                     item.forEach(ele => ele.draw(ctx));
@@ -124,13 +132,20 @@
             drawer.elements = [];
             for (let i = 0; i < option.deepNum; i++) {
                 let eles = [];
-                if (i == 0) {
-                    eles.push(new Element(drawer.w / 2, drawer.h / 2, drawer.w / 2.5, 0, option.lineWidth, option.color, option.ratio, option.timeStep));
+                if (i === 0) {
+                    eles.push(new Element(
+                        .5 * drawer.w,
+                        .65 * drawer.h,
+                        .3 * drawer.h,
+                        '#fff',
+                        option.timeStep
+                    ));
                 } else {
                     drawer.elements[i - 1].forEach(item => eles.push(eles = eles.concat(item.children())));
                 }
                 drawer.elements.push(eles);
             }
+
         },
         getMarkCanvas: function(fillStyle) {
             let markCanvas = document.createElement('canvas');

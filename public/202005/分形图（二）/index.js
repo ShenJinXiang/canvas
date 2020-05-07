@@ -16,7 +16,6 @@
             this.color = color;
             this.ratio = ratio;
             this.current = 0;
-            this.complete = false;
             this.time = time;
             this.step = this.len / (2 * this.time);
         }
