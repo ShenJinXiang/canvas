@@ -79,7 +79,6 @@
             drawer.currentDeep = 0;
             drawer.currentTime = 0;
             drawer.initElementGroup();
-            console.log(drawer.elements);
             drawer.animate();
             drawer.bindEvent();
         },
