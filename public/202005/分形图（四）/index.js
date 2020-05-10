@@ -36,6 +36,7 @@
                     this.startAngle = this.angle + Math.PI / 3;
                     this.angleStep = -Math.PI / (3 * this.time);
                 }
+                this.dAngle = this.startAngle;
                 this.dxy();
             } else {
                 this.dx = this.ex;
