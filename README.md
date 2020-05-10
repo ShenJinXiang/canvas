@@ -35,3 +35,4 @@
 * [分形图（一）](https://canvas.shenjinxiang.com/202004/分形图（一）/)
 * [分形图（二）](https://canvas.shenjinxiang.com/202005/分形图（二）/)
 * [分形图（三）](https://canvas.shenjinxiang.com/202005/分形图（三）/)
+* [分形图（四）](https://canvas.shenjinxiang.com/202005/分形图（四）/)
