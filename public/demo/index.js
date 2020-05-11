@@ -1,7 +1,8 @@
 (() => {
     const option = {
-        deepNum: 4,
-        timeStep: 100,
+        deepNum: 14,
+        timeStep: 20,
+        sleepTime: 20,
         color: '#0075c9',
     };
 
@@ -28,7 +29,7 @@
             this.my = this.sy + (this.ey - this.sy) / 2;
             this.clen = this.len * Math.sin(Math.PI / 4);
             this.sAngle = this.angle + Math.PI / 4;
-            this.eAngle = -this.angle - Math.PI / 4;
+            this.eAngle = this.angle - Math.PI - Math.PI / 4;
             this.mex = this.sx + this.clen * Math.cos(this.sAngle);
             this.mey = this.sy + this.clen * Math.sin(this.sAngle);
         }
@@ -52,7 +53,7 @@
                 this.current++;
                 if (this.move) {
                     this.dx = this.tx + this.current * this.xStep;
-                    this.dy = this.ty + this.current + this.yStep;
+                    this.dy = this.ty + this.current * this.yStep;
                 }
             }
         }
@@ -64,6 +65,14 @@
             ctx.lineTo(this.dx, this.dy);
             ctx.stroke();
             ctx.restore();
+
+            // ctx.save();
+            // ctx.strokeStyle = 'red';
+            // ctx.beginPath();
+            // ctx.moveTo(this.tx, this.ty);
+            // ctx.lineTo(this.ex, this.ey);
+            // ctx.stroke();
+            // ctx.restore();
         }
         children() {
             return [
@@ -88,12 +97,25 @@
         animate() {
             drawer.update();
             drawer.draw();
+            requestAnimationFrame(drawer.animate);
         },
         update() {
-            drawer.elements[drawer.currentDeep].forEach(item => item.complete() );
+            drawer.elements[drawer.currentDeep].forEach(item => item.update() );
+            drawer.currentTime++;
+            if (drawer.currentTime >= (option.timeStep + option.sleepTime)) {
+                drawer.currentTime = 0;
+                drawer.currentDeep++;
+                if (drawer.currentDeep >= option.deepNum) {
+                    drawer.currentDeep = 0;
+                    drawer.elements.forEach(item => {
+                        item.forEach(ele => ele.start())
+                    });
+                }
+            }
         },
         draw() {
             let ctx = drawer.ctx;
+            ctx.clearRect(0, 0, drawer.w, drawer.h);
             drawer.elements[drawer.currentDeep].forEach(item => item.draw(ctx) );
         },
         initElementGroup() {
@@ -103,9 +125,9 @@
                 if (i === 0) {
                     eles.push(new Element(
                         (drawer.w - drawer.len) / 2,
-                        drawer.h / 2,
+                        drawer.h / 3,
                         (drawer.w + drawer.len) / 2,
-                        drawer.h / 2,
+                        drawer.h / 3,
                         drawer.len,
                         0,
                         option.color,
