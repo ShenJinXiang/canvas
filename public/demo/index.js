@@ -81,6 +81,20 @@
             drawer.len = Math.min(drawer.w, drawer.h) * 0.6;
             drawer.initElementGroup();
             console.log(drawer.elements);
+            drawer.currentDeep = 0;
+            drawer.currentTime = 0;
+            drawer.animate();
+        },
+        animate() {
+            drawer.update();
+            drawer.draw();
+        },
+        update() {
+            drawer.elements[drawer.currentDeep].forEach(item => item.complete() );
+        },
+        draw() {
+            let ctx = drawer.ctx;
+            drawer.elements[drawer.currentDeep].forEach(item => item.draw(ctx) );
         },
         initElementGroup() {
             drawer.elements = [];
