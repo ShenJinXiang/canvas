@@ -58,3 +58,22 @@ function getMarkCanvas(style) {
     ctx.fillText('shenjinxiang.com', markCanvas.width / 2, markCanvas.height / 2 );
     return markCanvas;
 }
+
+class CanvasUtil {
+    static getMarkCanvas(fillStyle) {
+        let markCanvas = document.createElement('canvas');
+        markCanvas.width = 240;
+        markCanvas.height = 60;
+        let ctx = markCanvas.getContext('2d');
+
+        ctx.fillStyle = fillStyle ? fillStyle : 'rgba(250, 250, 250, 0.5)';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.font = '30px cursive';
+        ctx.fillText('shenjinxiang.com', markCanvas.width / 2, markCanvas.height / 2 );
+        return markCanvas;
+    }
+    static drawMark(ctx, mark) {
+        ctx.drawImage(mark, ctx.canvas.width - mark.width, ctx.canvas.height - mark.height);
+    }
+};
