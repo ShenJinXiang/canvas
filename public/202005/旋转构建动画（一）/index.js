@@ -62,7 +62,7 @@
     const drawer = {
         start() {
             drawer.c = document.getElementById('canvas');
-            drawer.range = document.getElementById("numRange");
+            drawer.mark = CanvasUtil.getMarkCanvas('#999');
             drawer.init();
             drawer.ctx = drawer.c.getContext('2d');
             drawer.initElements();
@@ -72,7 +72,6 @@
         init() {
             drawer.w = drawer.c.width = window.innerWidth;
             drawer.h = drawer.c.height = window.innerHeight;
-            drawer.mark = CanvasUtil.getMarkCanvas('#999');
             drawer.grid = Math.min(drawer.w, drawer.h);
             option.radius = drawer.grid * 0.15;
             option.sRadius = drawer.grid * 0.30;
@@ -141,5 +140,4 @@
     };
 
     drawer.start();
-    drawer.bindEvent();
 })();
