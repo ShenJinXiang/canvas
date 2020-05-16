@@ -1,0 +1,25 @@
+body {margin: 0; padding: 0; overflow: hidden;background: #000;}
+canvas {
+    display: block;
+    margin: 0 auto;
+    padding: 0;
+}
+.info-txt{
+    position: absolute;
+    left: 10px;
+    display: block;
+    font-size: 24px;
+    font-weight: bold;
+    padding-left: 10px;
+    color: #777;
+    height: 48px;
+    line-height: 48px;
+    top: 0px;
+}
+.range {
+    position: absolute;
+    display: block;
+    left: 10px;
+    width: 280px;
+    top: 70px;
+}
