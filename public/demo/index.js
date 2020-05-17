@@ -32,6 +32,7 @@
         start() {
             drawer.c = document.getElementById('canvas');
             drawer.ctx = drawer.c.getContext('2d');
+            drawer.mark = CanvasUtil.getMarkCanvas();
             drawer.init();
             drawer.initElements();
             drawer.current = 0;
@@ -108,6 +109,7 @@
                 }
             });
             ctx.restore();
+            CanvasUtil.drawMark(ctx, drawer.mark);
         },
         drawerCurrent(ctx, current) {
             CanvasUtil.line(ctx, 0, 0, current.x, current.y, option.outerColor);
