@@ -60,6 +60,19 @@ function getMarkCanvas(style) {
 }
 
 class CanvasUtil {
+    static distance(sx, sy, ex, ey) {
+        return Math.sqrt(Math.pow(sx - ex, 2) + Math.pow(sy - ey, 2));
+    }
+    static line(ctx, sx, sy, ex, ey, color, width) {
+        ctx.save();
+        ctx.strokeStyle = !color ? '#000': color;
+        ctx.lineWidth = !width ? 1 : width;
+        ctx.beginPath();
+        ctx.moveTo(sx, sy);
+        ctx.lineTo(ex, ey);
+        ctx.stroke();
+        ctx.restore();
+    }
     static getMarkCanvas(fillStyle) {
         let markCanvas = document.createElement('canvas');
         markCanvas.width = 240;
