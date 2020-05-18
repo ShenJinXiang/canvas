@@ -39,3 +39,4 @@
 * [分形图（五）](https://canvas.shenjinxiang.com/202005/分形图（五）/)
 * [旋转构建动画（一）](https://canvas.shenjinxiang.com/202005/旋转构建动画（一）/)
 * [旋转构建动画（二）](https://canvas.shenjinxiang.com/202005/旋转构建动画（二）/)
+* [旋转构建动画（三）](https://canvas.shenjinxiang.com/202005/旋转构建动画（三）/)
