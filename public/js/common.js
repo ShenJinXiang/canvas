@@ -60,6 +60,13 @@ function getMarkCanvas(style) {
 }
 
 class CanvasUtil {
+    static createCanvas(width, height) {
+        let canvas = document.createElement('canvas'),
+            w = canvas.width = width,
+            h = canvas.height = height,
+            context = canvas.getContext('2d');
+        return {canvas, w, h, context }
+    }
     static distance(sx, sy, ex, ey) {
         return Math.sqrt(Math.pow(sx - ex, 2) + Math.pow(sy - ey, 2));
     }
