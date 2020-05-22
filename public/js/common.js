@@ -59,18 +59,18 @@ function getMarkCanvas(style) {
     return markCanvas;
 }
 
-class CanvasUtil {
-    static createCanvas(width, height) {
+const CanvasUtil = {
+    createCanvas(width, height) {
         let canvas = document.createElement('canvas'),
             w = canvas.width = width,
             h = canvas.height = height,
             context = canvas.getContext('2d');
         return {canvas, w, h, context }
-    }
-    static distance(sx, sy, ex, ey) {
+    },
+    distance(sx, sy, ex, ey) {
         return Math.sqrt(Math.pow(sx - ex, 2) + Math.pow(sy - ey, 2));
-    }
-    static line(ctx, sx, sy, ex, ey, color, width) {
+    },
+    line(ctx, sx, sy, ex, ey, color, width) {
         ctx.save();
         ctx.strokeStyle = !color ? '#000': color;
         ctx.lineWidth = !width ? 1 : width;
@@ -79,8 +79,8 @@ class CanvasUtil {
         ctx.lineTo(ex, ey);
         ctx.stroke();
         ctx.restore();
-    }
-    static getMarkCanvas(fillStyle) {
+    },
+    getMarkCanvas(fillStyle) {
         let markCanvas = document.createElement('canvas');
         markCanvas.width = 240;
         markCanvas.height = 60;
@@ -92,8 +92,34 @@ class CanvasUtil {
         ctx.font = '30px cursive';
         ctx.fillText('shenjinxiang.com', markCanvas.width / 2, markCanvas.height / 2 );
         return markCanvas;
-    }
-    static drawMark(ctx, mark) {
+    },
+    drawMark(ctx, mark) {
         ctx.drawImage(mark, ctx.canvas.width - mark.width, ctx.canvas.height - mark.height);
+    },
+    fillHeart(ctx, ox, oy, radius, fillStyle) {
+        ctx.save();
+        ctx.translate(ox, oy);
+        ctx.fillStyle = fillStyle;
+        this.pathHeart(ctx, radius);
+        ctx.fill();
+        ctx.restore();
+    },
+    strokeHeart(ctx, ox, oy, radius, lineWidth, strokeStyles) {
+        ctx.save();
+        ctx.translate(ox, oy);
+        ctx.lineWidth = lineWidth;
+        ctx.strokeStyle = strokeStyles;
+        this.pathHeart(ctx, radius);
+        ctx.stroke();
+        ctx.restore();
+    },
+    pathHeart(ctx, radius) {
+        ctx.beginPath();
+        for (let angle = 0; angle < 2 * Math.PI; angle += 0.01 ) {
+            ctx.lineTo(
+                radius * 16 * Math.pow(Math.sin(angle), 3),
+                -radius * (13 * Math.cos(angle) - 5 * Math.cos(2 * angle) - 2 * Math.cos(3 * angle) - Math.cos(4 * angle))
+            );
+        }
     }
 };
