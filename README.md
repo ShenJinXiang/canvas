@@ -2,6 +2,19 @@
 
 一些canvas练习，看到或想到一些感兴趣的canvas作品后，尝试模仿。练习练习！
 
+## 初始化
+本地需安装好nodejs环境，下载完成后进入项目根目录执行
+```
+npm install
+```
+等安装完成后，执行
+```
+npm start
+```
+启动后，浏览器访问：
+> http://localhost:4001
+
+## 目录
 * [中国国旗](https://canvas.shenjinxiang.com/202003/中国国旗/)
 * [象棋棋盘](https://canvas.shenjinxiang.com/202003/象棋棋盘/)
 * [硬笔练习纸](https://canvas.shenjinxiang.com/202003/硬笔练习纸/)
