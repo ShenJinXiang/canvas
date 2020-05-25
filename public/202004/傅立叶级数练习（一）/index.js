@@ -1,5 +1,5 @@
 (function() {
-    let option = {
+    const option = {
         background: '#061928',
         elementStrokeColor: 'rgba(255, 255, 255, 0.5)',
         marksLength: 5000,
@@ -45,9 +45,11 @@
         //     , {radius: 100 / 19, beginAngle: 0, angleStep: 19 * Math.PI / 360, counterclockwise: true}
         // ]
     };
-    function Point(x, y) {
-        this.x = x;
-        this.y = y;
+    class Point {
+        constructor(x, y) {
+            this.x = x;
+            this.y = y;
+        }
     }
     function linePoint(ctx, point1, point2, lineWidth, color) {
         line(ctx, point1.x, point1.y, point2.x, point2.y, lineWidth, color);
@@ -62,45 +64,47 @@
         ctx.stroke();
         ctx.restore();
     }
-    function Element(radius, beginAngle, angleStep, counterclockwise) {
-        this.radius = radius;
-        this.beginAngle = beginAngle;
-        this.angle = this.beginAngle;
-        this.angleStep = angleStep;
-        this.counterclockwise = !!counterclockwise;
+    class Element {
+        constructor(radius, beginAngle, angleStep, counterclockwise) {
+            this.radius = radius;
+            this.beginAngle = beginAngle;
+            this.angle = this.beginAngle;
+            this.angleStep = angleStep;
+            this.counterclockwise = !!counterclockwise;
+        }
+        setOrigin(origin) {
+            this.origin = origin;
+        }
+        setNext(next) {
+            this.next = next;
+        }
+        update(arr) {
+            this.currentPoint = new Point(
+                this.origin.x + this.radius * Math.cos(this.angle),
+                this.origin.y + this.radius * Math.sin(this.angle)
+            );
+            if(this.next) {
+                this.next.setOrigin(this.currentPoint);
+            }
+            if (this.counterclockwise) {
+                this.angle -= this.angleStep;
+            } else {
+                this.angle += this.angleStep;
+            }
+        }
+        draw(ctx) {
+            ctx.save();
+            ctx.beginPath();
+            ctx.strokeStyle = option.elementStrokeColor;
+            ctx.arc(this.origin.x, this.origin.y, this.radius, 0, 2 * Math.PI, false);
+            ctx.stroke();
+            ctx.restore();
+            linePoint(ctx, this.origin, this.currentPoint, 1, option.elementStrokeColor);
+        }
     }
-    Element.prototype.setOrigin = function (origin) {
-        this.origin = origin;
-    };
-    Element.prototype.setNext = function(next) {
-        this.next = next;
-    };
-    Element.prototype.update = function (arr) {
-        this.currentPoint = new Point(
-            this.origin.x + this.radius * Math.cos(this.angle),
-            this.origin.y + this.radius * Math.sin(this.angle)
-        );
-        if(this.next) {
-            this.next.setOrigin(this.currentPoint);
-        }
-        if (this.counterclockwise) {
-            this.angle -= this.angleStep;
-        } else {
-            this.angle += this.angleStep;
-        }
-    };
-    Element.prototype.draw = function (ctx) {
-        ctx.save();
-        ctx.beginPath();
-        ctx.strokeStyle = option.elementStrokeColor;
-        ctx.arc(this.origin.x, this.origin.y, this.radius, 0, 2 * Math.PI, false);
-        ctx.stroke();
-        ctx.restore();
-        linePoint(ctx, this.origin, this.currentPoint, 1, option.elementStrokeColor);
-    };
 
-    let drawer = {
-        start: function() {
+    const drawer = {
+        start() {
             drawer.c = document.getElementById('canvas');
             drawer.w = drawer.c.width = drawer.getWidth();
             drawer.h = drawer.c.height = drawer.getHeight();
@@ -111,7 +115,7 @@
             drawer.rh = drawer.rc.height = drawer.h;
             drawer.rctx = drawer.rc.getContext('2d');
 
-            this.mark = drawer.getMarkCanvas();
+            this.mark = CanvasUtil.getMarkCanvas();
             drawer.num = 5;
             drawer.refreshCs(drawer.num);
             console.log(drawer.cs);
@@ -121,7 +125,7 @@
             drawer.animate();
             drawer.bindEvent();
         },
-        bindEvent: function() {
+        bindEvent() {
             $("#numRange").mousemove(function() {
                 let val = ~~$(this).val();
                 $("#num_span").text(val);
@@ -134,7 +138,7 @@
                 }
             });
         },
-        refreshCs: function(num) {
+        refreshCs(num) {
             drawer.cs = [];
             for (let i = 0; i <= num; i++) {
                 let n = 2 * i + 1;
@@ -147,12 +151,12 @@
             }
 
         },
-        animate: function() {
+        animate() {
             drawer.update();
             drawer.draw();
             requestAnimationFrame(drawer.animate);
         },
-        update: function() {
+        update() {
             drawer.elements.forEach(item => item.update(drawer.marks));
             drawer.rmarks.forEach(item => item.x += option.rightXStep);
             drawer.rmarks = drawer.rmarks.filter(item => item.x <= drawer.rw);
@@ -164,7 +168,7 @@
             }
 
         },
-        draw: function() {
+        draw() {
             let ctx = drawer.ctx,
                 rctx = drawer.rctx;
             ctx.clearRect(0, 0, drawer.w, drawer.h);
@@ -178,7 +182,7 @@
             drawer.drawMarks(rctx, drawer.rmarks);
             ctx.drawImage(drawer.rc, drawer.w - drawer.rw, 0);
 
-            drawer.drawMark(drawer.ctx, drawer.mark);
+            CanvasUtil.drawMark(ctx, drawer.mark);
         },
         drawMarkLink(ctx, markPoint) {
             let rx = drawer.w - drawer.rw;
@@ -193,7 +197,7 @@
             ctx.fill();
             ctx.restore();
         },
-        drawMarks: function(ctx, arr) {
+        drawMarks(ctx, arr) {
             ctx.save();
             ctx.beginPath();
             ctx.strokeStyle = 'red';
@@ -205,7 +209,7 @@
             ctx.stroke();
             ctx.restore();
         },
-        initElements: function() {
+        initElements() {
             debugger
             drawer.elements = [];
             drawer.cs.forEach(function (item, index) {
@@ -223,28 +227,12 @@
                 drawer.elements.push(elment);
             });
         },
-        getWidth: function () {
+        getWidth() {
             return window.innerWidth <= option.minWidth ? option.minWidth : window.innerWidth;
         },
-        getHeight: function () {
+        getHeight() {
             return window.innerHeight <= option.minHeight ? option.minHeight : window.innerHeight;
         },
-        getMarkCanvas: function(fillStyle) {
-            var markCanvas = document.createElement('canvas');
-            markCanvas.width = 240;
-            markCanvas.height = 60;
-            var ctx = markCanvas.getContext('2d');
-
-            ctx.fillStyle = fillStyle || 'rgba(250, 250, 250, 0.5)';
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'middle';
-            ctx.font = '30px cursive';
-            ctx.fillText('shenjinxiang.com', markCanvas.width / 2, markCanvas.height / 2 );
-            return markCanvas;
-        },
-        drawMark: function(ctx, mark) {
-            ctx.drawImage(mark, ctx.canvas.width - mark.width, ctx.canvas.height - mark.height);
-        }
     };
     drawer.start();
 })();
