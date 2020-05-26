@@ -18,11 +18,14 @@
 </head>
 <body>
 <canvas id='canvas'></canvas>
-<p class='info-txt sides'>
-    <span>NUM:</span>
-    <span id='num_span'>5</span>
+<p class='info-txt radius'>
+    <span>振幅:</span>
+    <input class='range' id='radiusRange' type='range' min='1' max='10' step='1' value='5' />
 </p>
-<input class='range' id='numRange' type='range' min='0' max='100' step='1' value='5' />
+<p class='info-txt angle'>
+    <span>频率:</span>
+    <input class='range' id='angleRange' type='range' min='1' max='10' step='1' value='2' />
+</p>
 <script src='/js/jquery.js'></script>
 <script src='/js/common.js'></script>
 <script src='index.js'></script>

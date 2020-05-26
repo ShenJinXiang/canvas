@@ -1,10 +1,10 @@
-body {margin: 0; padding: 0; overflow: auto;background: #061928;}
+body {margin: 0; padding: 0; overflow: hidden;background: #061928;}
 canvas {
     display: block;
     margin: 0 auto;
     padding: 0;
 }
-.info-txt{
+.info-txt span{
     position: absolute;
     left: 10px;
     display: block;
@@ -16,11 +16,23 @@ canvas {
     line-height: 48px;
     top: 0px;
 }
-.range {
+.info-txt.radius span{
+    left: 10px;
+}
+.info-txt.angle span{
+    left: 240px;
+}
+.info-txt .range {
     position: absolute;
     display: block;
     left: 10px;
-    width: 280px;
+    width: 100px;
     border-color: #fff;
-    top: 70px;
+    top: 15px;
+}
+.info-txt.radius .range{
+    left: 80px;
+}
+.info-txt.angle .range{
+    left: 320px;
 }

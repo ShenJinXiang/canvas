@@ -5,6 +5,7 @@
         color: '#f00',
         angleStep: Math.PI / 180,
         margin: 10,
+        rightXStep: 1,
     };
     class Point {
         constructor(x, y) {
@@ -54,8 +55,13 @@
             drawer.c = document.getElementById('canvas');
             drawer.ctx = drawer.c.getContext('2d');
             drawer.element = new Element(option.elementStrokeColor, option.color);
+            drawer.radiusRange = document.getElementById('radiusRange');
+            drawer.angleRange = document.getElementById('angleRange');
+            drawer.mark = CanvasUtil.getMarkCanvas();
+            drawer.marks = [];
             drawer.init();
             drawer.animate();
+            drawer.bindEvent();
         },
         init() {
             drawer.w = drawer.c.width = window.innerWidth;
@@ -64,15 +70,20 @@
             drawer.ox = drawer.width / 2;
             drawer.oy = drawer.width / 2;
             drawer.radiusStep = 0.04 * drawer.width;
-            drawer.radius = 5;
+            drawer.radius = drawer.radiusRange.value;
             drawer.angleStep = Math.PI / 360;
-            drawer.angle = 2;
+            drawer.angle = drawer.angleRange.value;
             drawer.element.attrs(
                 drawer.ox,
                 drawer.oy,
                 drawer.radius * drawer.radiusStep,
                 drawer.angleStep * drawer.angle
             );
+        },
+        bindEvent() {
+            drawer.angleRange.onmousemove = drawer.init;
+            drawer.radiusRange.onmousemove = drawer.init;
+            window.onresize = drawer.init;
         },
         animate() {
             drawer.update();
@@ -82,12 +93,17 @@
         update() {
             drawer.element.update();
             drawer.currentPoint = drawer.element.currentPoint;
+            drawer.marks.push(new Point(0, drawer.currentPoint.y));
+            drawer.marks.forEach(item => item.x += option.rightXStep);
+            drawer.marks = drawer.marks.filter(item => item.x <= drawer.w - drawer.width);
         },
         draw() {
             let ctx = drawer.ctx;
             ctx.clearRect(0, 0, drawer.w, drawer.h);
             drawer.element.draw(ctx);
             drawer.drawLinkLine(ctx);
+            drawer.drawMarks(ctx, drawer.width, drawer.oy, drawer.marks);
+            CanvasUtil.drawMark(ctx, drawer.mark);
         },
         drawLinkLine(ctx) {
             ctx.save();
@@ -109,7 +125,20 @@
             ctx.fill();
 
             ctx.restore();
-        }
+        },
+        drawMarks(ctx, ox, oy, arr) {
+            ctx.save();
+            ctx.translate(ox, oy);
+            ctx.beginPath();
+            ctx.strokeStyle = option.color;
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            for(let i = 0; i < arr.length; i++ ) {
+                ctx.lineTo(arr[i].x, arr[i].y);
+            }
+            ctx.stroke();
+            ctx.restore();
+        },
     };
     drawer.start();
 })();
