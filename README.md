@@ -44,6 +44,7 @@ npm start
 * [彩色烟花动画](https://canvas.shenjinxiang.com/202004/彩色烟花动画/)
 * [心形动画](https://canvas.shenjinxiang.com/202004/心形动画/)
 * [心形环形动画](https://canvas.shenjinxiang.com/202004/心形环形动画/)
+* [正弦波](https://canvas.shenjinxiang.com/202004/正弦波/)
 * [傅立叶级数练习（一）](https://canvas.shenjinxiang.com/202004/傅立叶级数练习（一）/)
 * [分形图（一）](https://canvas.shenjinxiang.com/202004/分形图（一）/)
 * [分形图（二）](https://canvas.shenjinxiang.com/202005/分形图（二）/)
