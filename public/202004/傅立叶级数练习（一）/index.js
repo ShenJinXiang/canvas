@@ -1,4 +1,4 @@
-(function() {
+(() => {
     const option = {
         background: '#061928',
         elementStrokeColor: 'rgba(255, 255, 255, 0.5)',
