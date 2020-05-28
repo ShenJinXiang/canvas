@@ -78,7 +78,7 @@
         setNext(next) {
             this.next = next;
         }
-        update(arr) {
+        update() {
             this.currentPoint = new Point(
                 this.origin.x + this.radius * Math.cos(this.angle),
                 this.origin.y + this.radius * Math.sin(this.angle)
