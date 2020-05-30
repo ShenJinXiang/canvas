@@ -115,7 +115,7 @@
             drawer.rh = drawer.rc.height = drawer.h;
             drawer.rctx = drawer.rc.getContext('2d');
 
-            this.mark = CanvasUtil.getMarkCanvas();
+            drawer.mark = CanvasUtil.getMarkCanvas();
             drawer.num = 5;
             drawer.refreshCs(drawer.num);
             console.log(drawer.cs);
@@ -163,8 +163,8 @@
             let last = drawer.elements[drawer.elements.length - 1];
             drawer.marks.push(last.currentPoint);
             drawer.rmarks.push(new Point(0, last.currentPoint.y));
-            if (drawer.elements.length > option.marksLength) {
-                drawer.elements.shift();
+            if (drawer.marks.length > option.marksLength) {
+                drawer.marks.shift();
             }
 
         },
@@ -172,7 +172,7 @@
             let ctx = drawer.ctx,
                 rctx = drawer.rctx;
             ctx.clearRect(0, 0, drawer.w, drawer.h);
-            this.elements.forEach(item => item.draw(ctx));
+            drawer.elements.forEach(item => item.draw(ctx));
             drawer.drawMarks(ctx, drawer.marks);
             drawer.drawMarkLink(ctx, drawer.marks[drawer.marks.length - 1], drawer.rmarks[drawer.rmarks.length - 1]);
 
