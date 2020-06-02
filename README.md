@@ -58,3 +58,4 @@ npm start
 * [分形图（六）](https://canvas.shenjinxiang.com/202005/分形图（六）/)
 * [线条爱心动画](https://canvas.shenjinxiang.com/202005/线条爱心动画/)
 * [旋转构建动画（四）](https://canvas.shenjinxiang.com/202005/旋转构建动画（四）/)
+* [心形波函数动画](https://canvas.shenjinxiang.com/202006/心形波函数动画/)
