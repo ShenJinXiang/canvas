@@ -36,7 +36,7 @@
             drawer.ctx = drawer.c.getContext('2d');
             drawer.mark = CanvasUtil.getMarkCanvas();
             drawer.reset();
-            drawer.elementsNum = 2;
+            drawer.elementsNum = 64;
             drawer.initElements();
             console.log(drawer.elements);
             drawer.animate();
@@ -46,10 +46,10 @@
             drawer.h = drawer.c.height = window.innerHeight;
             drawer.radius = Math.min(drawer.w, drawer.h) * 0.3;
             drawer.length = drawer.radius * 0.8;
-            drawer.width = drawer.radius * 0.1;
+            drawer.width = drawer.radius * 0.02;
             drawer.ox = drawer.w / 2;
             drawer.oy = drawer.h / 2;
-            drawer.angleStep = Math.PI / 90;
+            drawer.angleStep = Math.PI / 60;
         },
         initElements() {
             drawer.elements = [];
@@ -59,14 +59,25 @@
                     drawer.oy + drawer.radius * Math.sin(i * step),
                     drawer.length,
                     drawer.width,
-                    0,
+                    -i * step / 2 ,
                     drawer.angleStep,
                     'hsla(' + (i * 10)  + ', 80%, 60%, 1)'
                 ));
             }
         },
         animate() {
-            
+            drawer.update();
+            drawer.draw();
+            requestAnimationFrame(drawer.animate);
+        },
+        update() {
+            drawer.elements.forEach((item) => item.update());
+        },
+        draw() {
+            let ctx = drawer.ctx;
+            ctx.clearRect(0, 0, drawer.w, drawer.h);
+            drawer.elements.forEach((item) => item.draw(ctx));
+            CanvasUtil.drawMark(ctx, drawer.mark);
         }
 
     };
