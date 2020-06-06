@@ -54,6 +54,7 @@
             drawer.reset();
             drawer.initElements();
             drawer.current = 0;
+            drawer.flag = 1;
             drawer.animate();
             drawer.bindEvent();
         },
@@ -74,9 +75,9 @@
             requestAnimationFrame(drawer.animate);
         },
         update() {
-            drawer.current++;
-            if (drawer.current >= drawer.elements.length) {
-                drawer.current = 0;
+            drawer.current += drawer.flag;
+            if (drawer.current >= drawer.elements.length - 1 || drawer.current <=0) {
+                drawer.flag = -drawer.flag;
             }
             console.log(drawer.current);
         },
