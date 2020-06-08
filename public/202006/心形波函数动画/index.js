@@ -53,7 +53,7 @@
             drawer.mark = CanvasUtil.getMarkCanvas();
             drawer.reset();
             drawer.initElements();
-            drawer.current = 0;
+            drawer.current = Math.floor(drawer.elements.length / 2);
             drawer.flag = 1;
             drawer.animate();
             drawer.bindEvent();
@@ -79,7 +79,6 @@
             if (drawer.current >= drawer.elements.length - 1 || drawer.current <=0) {
                 drawer.flag = -drawer.flag;
             }
-            console.log(drawer.current);
         },
         initElements() {
             drawer.elements = [];
