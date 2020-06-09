@@ -1,14 +1,16 @@
 {
     const option = {
+		dateColor: '#048',
 
     }
 
     class Element {
-        constructor(width, height, char, radius) {
+        constructor(width, height, radius, char, color) {
             this.width = width;
             this.height = height;
-            this.char = char;
             this.radius = radius;
+            this.char = char;
+            this.color = color;
             this.init();
         }
         init() {
@@ -49,7 +51,7 @@
             ctx.save();
             ctx.translate(sx, sy);
             this.points.forEach((item) => {
-                item.draw(ctx, this.radius)
+                item.draw(ctx, this.radius, this.color)
             });
             ctx.restore();
         }
@@ -60,15 +62,39 @@
             this.x = x;
             this.y = y;
         }
-        draw(ctx, radius) {
+        draw(ctx, radius, color) {
             ctx.save();
-            ctx.fillStyle = '#084';
+            ctx.fillStyle = color;
             ctx.beginPath();
             ctx.arc(this.x, this.y, radius, 0, 2 * Math.PI, false);
             ctx.fill();
             ctx.restore();
         }
     }
+
+	class Ball {
+		constructor(point, radius, vx, vy, ax, ay, color) {
+			this.point = point;
+			this.radius = radius;
+			this.vx = vx;
+			this.vy = vy;
+			this.ax = ax;
+			this.ay = ay;
+			this.color = color;
+		}
+		update(maxY) {
+			this.point.x += this.vx;
+			this.point.y += this.vy;
+			this.vx += this.ax;
+			this.vy += this.ay;
+			if (this.point.y >= maxY) {
+				this.vy = -this.vy;
+			}
+		}
+		draw(ctx) {
+		    this.point.draw(ctx, this.radius, this.color);
+        }
+	}
 
     const drawer = {
         start() {
@@ -77,7 +103,6 @@
             drawer.init();
             drawer.initElements();
             drawer.elements.forEach((item, index) => {
-                // drawer.ctx.drawImage(item.getCanvas(), index * drawer.elementWidth, 0);
                 item.drawPoints(drawer.ctx, index * drawer.elementWidth, 0);
             });
         },
@@ -90,17 +115,17 @@
         },
         initElements() {
             drawer.elements = [
-                new Element(drawer.elementWidth, drawer.elementHeight, '0', drawer.ballRadius),
-                new Element(drawer.elementWidth, drawer.elementHeight, '1', drawer.ballRadius),
-                new Element(drawer.elementWidth, drawer.elementHeight, '2', drawer.ballRadius),
-                new Element(drawer.elementWidth, drawer.elementHeight, '3', drawer.ballRadius),
-                new Element(drawer.elementWidth, drawer.elementHeight, '4', drawer.ballRadius),
-                new Element(drawer.elementWidth, drawer.elementHeight, '5', drawer.ballRadius),
-                new Element(drawer.elementWidth, drawer.elementHeight, '6', drawer.ballRadius),
-                new Element(drawer.elementWidth, drawer.elementHeight, '7', drawer.ballRadius),
-                new Element(drawer.elementWidth, drawer.elementHeight, '8', drawer.ballRadius),
-                new Element(drawer.elementWidth, drawer.elementHeight, '9', drawer.ballRadius),
-                new Element(drawer.elementWidth / 2, drawer.elementHeight, ':', drawer.ballRadius),
+                new Element(drawer.elementWidth, drawer.elementHeight, drawer.ballRadius, '0', option.dateColor),
+                new Element(drawer.elementWidth, drawer.elementHeight, drawer.ballRadius, '1', option.dateColor),
+                new Element(drawer.elementWidth, drawer.elementHeight, drawer.ballRadius, '2', option.dateColor),
+                new Element(drawer.elementWidth, drawer.elementHeight, drawer.ballRadius, '3', option.dateColor),
+                new Element(drawer.elementWidth, drawer.elementHeight, drawer.ballRadius, '4', option.dateColor),
+                new Element(drawer.elementWidth, drawer.elementHeight, drawer.ballRadius, '5', option.dateColor),
+                new Element(drawer.elementWidth, drawer.elementHeight, drawer.ballRadius, '6', option.dateColor),
+                new Element(drawer.elementWidth, drawer.elementHeight, drawer.ballRadius, '7', option.dateColor),
+                new Element(drawer.elementWidth, drawer.elementHeight, drawer.ballRadius, '8', option.dateColor),
+                new Element(drawer.elementWidth, drawer.elementHeight, drawer.ballRadius, '9', option.dateColor),
+                new Element(drawer.elementWidth / 2, drawer.elementHeight, drawer.ballRadius, ':', option.dateColor),
             ];
         },
     };
