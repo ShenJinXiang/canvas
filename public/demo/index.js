@@ -3,6 +3,19 @@
 		dateColor: '#048',
 
     }
+    const digit = [
+        [ [0,0,1,1,1,0,0], [0,1,1,0,1,1,0], [1,1,0,0,0,1,1], [1,1,0,0,0,1,1], [1,1,0,0,0,1,1], [1,1,0,0,0,1,1], [1,1,0,0,0,1,1], [1,1,0,0,0,1,1], [0,1,1,0,1,1,0], [0,0,1,1,1,0,0] ],//0
+        [ [0,0,0,1,1,0,0], [0,1,1,1,1,0,0], [0,0,0,1,1,0,0], [0,0,0,1,1,0,0], [0,0,0,1,1,0,0], [0,0,0,1,1,0,0], [0,0,0,1,1,0,0], [0,0,0,1,1,0,0], [0,0,0,1,1,0,0], [1,1,1,1,1,1,1] ],//1
+        [ [0,1,1,1,1,1,0], [1,1,0,0,0,1,1], [0,0,0,0,0,1,1], [0,0,0,0,1,1,0], [0,0,0,1,1,0,0], [0,0,1,1,0,0,0], [0,1,1,0,0,0,0], [1,1,0,0,0,0,0], [1,1,0,0,0,1,1], [1,1,1,1,1,1,1] ],//2
+        [ [1,1,1,1,1,1,1], [0,0,0,0,0,1,1], [0,0,0,0,1,1,0], [0,0,0,1,1,0,0], [0,0,1,1,1,0,0], [0,0,0,0,1,1,0], [0,0,0,0,0,1,1], [0,0,0,0,0,1,1], [1,1,0,0,0,1,1], [0,1,1,1,1,1,0] ],//3
+        [ [0,0,0,0,1,1,0], [0,0,0,1,1,1,0], [0,0,1,1,1,1,0], [0,1,1,0,1,1,0], [1,1,0,0,1,1,0], [1,1,1,1,1,1,1], [0,0,0,0,1,1,0], [0,0,0,0,1,1,0], [0,0,0,0,1,1,0], [0,0,0,1,1,1,1] ],//4
+        [ [1,1,1,1,1,1,1], [1,1,0,0,0,0,0], [1,1,0,0,0,0,0], [1,1,1,1,1,1,0], [0,0,0,0,0,1,1], [0,0,0,0,0,1,1], [0,0,0,0,0,1,1], [0,0,0,0,0,1,1], [1,1,0,0,0,1,1], [0,1,1,1,1,1,0] ],//5
+        [ [0,0,0,0,1,1,0], [0,0,1,1,0,0,0], [0,1,1,0,0,0,0], [1,1,0,0,0,0,0], [1,1,0,1,1,1,0], [1,1,0,0,0,1,1], [1,1,0,0,0,1,1], [1,1,0,0,0,1,1], [1,1,0,0,0,1,1], [0,1,1,1,1,1,0] ],//6
+        [ [1,1,1,1,1,1,1], [1,1,0,0,0,1,1], [0,0,0,0,1,1,0], [0,0,0,0,1,1,0], [0,0,0,1,1,0,0], [0,0,0,1,1,0,0], [0,0,1,1,0,0,0], [0,0,1,1,0,0,0], [0,0,1,1,0,0,0], [0,0,1,1,0,0,0] ],//7
+        [ [0,1,1,1,1,1,0], [1,1,0,0,0,1,1], [1,1,0,0,0,1,1], [1,1,0,0,0,1,1], [0,1,1,1,1,1,0], [1,1,0,0,0,1,1], [1,1,0,0,0,1,1], [1,1,0,0,0,1,1], [1,1,0,0,0,1,1], [0,1,1,1,1,1,0] ],//8
+        [ [0,1,1,1,1,1,0], [1,1,0,0,0,1,1], [1,1,0,0,0,1,1], [1,1,0,0,0,1,1], [0,1,1,1,0,1,1], [0,0,0,0,0,1,1], [0,0,0,0,0,1,1], [0,0,0,0,1,1,0], [0,0,0,1,1,0,0], [0,1,1,0,0,0,0] ],//9
+        [ [0,0,0,0], [0,0,0,0], [0,1,1,0], [0,1,1,0], [0,0,0,0], [0,0,0,0], [0,1,1,0], [0,1,1,0], [0,0,0,0], [0,0,0,0] ]//:
+    ];
 
     class Element {
         constructor(width, height, radius, char, color) {
@@ -101,10 +114,7 @@
             drawer.c = document.getElementById('canvas');
             drawer.ctx = drawer.c.getContext('2d');
             drawer.init();
-            drawer.initElements();
-            drawer.elements.forEach((item, index) => {
-                item.drawPoints(drawer.ctx, index * drawer.elementWidth, 0);
-            });
+            drawer.animate();
         },
         init() {
             drawer.w = drawer.c.width = window.innerWidth;
@@ -112,22 +122,59 @@
             drawer.elementWidth = Math.floor(drawer.w * 0.6 / 7);
             drawer.elementHeight = drawer.elementWidth * 1.5;
             drawer.ballRadius = Math.floor(drawer.elementWidth / 20);
+            drawer.initElement();
         },
-        initElements() {
-            drawer.elements = [
-                new Element(drawer.elementWidth, drawer.elementHeight, drawer.ballRadius, '0', option.dateColor),
-                new Element(drawer.elementWidth, drawer.elementHeight, drawer.ballRadius, '1', option.dateColor),
-                new Element(drawer.elementWidth, drawer.elementHeight, drawer.ballRadius, '2', option.dateColor),
-                new Element(drawer.elementWidth, drawer.elementHeight, drawer.ballRadius, '3', option.dateColor),
-                new Element(drawer.elementWidth, drawer.elementHeight, drawer.ballRadius, '4', option.dateColor),
-                new Element(drawer.elementWidth, drawer.elementHeight, drawer.ballRadius, '5', option.dateColor),
-                new Element(drawer.elementWidth, drawer.elementHeight, drawer.ballRadius, '6', option.dateColor),
-                new Element(drawer.elementWidth, drawer.elementHeight, drawer.ballRadius, '7', option.dateColor),
-                new Element(drawer.elementWidth, drawer.elementHeight, drawer.ballRadius, '8', option.dateColor),
-                new Element(drawer.elementWidth, drawer.elementHeight, drawer.ballRadius, '9', option.dateColor),
-                new Element(drawer.elementWidth / 2, drawer.elementHeight, drawer.ballRadius, ':', option.dateColor),
+        animate() {
+            drawer.draw();
+            drawer.update();
+            requestAnimationFrame(drawer.animate);
+        },
+        update() {
+            drawer.currentDateArr = drawer.timeStr();
+        },
+        draw() {
+            let ctx = drawer.ctx;
+        },
+        initElement() {
+            drawer.element = {
+                '0': new Element(drawer.elementWidth, drawer.elementHeight, drawer.ballRadius, '0', option.dateColor),
+                '1': new Element(drawer.elementWidth, drawer.elementHeight, drawer.ballRadius, '1', option.dateColor),
+                '2': new Element(drawer.elementWidth, drawer.elementHeight, drawer.ballRadius, '2', option.dateColor),
+                '3': new Element(drawer.elementWidth, drawer.elementHeight, drawer.ballRadius, '3', option.dateColor),
+                '4': new Element(drawer.elementWidth, drawer.elementHeight, drawer.ballRadius, '4', option.dateColor),
+                '5': new Element(drawer.elementWidth, drawer.elementHeight, drawer.ballRadius, '5', option.dateColor),
+                '6': new Element(drawer.elementWidth, drawer.elementHeight, drawer.ballRadius, '6', option.dateColor),
+                '7': new Element(drawer.elementWidth, drawer.elementHeight, drawer.ballRadius, '7', option.dateColor),
+                '8': new Element(drawer.elementWidth, drawer.elementHeight, drawer.ballRadius, '8', option.dateColor),
+                '9': new Element(drawer.elementWidth, drawer.elementHeight, drawer.ballRadius, '9', option.dateColor),
+                ':': new Element(drawer.elementWidth / 2, drawer.elementHeight, drawer.ballRadius, ':', option.dateColor),
+            };
+        },
+        timeStr() {
+            let d = new Date(),
+                year = d.getFullYear(),
+                month = d.getMonth(),
+                date = d.getDate(),
+                hour = d.getHours(),
+                minute = d.getMinutes(),
+                second = d.getSeconds();
+            return [
+                Math.floor(year / 1000),
+                Math.floor(year / 100) % 10,
+                Math.floor(year / 10) % 100,
+                year % 10,
+                Math.floor(month / 10),
+                month % 10,
+                Math.floor(date / 10),
+                date % 10,
+                Math.floor(hour / 10),
+                hour % 10,
+                Math.floor(minute / 10),
+                minute % 10,
+                Math.floor(second / 10),
+                second % 10,
             ];
-        },
+        }
     };
     drawer.start();
 }
