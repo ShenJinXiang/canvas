@@ -60,3 +60,4 @@ npm start
 * [旋转构建动画（四）](https://canvas.shenjinxiang.com/202005/旋转构建动画（四）/)
 * [心形波函数动画](https://canvas.shenjinxiang.com/202006/心形波函数动画/)
 * [旋转构建动画（五）](https://canvas.shenjinxiang.com/202006/旋转构建动画（五）/)
+* [时间显示动画](https://canvas.shenjinxiang.com/202006/时间显示动画/)
