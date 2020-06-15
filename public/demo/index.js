@@ -39,6 +39,12 @@
         }
         update() {
             this.angle += this.angleStep;
+            this.marks.forEach((mark) => {
+                mark.addPoint(new Point(
+                    this.origin.x + mark.len * Math.cos(this.angle + mark.angle),
+                    this.origin.y + mark.len * Math.sin(this.angle + mark.angle),
+                ));
+            });
         }
         setAngleStep(angleStep) {
             this.angleStep = angleStep;
@@ -78,13 +84,9 @@
             }
             ctx.fill();
             this.drawMarks(ctx);
-
-			ctx.beginPath();
-			ctx.strokeStyle = 'red';
-			ctx.lineTo(0, 0);
-			ctx.lineTo(this.radius, 0);
-			ctx.stroke();
             ctx.restore();
+
+            this.marks.forEach((mark) => mark.drawPoints(ctx));
         }
         drawMarks(ctx) {
             this.marks.forEach((item) => {
@@ -107,8 +109,10 @@
             ctx.save();
             ctx.beginPath();
             ctx.strokeStyle = this.style;
+            ctx.fillStyle = this.style;
             ctx.arc(this.len * Math.cos(this.angle), this.len * Math.sin(this.angle), this.radius, 0, 2 * Math.PI, false);
             ctx.stroke();
+            ctx.fill();
             ctx.restore();
         }
         addPoint(point) {
@@ -144,10 +148,16 @@
             drawer.innerOriginRadius = drawer.outerRadius - drawer.innerRadius;
             drawer.angle = 0;
             drawer.initElements();
-            drawer.angleStep = Math.PI / 90;
+            drawer.angleStep = Math.PI / 60;
             drawer.inner.setAngleStep(drawer.inner.toothAngle * drawer.angleStep / drawer.outer.toothAngle - drawer.angleStep);
-            //drawer.inner.addMark(0, 0.2 * drawer.inner.radius, 'red', option.markRadius);
-			drawer.inner.addMark(new Mark(0, 0.2 * drawer.inner.radius, option.markRadius, 'green', 10000))
+            for (let i = 1; i < 5; i++) {
+                drawer.inner.addMark(new Mark(0, i * 0.2 * drawer.inner.radius, option.markRadius,
+                    'hsla(' + (i * 20) + ', 80%, 60%, 1)',
+                    10000))
+            }
+                // drawer.inner.addMark(new Mark(0, 0.6 * drawer.inner.radius, option.markRadius,
+                //     'hsla(300, 80%, 60%, 1)',
+                //     10000))
         },
         animate() {
             drawer.update();
@@ -168,19 +178,9 @@
         draw() {
             let ctx = drawer.ctx;
             ctx.clearRect(0, 0, drawer.w, drawer.h);
-            drawer.drawLine(ctx);
+            // drawer.drawLine(ctx);
             drawer.inner.draw(ctx);
             drawer.outer.draw(ctx);
-            // ctx.save();
-            // ctx.translate(drawer.w / 2, drawer.h / 2);
-            // ctx.beginPath();
-            // ctx.lineTo(0, 0);
-            // ctx.lineTo(
-            //     drawer.outerRadius * Math.cos(drawer.angle),
-            //     drawer.outerRadius * Math.sin(drawer.angle),
-            // );
-            // ctx.stroke();
-            // ctx.restore();
         },
         drawLine(ctx) {
             ctx.save();
