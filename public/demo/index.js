@@ -99,18 +99,34 @@
     }
 
     class Mark {
-        constructor(origin, angle, radius, len, style) {
+        constructor(origin, angle, radius, len, style, length) {
             this.origin = origin;
             this.angle = angle;
             this.radius = radius;
             this.len = len;
             this.style = style;
+            this.length = length;
+            this.points = [];
         }
         draw(ctx) {
             ctx.save();
             ctx.beginPath();
             ctx.strokeStyle = this.style;
             ctx.arc(this.len * Math.cos(this.angle), this.len * Math.sin(this.angle), this.radius, 0, 2 * Math.PI, false);
+            ctx.stroke();
+            ctx.restore();
+        }
+        addPoint(point) {
+            this.points.push(point);
+            if (this.points.length >= this.length) {
+                this.points.shift();
+            }
+        }
+        drawPoints(ctx) {
+            ctx.save();
+            ctx.strokeStyle = this.style;
+            ctx.beginPath();
+            this.points.forEach((item) => ctx.lineTo(item.x, item.y));
             ctx.stroke();
             ctx.restore();
         }
