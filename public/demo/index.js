@@ -46,13 +46,8 @@
         setOrigin(point) {
             this.origin = point;
         }
-        addMark(angle, radius, style, mRadius) {
-            this.marks.push({
-                angle: angle,
-                radius: radius,
-                style: style,
-                mRadius: mRadius,
-            });
+        addMark(mark) {
+            this.marks.push(mark);
         }
         draw(ctx) {
             ctx.save();
@@ -83,27 +78,27 @@
             }
             ctx.fill();
             this.drawMarks(ctx);
+
+			ctx.beginPath();
+			ctx.strokeStyle = 'red';
+			ctx.lineTo(0, 0);
+			ctx.lineTo(this.radius, 0);
+			ctx.stroke();
             ctx.restore();
         }
         drawMarks(ctx) {
             this.marks.forEach((item) => {
-                ctx.save();
-                ctx.beginPath();
-                ctx.strokeStyle = item.style;
-                ctx.arc(item.radius * Math.cos(item.angle), item.radius * Math.sin(item.angle), item.mRadius, 0, 2 * Math.PI, false);
-                ctx.stroke();
-                ctx.restore();
+				item.draw(ctx);
             });
         }
 
     }
 
     class Mark {
-        constructor(origin, angle, radius, len, style, length) {
-            this.origin = origin;
+        constructor(angle, len, radius, style, length) {
             this.angle = angle;
-            this.radius = radius;
             this.len = len;
+            this.radius = radius;
             this.style = style;
             this.length = length;
             this.points = [];
@@ -149,9 +144,10 @@
             drawer.innerOriginRadius = drawer.outerRadius - drawer.innerRadius;
             drawer.angle = 0;
             drawer.initElements();
-            drawer.angleStep = Math.PI / 180;
+            drawer.angleStep = Math.PI / 90;
             drawer.inner.setAngleStep(drawer.inner.toothAngle * drawer.angleStep / drawer.outer.toothAngle - drawer.angleStep);
-            drawer.inner.addMark(0, 0.2 * drawer.inner.radius, 'red', option.markRadius);
+            //drawer.inner.addMark(0, 0.2 * drawer.inner.radius, 'red', option.markRadius);
+			drawer.inner.addMark(new Mark(0, 0.2 * drawer.inner.radius, option.markRadius, 'green', 10000))
         },
         animate() {
             drawer.update();
@@ -218,17 +214,8 @@
                 option.toothDeep,
                 10,
                 'rgba(100, 100, 200, 0.5)',
-                null,
-                // -drawer.angleStep * drawer.outerRadius / drawer.innerRadius
             );
         }
     };
     drawer.start();
 }
-
-/**
-
- oangle / iangle = angles / x
-
- x = iangle * angle / o
- */
