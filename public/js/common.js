@@ -96,6 +96,13 @@ const CanvasUtil = {
     drawMark(ctx, mark) {
         ctx.drawImage(mark, ctx.canvas.width - mark.width, ctx.canvas.height - mark.height);
     },
+    windowToCanvas(canvas, x, y) {
+        let box = canvas.getBoundingClientRect();
+        return {
+            x: x - box.left,
+            y: y - box.top
+        };
+    },
     fillHeart(ctx, ox, oy, radius, fillStyle) {
         ctx.save();
         ctx.translate(ox, oy);

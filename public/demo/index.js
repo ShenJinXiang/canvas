@@ -129,15 +129,40 @@
             ctx.stroke();
             ctx.restore();
         }
+        setControBtn() {
 
+        }
+
+    }
+
+    class MarkController {
+        constructor(sx, sy, width, height, style, flag) {
+            this.sx = sx;
+            this.sy = sy;
+            this.width = width;
+            this.height = height;
+            this.style = style;
+            this.flag = flag;
+        }
+        draw(ctx) {
+            ctx.save();
+            if (this.flag) {
+                ctx.fillRect(this.sx, this.sy, this.width, this.height);
+            } else {
+                ctx.strokeRect(this.sx, this.sy, this.width, this.height);
+            }
+            ctx.restore();
+        }
     }
 
     const drawer = {
         start() {
             drawer.c = document.getElementById('canvas');
             drawer.ctx = drawer.c.getContext('2d');
+            drawer.mark = CanvasUtil.getMarkCanvas('#999');
             drawer.init();
             drawer.animate();
+            drawer.bindEvent();
         },
         init() {
             drawer.w = drawer.c.width = window.innerWidth;
@@ -158,6 +183,13 @@
                 // drawer.inner.addMark(new Mark(0, 0.6 * drawer.inner.radius, option.markRadius,
                 //     'hsla(300, 80%, 60%, 1)',
                 //     10000))
+        },
+        bindEvent() {
+            window.onresize = drawer.init;
+            drawer.c.onmousemove = (e) => {
+                let p = CanvasUtil.windowToCanvas(drawer.c, e.clientX, e.clientY);
+
+            }
         },
         animate() {
             drawer.update();
@@ -181,6 +213,7 @@
             // drawer.drawLine(ctx);
             drawer.inner.draw(ctx);
             drawer.outer.draw(ctx);
+            CanvasUtil.drawMark(ctx, drawer.mark);
         },
         drawLine(ctx) {
             ctx.save();
