@@ -3,6 +3,7 @@
         toothWidth: 10,
         toothDeep: 20,
         markRadius: 3,
+        controBtnWidth: 20
     };
 
     class Point{
@@ -86,12 +87,18 @@
             this.drawMarks(ctx);
             ctx.restore();
 
-            this.marks.forEach((mark) => mark.drawPoints(ctx));
+            this.marks.forEach((mark) => {
+                mark.drawPoints(ctx);
+                mark.drawController(ctx);
+            });
         }
         drawMarks(ctx) {
             this.marks.forEach((item) => {
 				item.draw(ctx);
             });
+        }
+        eventHandler(x, y) {
+            this.marks.forEach((item) => item.clickHandler(x, y));
         }
 
     }
@@ -116,21 +123,34 @@
             ctx.restore();
         }
         addPoint(point) {
-            this.points.push(point);
-            if (this.points.length >= this.length) {
-                this.points.shift();
+            if (this.markController.flag) {
+                this.points.push(point);
+                if (this.points.length >= this.length) {
+                    this.points.shift();
+                }
             }
         }
         drawPoints(ctx) {
-            ctx.save();
-            ctx.strokeStyle = this.style;
-            ctx.beginPath();
-            this.points.forEach((item) => ctx.lineTo(item.x, item.y));
-            ctx.stroke();
-            ctx.restore();
+            if (this.markController.flag) {
+                ctx.save();
+                ctx.strokeStyle = this.style;
+                ctx.beginPath();
+                this.points.forEach((item) => ctx.lineTo(item.x, item.y));
+                ctx.stroke();
+                ctx.restore();
+            }
         }
-        setControBtn() {
-
+        setControBtn(markController) {
+            this.markController = markController;
+        }
+        drawController(ctx) {
+            this.markController.draw(ctx);
+        }
+        clickHandler(x, y) {
+            this.markController.eventHandler(x, y);
+            if (!this.markController.flag) {
+                this.points = [];
+            }
         }
 
     }
@@ -146,12 +166,21 @@
         }
         draw(ctx) {
             ctx.save();
+            ctx.beginPath();
             if (this.flag) {
+                ctx.fillStyle = this.style;
                 ctx.fillRect(this.sx, this.sy, this.width, this.height);
             } else {
+                ctx.strokeStyle = this.style;
                 ctx.strokeRect(this.sx, this.sy, this.width, this.height);
             }
             ctx.restore();
+        }
+        eventHandler(x, y) {
+            if (x >= this.sx && x <= this.sx + this.width && y >= this.sy && y <= this.sy + this.height) {
+                this.flag = !this.flag;
+            }
+            return this.flag;
         }
     }
 
@@ -168,6 +197,7 @@
             drawer.w = drawer.c.width = window.innerWidth;
             drawer.h = drawer.c.height = window.innerHeight;
             drawer.width = Math.min(drawer.w, drawer.h);
+            drawer.controllerMargin = drawer.width * 0.05;
             drawer.outerRadius = drawer.width * 0.45;
             drawer.innerRadius = drawer.width * 0.25;
             drawer.innerOriginRadius = drawer.outerRadius - drawer.innerRadius;
@@ -176,19 +206,24 @@
             drawer.angleStep = Math.PI / 60;
             drawer.inner.setAngleStep(drawer.inner.toothAngle * drawer.angleStep / drawer.outer.toothAngle - drawer.angleStep);
             for (let i = 1; i < 5; i++) {
-                drawer.inner.addMark(new Mark(0, i * 0.2 * drawer.inner.radius, option.markRadius,
-                    'hsla(' + (i * 20) + ', 80%, 60%, 1)',
-                    10000))
+                let style = 'hsla(' + (i * 20) + ', 80%, 60%, 1)',
+                    mark = new Mark(0, i * 0.2 * drawer.inner.radius, option.markRadius, style, 10000);
+                mark.setControBtn(new MarkController(
+                    drawer.w - 2 * i * option.controBtnWidth,
+                    option.controBtnWidth,
+                    option.controBtnWidth,
+                    option.controBtnWidth,
+                    style,
+                    false
+                ));
+                drawer.inner.addMark(mark);
             }
-                // drawer.inner.addMark(new Mark(0, 0.6 * drawer.inner.radius, option.markRadius,
-                //     'hsla(300, 80%, 60%, 1)',
-                //     10000))
         },
         bindEvent() {
             window.onresize = drawer.init;
-            drawer.c.onmousemove = (e) => {
+            drawer.c.onclick = (e) => {
                 let p = CanvasUtil.windowToCanvas(drawer.c, e.clientX, e.clientY);
-
+                drawer.inner.eventHandler(p.x, p.y);
             }
         },
         animate() {
