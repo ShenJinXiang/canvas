@@ -203,7 +203,7 @@
             drawer.innerOriginRadius = drawer.outerRadius - drawer.innerRadius;
             drawer.angle = 0;
             drawer.initElements();
-            drawer.angleStep = Math.PI / 60;
+            drawer.angleStep = Math.PI / 90;
             drawer.inner.setAngleStep(drawer.inner.toothAngle * drawer.angleStep / drawer.outer.toothAngle - drawer.angleStep);
             for (let i = 1; i < 5; i++) {
                 let style = 'hsla(' + (i * 20) + ', 80%, 60%, 1)',
