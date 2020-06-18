@@ -65,4 +65,4 @@ npm start
 * [旋转构建动画（六）](https://canvas.shenjinxiang.com/202006/旋转构建动画（六）/)
 
 ## 感谢
-[![](./public/images/jetbrains.png=120*120)](https://www.jetbrains.com/?from=ShenJinXiang/canvas)
+[![](./public/images/jetbrains.png =120*120)](https://www.jetbrains.com/?from=ShenJinXiang/canvas)
