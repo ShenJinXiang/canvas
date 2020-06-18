@@ -1,6 +1,6 @@
 {
     const option = {
-        num: 25,
+        num: 30,
     };
     class Element {
         constructor(x, y, radius, width, beginAngle, angleStep, style) {
@@ -27,6 +27,12 @@
             ctx.stroke();
             ctx.restore();
         }
+        refresh(x, y, radius, width) {
+            this.x = x;
+            this.y = y;
+            this.radius = radius;
+            this.width = width;
+        }
     }
 
     const drawer = {
@@ -37,6 +43,7 @@
             drawer.init();
             drawer.initElement();
             drawer.animate();
+            drawer.bindEvent();
         },
         init() {
             drawer.w = drawer.c.width = window.innerWidth;
@@ -44,6 +51,10 @@
             drawer.width = Math.min(drawer.w, drawer.h);
             drawer.radius = drawer.width * 0.4;
             drawer.eleWidth = drawer.radius / option.num;
+            drawer.refreshElements();
+        },
+        bindEvent() {
+            window.onresize = drawer.init;
         },
         animate() {
             drawer.update();
@@ -57,6 +68,7 @@
             let ctx = drawer.ctx;
             ctx.clearRect(0, 0, drawer.w, drawer.h);
             drawer.elements.forEach((item) => item.draw(ctx));
+            CanvasUtil.drawMark(ctx, drawer.mark);
         },
         initElement() {
             drawer.elements = [];
@@ -68,10 +80,23 @@
                     drawer.eleWidth,
                     -Math.PI,
                     // (i + 1) * Math.PI / 360,
-                    (option.num + 1 - i) * Math.PI / 360,
+                    (option.num + 1 - i) * Math.PI / 450,
                     'hsla(' + (i * 180 / option.num) + ', 80%, 60%, 1)'
                 ));
             }
+        },
+        refreshElements() {
+            if (!drawer.elements) {
+                return;
+            }
+            drawer.elements.forEach((item, index) => {
+                item.refresh(
+                    drawer.w / 2,
+                    drawer.h / 2,
+                    drawer.eleWidth * index,
+                    drawer.eleWidth,
+                );
+            });
         }
     };
     drawer.start();
