@@ -63,3 +63,6 @@ npm start
 * [时间显示动画](https://canvas.shenjinxiang.com/202006/时间显示动画/)
 * [万花尺](https://canvas.shenjinxiang.com/202006/万花尺/)
 * [旋转构建动画（六）](https://canvas.shenjinxiang.com/202006/旋转构建动画（六）/)
+
+## 感谢
+[![](./public/images/jetbrains.png)](https://www.jetbrains.com/?from=ShenJinXiang/canvas)
