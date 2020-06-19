@@ -1,3 +1,7 @@
+---
+typora-root-url: ./
+---
+
 # Canvas
 
 一些canvas练习，看到或想到一些感兴趣的canvas作品后，尝试模仿。练习练习！
@@ -65,4 +69,4 @@ npm start
 * [旋转构建动画（六）](https://canvas.shenjinxiang.com/202006/旋转构建动画（六）/)
 
 ## 感谢
-<a href="https://www.jetbrains.com/?from=ShenJinXiang/canvas">   <img src="./public/images/jetbrains.png" width="120px" height="120px" /></a>
+<a href="https://www.jetbrains.com/?from=ShenJinXiang/canvas"><img src="./public/images/jetbrains.png" style="zoom:5%;"  /></a>
