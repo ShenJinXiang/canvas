@@ -66,5 +66,5 @@ npm start
 
 ## 感谢
 <a href="https://www.jetbrains.com/?from=ShenJinXiang/canvas">
-    <img src="./public/images/jetbrains.png" width="120px" height="120px" />
+    <img src="https://canvas.shenjinxiang.com/images/jetbrains.png" width="120px" height="120px" />
 </a>
