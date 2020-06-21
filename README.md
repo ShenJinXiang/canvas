@@ -1,7 +1,3 @@
----
-typora-root-url: ./
----
-
 # Canvas
 
 一些canvas练习，看到或想到一些感兴趣的canvas作品后，尝试模仿。练习练习！
