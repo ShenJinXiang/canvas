@@ -70,4 +70,4 @@ npm start
 * [视觉误差动画](https://canvas.shenjinxiang.com/202006/视觉误差动画/)
 
 ## 感谢
-<a href="https://www.jetbrains.com/?from=ShenJinXiang/canvas"><img src="./public/images/jetbrains.png" style="zoom:5%;"  /></a>
+<a href="https://www.jetbrains.com/?from=ShenJinXiang/canvas"><img src="./public/images/jetbrains.png" width="120px;"/></a>
