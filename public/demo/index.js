@@ -29,6 +29,12 @@
             ctx.stroke();
             ctx.restore();
         }
+        reverse() {
+            let temp = this.start;
+            this.start = this.end;
+            this.end = temp;
+            this.angle = Math.PI - this.angle;
+        }
     }
 
     const drawer = {
@@ -36,13 +42,15 @@
             drawer.c = document.getElementById('canvas');
             drawer.ctx = drawer.c.getContext('2d');
             drawer.init();
-            let ele = new Element({x: drawer.w / 2, y: drawer.h / 2}, 0, option.lineLength, option.lineWidth, 'red');
-            ele.draw(drawer.ctx);
+            drawer.initElements();
         },
         init() {
             drawer.w = drawer.c.width = window.innerWidth;
             drawer.h = drawer.c.height = window.innerHeight;
 
+        },
+        initElements() {
+            
         }
     };
     drawer.start();
