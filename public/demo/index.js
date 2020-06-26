@@ -1,102 +1,104 @@
 {
     const option = {
-        lineWidth: 1,
-        lineLength: 10,
-        num: 3,
-        times: [300, 400],
-
+        num: 18,
+        time: 20,
+        ballStyle: 'hsla(0, 100%, 50%, 1)',
+        originLength: 20,
+        originWidth: 2,
+        originStyle: '#000',
     };
-    class Element {
-        constructor(point, angle, length, width, style) {
-            this.point = point;
-            this.angle = angle;
-            this.length = length;
-            this.width = width;
+
+    class Ball {
+        constructor(ox, oy, radius, style) {
+            this.ox = ox;
+            this.oy = oy;
+            this.radius = radius;
             this.style = style;
-
-            this.start = this.point;
-            this.end = {
-                x: this.start.x + this.length * Math.cos(this.angle),
-                y: this.start.y + this.length * Math.sin(this.angle)
-            };
-        }
-        draw(ctx, origin) {
-            ctx.save();
-            origin = origin ? origin: {x: 0, y: 0};
-            ctx.translate(this.point.x - origin.x, this.point.y - origin.y);
-            ctx.strokeStyle = this.style;
-            ctx.lineWidth = this.width;
-            ctx.beginPath();
-            ctx.moveTo(0, 0);
-            ctx.lineTo(this.length * Math.cos(this.angle), this.length * Math.sin(this.angle));
-            ctx.stroke();
-            ctx.restore();
-        }
-        reverse() {
-            let temp = this.start;
-            this.start = this.end;
-            this.end = temp;
-            this.angle = Math.PI - this.angle;
-        }
-    }
-
-    class ElementGroup {
-        constructor(elemnts, time1, time2) {
-            this.elements = elemnts;
-            this.time1 = time1;
-            this.time2 = time2;
-            this.start = this.elements[0].start;
-            this.end = this.elements[this.elements.length - 1].end;
-            this.status = 0;
-
-            this.angleStep = Math.PI / 2 / this.time2;
-            this.time1Count = 0;
-            this.time2Count = 0;
-        }
-        update() {
-            if (this.status === 0) {
-                this.time1Count++;
-                if (this.time1Count >= this.time1) {
-                    this.start = 1;
-                }
-            }
-            if (this.status === 1) {
-                this.angle = this.angleStep * this.time2Count;
-                this.time2Count++;
-                if (this.time2Count >= this.time2) {
-                    this.status = 2;
-                }
-            }
         }
         draw(ctx) {
-            this.elements.forEach((item) => {
-                item.draw(ctx);
-            });
-            if (this.status === 1) {
-                ctx.save();
-                ctx.restore();
-            }
+            ctx.save();
+            ctx.translate(this.ox, this.oy);
+            ctx.fillStyle = this.style;
+            ctx.beginPath();
+            ctx.arc(0, 0, this.radius, 0, 2 * Math.PI, false);
+            ctx.fill();
+            ctx.restore();
         }
-
     }
-
     const drawer = {
         start() {
             drawer.c = document.getElementById('canvas');
             drawer.ctx = drawer.c.getContext('2d');
             drawer.init();
-            drawer.initElements();
+            drawer.current = 0;
+            drawer.count = 0;
+            drawer.animate();
         },
         init() {
             drawer.w = drawer.c.width = window.innerWidth;
             drawer.h = drawer.c.height = window.innerHeight;
-
+            drawer.width = Math.min(drawer.w, drawer.h);
+            drawer.radius = drawer.width * 0.4;
+            drawer.ballRadius = drawer.radius * 0.06;
+            drawer.ox = drawer.w / 2;
+            drawer.oy = drawer.h / 2;
+            drawer.initElements();
+        },
+        animate() {
+            drawer.update();
+            drawer.draw();
+            requestAnimationFrame(drawer.animate);
+        },
+        update() {
+            if (++drawer.count >= option.time) {
+                drawer.count = 0;
+                drawer.current += 1;
+                if (drawer.current >= option.num) {
+                    drawer.current = 0;
+                }
+            }
+        },
+        draw() {
+            let ctx = drawer.ctx;
+            ctx.clearRect(0, 0, drawer.w, drawer.h);
+            drawer.origin(ctx);
+            // drawer.elements.forEach((item, index) => item.draw(ctx));
+            drawer.elements.map((item, index) => {
+                if (index !== drawer.current) {
+                    item.draw(ctx);
+                }
+            });
         },
         initElements() {
             drawer.elements = [];
+            let angleStep = 2 * Math.PI / option.num;
             for (let i = 0; i < option.num; i++) {
-
+                drawer.elements.push(new Ball(
+                    drawer.ox + drawer.radius * Math.cos(angleStep * i),
+                    drawer.oy + drawer.radius * Math.sin(i * angleStep),
+                    drawer.ballRadius,
+                    option.ballStyle,
+                ));
             }
+        },
+        origin(ctx) {
+            ctx.save();
+            ctx.translate(drawer.ox, drawer.oy);
+            ctx.rotate(Math.PI / 4);
+            ctx.strokeStyle = option.originStyle;
+            ctx.lineWidth = option.originWidth;
+
+            ctx.beginPath();
+            ctx.moveTo(-option.originLength / 2, 0);
+            ctx.lineTo(option.originLength / 2, 0);
+            ctx.stroke();
+
+            ctx.beginPath();
+            ctx.moveTo(0, -option.originLength / 2);
+            ctx.lineTo(0, option.originLength / 2);
+            ctx.stroke();
+
+            ctx.restore();
         }
     };
     drawer.start();
