@@ -1,8 +1,9 @@
 {
     const option = {
         num: 18,
-        time: 20,
-        ballStyle: 'hsla(0, 100%, 50%, 1)',
+        time: 5,
+        ballStyle: 'hsla(270, 100%, 50%, 1)',
+        // ballStyle: 'violet',
         originLength: 20,
         originWidth: 2,
         originStyle: '#000',
