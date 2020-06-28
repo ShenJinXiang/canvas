@@ -4,7 +4,7 @@
         time: 5,
         ballStyle: 'hsla(270, 100%, 50%, 1)',
         // ballStyle: 'violet',
-        originLength: 20,
+        originLength: 40,
         originWidth: 2,
         originStyle: '#000',
     };
