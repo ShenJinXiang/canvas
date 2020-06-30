@@ -63,8 +63,9 @@ npm start
 * [时间显示动画](https://canvas.shenjinxiang.com/202006/时间显示动画/)
 * [万花尺](https://canvas.shenjinxiang.com/202006/万花尺/)
 * [旋转构建动画（六）](https://canvas.shenjinxiang.com/202006/旋转构建动画（六）/)
-* [视觉误差动画](https://canvas.shenjinxiang.com/202006/视觉误差动画/)
+* [视觉误差动画（一）](https://canvas.shenjinxiang.com/202006/视觉误差动画（一）/)
 * [色彩](https://canvas.shenjinxiang.com/202006/色彩/)
+* [视觉误差动画（二）](https://canvas.shenjinxiang.com/202006/视觉误差动画（二）/)
 
 ## 感谢
 <a href="https://www.jetbrains.com/?from=ShenJinXiang/canvas"><img src="./public/images/jetbrains.png" width="120px;"/></a>
