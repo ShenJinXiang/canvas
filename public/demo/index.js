@@ -39,17 +39,16 @@
             drawer.ctx = drawer.c.getContext('2d');
             drawer.init();
             // drawer.draw();
-            let ele = new Element(
-                drawer.ox,
-                drawer.oy,
-                20,
-                0,
-                0.1,
-                Math.PI / 400,
-                10,
-                'red'
-            );
-            ele.draw(drawer.ctx, Math.max(drawer.ox, drawer.oy));
+            // let ele = new Element( drawer.ox, drawer.oy, 20, 0, 0.1, Math.PI / 400, 10, 'red' );
+            // ele.draw(drawer.ctx, Math.max(drawer.ox, drawer.oy));
+
+            drawer.elements = [
+                new Element(drawer.ox, drawer.oy, 0, 0, 0.1, Math.PI / 800, 20, 'red'),
+                new Element(drawer.ox, drawer.oy, 0, Math.PI / 2, 0.1, Math.PI / 800, 20, 'red'),
+                new Element(drawer.ox, drawer.oy, 0, Math.PI, 0.1, Math.PI / 800, 20, 'red'),
+                new Element(drawer.ox, drawer.oy, 0, 3 * Math.PI / 2, 0.1, Math.PI / 800, 20, 'red'),
+            ]
+            drawer.elements.map((item) => item.draw(drawer.ctx, drawer.oy));
         },
         init() {
             drawer.w = drawer.c.width = window.innerWidth;
