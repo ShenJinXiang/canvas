@@ -1,6 +1,6 @@
 {
     const option = {
-        time: 50,
+        time: 25,
     };
 
     class Element {
@@ -10,15 +10,41 @@
             this.time = time;
 
             this.current = 0;
-            this.ratio = 0;
 
-            this.circular = {
-                minRadius: 5,
-                maxRadius: 100,
-                radiusStep: 95 / this.time,
-                lineWidth: 2,
+            this.elements = [
+                new Circular(0, 50, this.time, 2),
+            ]
+
+
+        }
+        update() {
+            if (this.current <= this.time) {
+                this.current++;
+                this.elements.map((item) => item.update());
             }
+        }
+        draw(ctx) {
+            if (this.current <= this.time) {
+                ctx.save();
+                ctx.translate(this.x, this.y);
 
+                this.elements.map((item) => item.draw(ctx));
+
+                ctx.restore();
+            }
+        }
+    }
+
+    class Circular {
+        constructor(minRadius, maxRadius, time, lineWidth) {
+            this.minRadius = minRadius;
+            this.maxRadius = maxRadius;
+            this.time = time;
+            this.lineWidth = lineWidth;
+            this.radiusStep = (this.maxRadius - this.minRadius) / this.time;
+
+            this.current = 0;
+            this.ratio = 0;
         }
         update() {
             if (this.current <= this.time) {
@@ -29,14 +55,11 @@
         draw(ctx) {
             if (this.current <= this.time) {
                 ctx.save();
-                ctx.translate(this.x, this.y);
-
                 ctx.beginPath();
-                ctx.lineWidth = this.circular.lineWidth;
+                ctx.lineWidth = this.lineWidth;
                 ctx.strokeStyle = 'hsla(100, 100%, 50%, ' + (1 - this.ratio) + ')';
-                ctx.arc(0, 0, this.circular.radiusStep * this.current, 0, 2 * Math.PI, false);
+                ctx.arc(0, 0, this.radiusStep * this.current, 0, 2 * Math.PI, false);
                 ctx.stroke();
-
                 ctx.restore();
             }
         }
@@ -76,7 +99,7 @@
             drawer.c.addEventListener('click', drawer.mouseClick, false);
         },
         mouseClick(e) {
-            let point = CanvasUtil.windowToCanvas(drawer.c, e.clientX, e.clientY);
+            let point = CanvasUtil.eventToCanvas(drawer.c, e);
             drawer.currentElement = new Element(point.x, point.y, option.time);
         }
     };

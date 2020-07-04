@@ -96,6 +96,13 @@ const CanvasUtil = {
     drawMark(ctx, mark) {
         ctx.drawImage(mark, ctx.canvas.width - mark.width, ctx.canvas.height - mark.height);
     },
+    eventToCanvas(canvas, e) {
+        let box = canvas.getBoundingClientRect();
+        return {
+            x: e.clientX - box.left,
+            y: e.clientY - box.top
+        };
+    },
     windowToCanvas(canvas, x, y) {
         let box = canvas.getBoundingClientRect();
         return {
