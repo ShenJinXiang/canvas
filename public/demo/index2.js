@@ -3,104 +3,35 @@
         time: 30,
     };
 
-
-    class BurstElement {
-        constructor(ox, oy, startRadius, endRadius, time, style, startAlpha, endAlpha) {
-            this.ox = ox;
-            this.oy = oy;
-            this.startRadius = startRadius;
-            this.endRadius = endRadius;
-            this.time = time;
-
-            this.style = style;
-            this.startAlpha = startAlpha;
-            this.endAlpha = endAlpha;
-
-            this.radiusStep = (this.endRadius- this.startRadius ) / this.time;
-            this.radius = this.startRadius;
-
-            this.alphaStep = (this.endAlpha - this.startAlpha) / this.time;
-            this.alpha = this.startAlpha;
-            this.eleStyle = 'hsla(' + this.style + ', ' + this.alpha + ')';
-
-            this.current = 0;
-            // this.ratio = 0;
-        }
-        update() {
-            if (this.current <= this.time) {
-                this.current++;
-                // this.ratio = this.current / this.time;
-                this.radius += this.radiusStep;
-                this.alpha += this.alphaStep;
-                this.eleStyle = 'hsla(' + this.style + ', ' + this.alpha + ')';
-            }
-        }
-    }
-
-    class Circular extends BurstElement{
-        constructor(ox, oy, startRadius, endRadius, time, style, startAlpha, endAlpha, startLineWidth, endLineWidth) {
-            super(ox, oy, startRadius, endRadius, time, style, startAlpha, endAlpha);
-            this.startLineWidth = startLineWidth;
-            this.endLineWidth = endLineWidth;
-            this.lineWidthStep = (this.endLineWidth - this.startLineWidth) / this.time;
-            this.lineWidth = this.startLineWidth;
-        }
-        update() {
-            console.log(this.current);
-            super.update();
-            if (this.current <= this.time) {
-                this.lineWidth += this.lineWidthStep;
-            }
-        }
-
-        draw(ctx) {
-            ctx.save();
-            ctx.translate(this.ox, this.oy);
-            ctx.strokeStyle = this.eleStyle;
-            ctx.lineWidth = this.lineWidth;
-            ctx.beginPath();
-            ctx.arc(0, 0, this.radius, 0, 2 * Math.PI, false);
-            ctx.stroke();
-            ctx.restore();
-        }
-    }
-
-    class Point extends  BurstElement {
-        constructor(ox, oy, startRadius, endRadius, time, style, startAlpha, endAlpha, PointRadius, ) {
-            super(ox, oy, startRadius, endRadius, time, style, startAlpha, endAlpha);
-        }
-    }
-
-
-
-
     class Element {
         constructor(x, y, time) {
             this.x = x;
             this.y = y;
-            // this.time = time;
+            this.time = time;
 
             this.current = 0;
 
             this.elements = [
-                new Circular(this.x, this.y, 0, 80, 1000, '6, 63%, 46%', 1, 0, 8, 0, ),
-                // new SpreadPoint(this.x, this.y, 0, 100, this.time, 25, 2, '#048', 0, Math.PI / 60),
-                // new SpreadPolygon(this.x, this.y, 50, 150,  1500, 15, 4, 3, 'hsla(168, 76%, 36%, 1)', 0, Math.PI / 120),
+                new SpreadCircular(this.x, this.y, 0, 50, this.time, 2),
+                new SpreadPoint(this.x, this.y, 0, 100, this.time, 25, 2, '#048', 0, Math.PI / 60),
+                new SpreadPolygon(this.x, this.y, 50, 150,  1500, 15, 4, 3, 'hsla(168, 76%, 36%, 1)', 0, Math.PI / 120),
             ]
 
 
         }
         update() {
+            if (this.current <= this.time) {
                 this.current++;
                 this.elements.map((item) => item.update());
-            // }
+            }
         }
         draw(ctx) {
+            if (this.current <= this.time) {
                 this.elements.map((item) => item.draw(ctx));
+            }
         }
     }
 
-    /**
     class SpreadCircular {
         constructor(ox, oy, minRadius, maxRadius, time, lineWidth) {
             this.ox = ox;
@@ -243,7 +174,6 @@
         }
 
     }
-     */
 
     const drawer = {
         start() {
