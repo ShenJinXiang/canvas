@@ -37,7 +37,7 @@
         }
     }
 
-    class Circular extends BurstElement{
+    class CircularElement extends BurstElement{
         constructor(ox, oy, startRadius, endRadius, time, style, startAlpha, endAlpha, startLineWidth, endLineWidth) {
             super(ox, oy, startRadius, endRadius, time, style, startAlpha, endAlpha);
             this.startLineWidth = startLineWidth;
@@ -46,7 +46,6 @@
             this.lineWidth = this.startLineWidth;
         }
         update() {
-            console.log(this.current);
             super.update();
             if (this.current <= this.time) {
                 this.lineWidth += this.lineWidthStep;
@@ -65,14 +64,137 @@
         }
     }
 
-    class Point extends  BurstElement {
-        constructor(ox, oy, startRadius, endRadius, time, style, startAlpha, endAlpha, PointRadius, ) {
+    class PointElement extends  BurstElement {
+        constructor(ox, oy, startRadius, endRadius, time, style, startAlpha, endAlpha, pointStartRadius, pointEndRadius, pointNum, startAngle, endAngle) {
             super(ox, oy, startRadius, endRadius, time, style, startAlpha, endAlpha);
+            this.pointStartRadius = pointStartRadius;
+            this.pointEndRadius = pointEndRadius;
+            this.pointNum = pointNum;
+            this.startAngle = startAngle;
+            this.endAngle = endAngle;
+
+            this.pointAngleStep = 2 * Math.PI / this.pointNum;
+
+            this.pointRadiusStep = (this.pointEndRadius - this.pointStartRadius) / this.time;
+            this.pointRadius = this.pointStartRadius;
+
+            this.angleStep = (this.endAngle - this.startAngle) / this.time;
+            this.angle = this.startAngle;
+        }
+        update() {
+            super.update();
+            if (this.current <= this.time) {
+                this.angle += this.angleStep;
+                this.pointRadius += this.pointRadiusStep;
+            }
+        }
+        draw(ctx) {
+            if (this.current <= this.time) {
+                ctx.save();
+                ctx.translate(this.ox, this.oy);
+                ctx.rotate(this.angle);
+                ctx.fillStyle = this.eleStyle;
+                for (let i = 0; i < this.pointNum; i++) {
+                    ctx.beginPath();
+                    ctx.arc(
+                        this.radius * Math.cos(i * this.pointAngleStep),
+                        this.radius * Math.sin(i * this.pointAngleStep),
+                        this.pointRadius, 0, 2 * Math.PI, false );
+                    ctx.fill();
+                }
+                ctx.restore();
+
+            }
         }
     }
 
+    class LineElement extends BurstElement {
+        constructor(ox, oy, startRadius, endRadius, time, style, startAlpha, endAlpha, lineNum, lineStartWidth, lineEndWidth, startAngle, endAngle) {
+            super(ox, oy, startRadius, endRadius, time, style, startAlpha, endAlpha);
+            this.lineNum = lineNum;
+            this.lineStartWidth = lineStartWidth;
+            this.lineEndWidth = lineEndWidth;
+            this.startAngle = startAngle;
+            this.endAngle = endAngle;
 
+            this.lineAngleStep = 2 * Math.PI / this.lineNum;
 
+            this.lineWidthStep = (this.lineEndWidth - this.lineStartWidth) / this.time;
+            this.lineWidth = this.lineStartWidth;
+
+            this.angleStep = (this.endAngle - this.startAngle) / this.time;
+            this.angle = this.startAngle;
+        }
+        update() {
+            super.update();
+            if(this.current <= this.time) {
+                this.lineWidth += this.lineWidthStep;
+                this.angle += this.angleStep;
+            }
+        }
+        draw(ctx) {
+            if (this.current <= this.time) {
+                ctx.save();
+                ctx.translate(this.ox, this.oy);
+                ctx.rotate(this.angle);
+                ctx.strokeStyle = this.eleStyle;
+                ctx.lineWidth = this.lineWidth;
+                for (let i = 0; i < this.lineNum; i++) {
+                    ctx.beginPath();
+                    ctx.lineTo(this.radius * Math.cos(i * this.lineAngleStep),this.radius * Math.sin(i * this.lineAngleStep));
+                    ctx.lineTo((this.radius + 10) * Math.cos(i * this.lineAngleStep), (this.radius + 10) * Math.sin(i * this.lineAngleStep));
+                    ctx.stroke();
+                }
+                ctx.restore();
+            }
+        }
+    }
+    class PolygonElement extends BurstElement {
+        constructor(ox, oy, startRadius, endRadius, time, style, startAlpha, endAlpha, polygonNum, polygonSide, polygonRadius, startAngle, endAngle) {
+            super(ox, oy, startRadius, endRadius, time, style, startAlpha, endAlpha);
+            this.polygonNum = polygonNum;
+            this.polygonSide = polygonSide;
+            this.polygonRadius = polygonRadius;
+            this.startAngle = startAngle;
+            this.endAngle = endAngle;
+
+            this.polygonAngleStep = 2 * Math.PI / this.polygonNum;
+            this.polygonSideAngleStep = 2 * Math.PI / this.polygonSide;
+
+            this.angleStep = (this.endAngle - this.startAngle) / this.time;
+            this.angle = this.startAngle;
+        }
+        update() {
+            super.update();
+            console.log("polygon " + this.current);
+            if(this.current <= this.time) {
+                this.angle += this.angleStep;
+            }
+        }
+        draw(ctx) {
+            if (this.current <= this.time) {
+                ctx.save();
+                ctx.translate(this.ox, this.oy);
+                ctx.rotate(this.angle);
+                for (let i = 0; i < this.polygonNum; i++) {
+                    ctx.save();
+                    ctx.translate(this.radius * Math.cos(i * this.polygonAngleStep),this.radius * Math.sin(i * this.polygonAngleStep));
+                    ctx.beginPath();
+                    ctx.fillStyle = this.eleStyle;
+                    for (let side = 0 ; side < this.polygonSide; side++) {
+                        ctx.lineTo(
+                            this.polygonRadius * Math.cos(side * this.polygonSideAngleStep),
+                            this.polygonRadius * Math.sin(side * this.polygonSideAngleStep),
+                        );
+                    }
+                    ctx.closePath();
+                    ctx.fill();
+                    ctx.restore();
+                }
+                ctx.restore();
+            }
+        }
+    }
 
     class Element {
         constructor(x, y, time) {
@@ -83,15 +205,16 @@
             this.current = 0;
 
             this.elements = [
-                new Circular(this.x, this.y, 0, 80, 1000, '6, 63%, 46%', 1, 0, 8, 0, ),
-                // new SpreadPoint(this.x, this.y, 0, 100, this.time, 25, 2, '#048', 0, Math.PI / 60),
-                // new SpreadPolygon(this.x, this.y, 50, 150,  1500, 15, 4, 3, 'hsla(168, 76%, 36%, 1)', 0, Math.PI / 120),
+                new CircularElement(this.x, this.y, 0, 80, 40, '6, 63%, 46%', 1, 0, 4, 0, ),
+                new PointElement(this.x, this.y, 0, 100, 32, '90, 44%, 47%', 1, 0, 0, 5, 25, 0,  Math.PI / 2),
+                new LineElement(this.x, this.y, 0, 150, 32, '24, 99%, 42%', 1, 0.2, 10, 5, 2, 0,  -Math.PI / 3),
+                new LineElement(this.x, this.y, 50, 150, 40, '0, 0%, 13%', 1, 0, 10, 4, 4, 0,  0),
+                new PolygonElement(this.x, this.y, 50, 150, 60, '168, 76%, 36%', 1, 0, 15, 3, 6, 0,  2 * Math.PI / 3),
             ]
-
-
         }
         update() {
                 this.current++;
+                console.log(this.current);
                 this.elements.map((item) => item.update());
             // }
         }
@@ -99,151 +222,6 @@
                 this.elements.map((item) => item.draw(ctx));
         }
     }
-
-    /**
-    class SpreadCircular {
-        constructor(ox, oy, minRadius, maxRadius, time, lineWidth) {
-            this.ox = ox;
-            this.oy = oy;
-            this.minRadius = minRadius;
-            this.maxRadius = maxRadius;
-            this.time = time;
-            this.lineWidth = lineWidth;
-            this.radiusStep = (this.maxRadius - this.minRadius) / this.time;
-
-            this.current = 0;
-            this.ratio = 0;
-        }
-        update() {
-            if (this.current <= this.time) {
-                this.current++;
-                this.ratio = this.current / this.time;
-            }
-        }
-        draw(ctx) {
-            if (this.current <= this.time) {
-                ctx.save();
-                ctx.translate(this.ox, this.oy);
-                ctx.beginPath();
-                ctx.lineWidth = this.lineWidth;
-                // ctx.strokeStyle = 'hsla(100, 100%, 50%, ' + (1 - this.ratio) + ')';
-                ctx.strokeStyle = 'rgba(76, 123, 122, ' + (1 - this.ratio) + ')'
-                ctx.arc(0, 0, this.radiusStep * this.current, 0, 2 * Math.PI, false);
-                ctx.stroke();
-                ctx.restore();
-            }
-        }
-    }
-
-    class SpreadPoint {
-        constructor(ox, oy, minRadius, maxRadius, time, pointNum, pointRadius, pointStyle, rotateBeginAngle, rotateAngleStep) {
-            this.ox = ox;
-            this.oy = oy;
-            this.minRadius = minRadius;
-            this.maxRadius = maxRadius;
-            this.time = time;
-            this.pointNum = pointNum;
-            this.pointRadius = pointRadius;
-            this.pointStyle = pointStyle;
-            this.rotateBeginAngle = rotateBeginAngle;
-            this.rotateAngleStep = rotateAngleStep;
-            this.pointAngleStep = 2 * Math.PI / this.pointNum;
-            this.radiusStep = (this.maxRadius - this.minRadius) / this.time;
-
-            this.current = 0;
-            this.ratio = 0;
-            this.rotateAngle = this.rotateBeginAngle;
-        }
-        update() {
-            if (this.current <= this.time) {
-                this.current++;
-                this.ratio = this.current / this.time;
-                this.rotateAngle += this.rotateAngleStep;
-            }
-        }
-        draw(ctx) {
-            if (this.current <= this.time) {
-                ctx.save();
-                ctx.translate(this.ox, this.oy);
-                ctx.rotate(this.rotateAngle);
-                for (let i = 0; i < this.pointNum; i++) {
-                    ctx.beginPath();
-                    // ctx.fillStyle = this.pointStyle;
-                    ctx.fillStyle = 'rgba(186, 145, 205, ' + (1 - this.ratio) + ')';
-                    ctx.arc(
-                        this.current * this.radiusStep * Math.cos(i * this.pointAngleStep),
-                        this.current * this.radiusStep * Math.sin(i * this.pointAngleStep),
-                        this.pointRadius,
-                        0,
-                        2 * Math.PI,
-                        false
-                    );
-                    ctx.fill();
-                }
-                ctx.restore();
-            }
-        }
-    }
-
-    class SpreadPolygon {
-        constructor(ox, oy, minRadius, maxRadius, time, polygonNum, polygonRadius, polygonSideNum, polygonStyle, rotateBeginAngle, rotateAngleStep ) {
-            this.ox = ox;
-            this.oy = oy;
-            this.minRadius = minRadius;
-            this.maxRadius = maxRadius;
-            this.time = time;
-            this.polygonNum = polygonNum;
-            this.polygonRadius = polygonRadius;
-            this.polygonSideNum = polygonSideNum;
-            this.polygonStyle = polygonStyle;
-            this.rotateBeginAngle = rotateBeginAngle;
-            this.rotateAngleStep = rotateAngleStep;
-            this.polygonAngleStep = 2 * Math.PI / this.polygonNum;
-            this.radiusStep = (this.maxRadius - this.minRadius) / this.time;
-
-            this.sideAngleStep = 2 * Math.PI / this.polygonSideNum;
-
-            this.current = 0;
-            this.ratio = 0;
-            this.rotateAngle = this.rotateBeginAngle;
-        }
-        update() {
-            if (this.current <= this.time) {
-                this.current++;
-                this.ratio = this.current / this.time;
-                this.rotateAngle += this.rotateAngleStep;
-            }
-        }
-        draw(ctx) {
-            if (this.current <= this.time) {
-                ctx.save();
-                ctx.translate(this.ox, this.oy);
-                ctx.rotate(this.rotateAngle);
-                for (let i = 0; i < this.polygonNum; i++) {
-                    ctx.save();
-                    ctx.translate(
-                        this.current * this.radiusStep * Math.cos(i * this.polygonAngleStep),
-                        this.current * this.radiusStep * Math.sin(i * this.polygonAngleStep)
-                    );
-                    ctx.beginPath();
-                    // ctx.fillStyle = this.polygonStyle;
-                    ctx.fillStyle = 'rgba(35, 160, 133, ' + (1 - this.ratio) + ')';
-                    for (let side = 0; side < this.polygonSideNum; side++) {
-                        ctx.lineTo(
-                            this.polygonRadius * Math.cos(side * this.sideAngleStep),
-                            this.polygonRadius * Math.sin(side * this.sideAngleStep)
-                        );
-                    }
-                    ctx.closePath();
-                    ctx.fill();
-                    ctx.restore();
-                }
-                ctx.restore();
-            }
-        }
-
-    }
-     */
 
     const drawer = {
         start() {
