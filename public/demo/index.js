@@ -5,7 +5,6 @@
         titleBoxHeight: 60,
     };
 
-
     class BurstElement {
         constructor(ox, oy, startRadius, endRadius, time, style, startAlpha, endAlpha) {
             this.ox = ox;
@@ -26,12 +25,10 @@
             this.eleStyle = 'hsla(' + this.style + ', ' + this.alpha + ')';
 
             this.current = 0;
-            // this.ratio = 0;
         }
         update() {
             if (this.current <= this.time) {
                 this.current++;
-                // this.ratio = this.current / this.time;
                 this.radius += this.radiusStep;
                 this.alpha += this.alphaStep;
                 this.eleStyle = 'hsla(' + this.style + ', ' + this.alpha + ')';
@@ -168,7 +165,6 @@
         }
         update() {
             super.update();
-            console.log("polygon " + this.current);
             if(this.current <= this.time) {
                 this.angle += this.angleStep;
             }
@@ -283,7 +279,6 @@
             context.shadowOffsetY = 0;
             context.strokeStyle = 'rgba(50, 50, 50, 1)';
             context.lineWidth = 1;
-            // context.strokeRect(-option.titleBoxWidth / 2, -option.titleBoxHeight / 2, option.titleBoxWidth, option.titleBoxHeight);
             context.beginPath();
             context.moveTo(-option.titleBoxWidth / 2, option.titleBoxHeight / 2);
             context.lineTo(-option.titleBoxWidth / 2, -option.titleBoxHeight / 2);
@@ -292,8 +287,12 @@
             context.stroke();
 
             context.beginPath();
-            context.strokeStyle = 'rgba(0, 60, 60, 0.8)';
-            context.lineWidth = 4;
+            context.strokeStyle = 'rgba(0, 0, 0, 1)';
+            context.lineWidth = 2;
+            context.shadowColor = 'rgba(50, 50, 50, 1)';
+            context.shadowBlur = 10;
+            context.shadowOffsetX = 0;
+            context.shadowOffsetY = 2;
             context.moveTo(-option.titleBoxWidth / 2, option.titleBoxHeight / 2);
             context.lineTo(option.titleBoxWidth / 2, option.titleBoxHeight / 2);
             context.stroke();
