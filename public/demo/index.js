@@ -1,6 +1,8 @@
 {
     const option = {
-        time: 30,
+        title: '-- Click Anywhere --',
+        titleBoxWidth: 300,
+        titleBoxHeight: 60,
     };
 
 
@@ -197,13 +199,10 @@
     }
 
     class Element {
-        constructor(x, y, time) {
+        constructor(x, y) {
             this.x = x;
             this.y = y;
-            // this.time = time;
-
             this.current = 0;
-
             this.elements = [
                 new CircularElement(this.x, this.y, 0, 80, 40, '6, 63%, 46%', 1, 0, 4, 0, ),
                 new PointElement(this.x, this.y, 0, 100, 32, '90, 44%, 47%', 1, 0, 0, 5, 25, 0,  Math.PI / 2),
@@ -213,13 +212,11 @@
             ]
         }
         update() {
-                this.current++;
-                console.log(this.current);
-                this.elements.map((item) => item.update());
-            // }
+            this.current++;
+            this.elements.map((item) => item.update());
         }
         draw(ctx) {
-                this.elements.map((item) => item.draw(ctx));
+            this.elements.map((item) => item.draw(ctx));
         }
     }
 
@@ -227,6 +224,8 @@
         start() {
             drawer.c = document.getElementById('canvas');
             drawer.ctx = drawer.c.getContext('2d');
+            drawer.mark = CanvasUtil.getMarkCanvas();
+            drawer.titleCanvas = drawer.createTitleCanvas();
             drawer.init();
             drawer.animate();
             drawer.bindEvent();
@@ -251,14 +250,55 @@
             if (drawer.currentElement) {
                 drawer.currentElement.draw(ctx);
             }
-
+            ctx.drawImage(drawer.titleCanvas, (drawer.w - drawer.titleCanvas.width) / 2, 20);
+            CanvasUtil.drawMark(ctx, drawer.mark);
         },
         bindEvent() {
             drawer.c.addEventListener('click', drawer.mouseClick, false);
+            window.addEventListener('resize', drawer.init, false);
         },
         mouseClick(e) {
             let point = CanvasUtil.eventToCanvas(drawer.c, e);
-            drawer.currentElement = new Element(point.x, point.y, option.time);
+            drawer.currentElement = new Element(point.x, point.y);
+        },
+        createTitleCanvas() {
+            let canvas = document.createElement('canvas'),
+                width = canvas.width = option.titleBoxWidth + 20,
+                height = canvas.height = option.titleBoxHeight + 20,
+                context = canvas.getContext('2d');
+            context.save();
+            context.translate(width / 2, height / 2);
+            context.textBaseline = 'middle';
+            context.textAlign = 'center';
+            context.fillStyle = 'rgba(0, 0, 0, 0.8)';
+            context.font = '20px console';
+            context.fillText(option.title, 0, 0);
+            context.restore();
+
+            context.save();
+            context.translate(width / 2, height / 2);
+            context.shadowColor = 'rgba(50, 50, 50, 1)';
+            context.shadowBlur = 10;
+            context.shadowOffsetX = 0;
+            context.shadowOffsetY = 0;
+            context.strokeStyle = 'rgba(50, 50, 50, 1)';
+            context.lineWidth = 1;
+            // context.strokeRect(-option.titleBoxWidth / 2, -option.titleBoxHeight / 2, option.titleBoxWidth, option.titleBoxHeight);
+            context.beginPath();
+            context.moveTo(-option.titleBoxWidth / 2, option.titleBoxHeight / 2);
+            context.lineTo(-option.titleBoxWidth / 2, -option.titleBoxHeight / 2);
+            context.lineTo(option.titleBoxWidth / 2, -option.titleBoxHeight / 2);
+            context.lineTo(option.titleBoxWidth / 2, option.titleBoxHeight / 2);
+            context.stroke();
+
+            context.beginPath();
+            context.strokeStyle = 'rgba(0, 60, 60, 0.8)';
+            context.lineWidth = 4;
+            context.moveTo(-option.titleBoxWidth / 2, option.titleBoxHeight / 2);
+            context.lineTo(option.titleBoxWidth / 2, option.titleBoxHeight / 2);
+            context.stroke();
+            context.restore();
+            return canvas;
         }
     };
     drawer.start();
