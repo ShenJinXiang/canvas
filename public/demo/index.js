@@ -18,6 +18,11 @@
             drawer.w = drawer.h = drawer.c.width = drawer.c.height = drawer.width;
             drawer.gridWidth = drawer.width * 0.9;
             drawer.half = drawer.gridWidth / 2;
+            drawer.maxStrokeWidth = drawer.width * .02;
+            drawer.minStrokeWidth = 1;
+            drawer.minDis = 1;
+            drawer.maxDis = 10;
+            console.log(drawer);
 
             drawer.flag = false;
             drawer.drawGridLine(drawer.ctx);
@@ -61,15 +66,29 @@
         },
         drawHandWriting(ctx, point) {
             if (drawer.lastPoint) {
+                let dis = CanvasUtil.distance(drawer.lastPoint.x, drawer.lastPoint.y, point.x, point.y);
                 ctx.save();
                 ctx.beginPath();
+                ctx.lineCap = 'round';
+                ctx.lineJoin = 'round';
                 ctx.strokeStyle = option.handWritingColor;
+                ctx.lineWidth = drawer.widthByDistance(dis);
                 ctx.moveTo(drawer.lastPoint.x, drawer.lastPoint.y);
                 ctx.lineTo(point.x, point.y);
                 ctx.stroke();
                 ctx.restore();
             }
             drawer.lastPoint = point;
+        },
+        widthByDistance(distance) {
+            if (distance < drawer.minDis) {
+                distance = drawer.minDis;
+            }
+            if (distance > drawer.maxDis) {
+                distance = drawer.maxDis;
+            }
+            return drawer.minStrokeWidth + (drawer.maxStrokeWidth - drawer.minStrokeWidth) * (1 - (distance - drawer.minDis) / (drawer.maxDis - drawer.minDis));
+
         }
     };
     drawer.start();
