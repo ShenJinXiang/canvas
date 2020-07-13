@@ -13,15 +13,13 @@
         },
         init() {
             drawer.width = Math.min(window.innerWidth, window.innerHeight);
-            // drawer.w = drawer.c.width = window.innerWidth;
-            // drawer.h = drawer.c.height = window.innerHeight;
             drawer.w = drawer.h = drawer.c.width = drawer.c.height = drawer.width;
             drawer.gridWidth = drawer.width * 0.9;
             drawer.half = drawer.gridWidth / 2;
-            drawer.maxStrokeWidth = drawer.width * .02;
+            drawer.maxStrokeWidth = drawer.width * .04;
             drawer.minStrokeWidth = 1;
-            drawer.minDis = 1;
-            drawer.maxDis = 10;
+            drawer.minV = 0.1;
+            drawer.maxV = 10;
             console.log(drawer);
 
             drawer.flag = false;
@@ -63,32 +61,42 @@
         up(e) {
             drawer.flag = false;
             delete drawer.lastPoint;
+            delete drawer.lastTimestamp;
         },
         drawHandWriting(ctx, point) {
+            drawer.timestamp = new Date().getTime();
             if (drawer.lastPoint) {
                 let dis = CanvasUtil.distance(drawer.lastPoint.x, drawer.lastPoint.y, point.x, point.y);
+                drawer.lastLineWidth = drawer.widthByDistance(dis, drawer.timestamp - drawer.lastTimestamp, drawer.lastLineWidth);
                 ctx.save();
                 ctx.beginPath();
                 ctx.lineCap = 'round';
                 ctx.lineJoin = 'round';
                 ctx.strokeStyle = option.handWritingColor;
-                ctx.lineWidth = drawer.widthByDistance(dis);
+                ctx.lineWidth = drawer.lastLineWidth;
                 ctx.moveTo(drawer.lastPoint.x, drawer.lastPoint.y);
                 ctx.lineTo(point.x, point.y);
                 ctx.stroke();
                 ctx.restore();
             }
             drawer.lastPoint = point;
+            drawer.lastTimestamp = drawer.timestamp;
         },
-        widthByDistance(distance) {
-            if (distance < drawer.minDis) {
-                distance = drawer.minDis;
+        widthByDistance(distance, time, lastLineWidth) {
+            let v = distance / time,
+                lineWidth;
+            if (v < drawer.minV) {
+                v = drawer.minV;
             }
-            if (distance > drawer.maxDis) {
-                distance = drawer.maxDis;
+            if (v > drawer.maxV) {
+                v = drawer.maxV;
             }
-            return drawer.minStrokeWidth + (drawer.maxStrokeWidth - drawer.minStrokeWidth) * (1 - (distance - drawer.minDis) / (drawer.maxDis - drawer.minDis));
-
+            // return drawer.minStrokeWidth + (drawer.maxStrokeWidth - drawer.minStrokeWidth) * (1 - (distance - drawer.minDis) / (drawer.maxDis - drawer.minDis));
+            lineWidth = drawer.maxStrokeWidth - (v - drawer.minV) / (drawer.maxV - drawer.minV) * (drawer.maxStrokeWidth - drawer.minStrokeWidth);
+            if (!lastLineWidth) {
+                return lineWidth;
+            }
+            return lastLineWidth * 0.75 + lineWidth * 0.25;
         }
     };
     drawer.start();
