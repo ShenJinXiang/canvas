@@ -8,15 +8,16 @@
         start() {
             drawer.c = document.getElementById('canvas');
             drawer.ctx = drawer.c.getContext('2d');
+            drawer.clear = document.getElementById('clear');
             drawer.init();
             drawer.bindEvent();
         },
         init() {
             drawer.width = Math.min(window.innerWidth, window.innerHeight);
             drawer.w = drawer.h = drawer.c.width = drawer.c.height = drawer.width;
-            drawer.gridWidth = drawer.width * 0.9;
+            drawer.gridWidth = drawer.width * 0.8;
             drawer.half = drawer.gridWidth / 2;
-            drawer.maxStrokeWidth = drawer.width * .04;
+            drawer.maxStrokeWidth = drawer.width * .03;
             drawer.minStrokeWidth = 1;
             drawer.minV = 0.1;
             drawer.maxV = 10;
@@ -43,25 +44,41 @@
             window.addEventListener('resize', drawer.init, false);
             drawer.c.addEventListener('mousemove', drawer.move, false);
             drawer.c.addEventListener('mousedown', drawer.down, false);
-            drawer.c.addEventListener('mouseup', drawer.up, false);
-            drawer.c.addEventListener('mouseleave', drawer.up, false);
+            drawer.c.addEventListener('mouseup', drawer.endStroke, false);
+            drawer.c.addEventListener('mouseleave', drawer.endStroke, false);
+            drawer.clear.addEventListener('click', drawer.init, false);
+            drawer.c.addEventListener('touchstart', drawer.touchstart, false);
+            drawer.c.addEventListener('touchmove', drawer.touchmove, false);
+            drawer.c.addEventListener('touchend', drawer.endStroke, false);
+        },
+        beginStroke(point) {
+            if (point.x >= 0 && point.x <= drawer.w && point.y >= 0 && point.y <= drawer.h) {
+                drawer.flag = true;
+                drawer.drawHandWriting(drawer.ctx, point);
+            }
+        },
+        endStroke() {
+            drawer.flag = false;
+            delete drawer.lastPoint;
+            delete drawer.lastTimestamp;
         },
         move(e) {
             if (drawer.flag) {
                 drawer.drawHandWriting(drawer.ctx, CanvasUtil.eventToCanvas(drawer.c, e));
             }
         },
-        down(e) {
-            let p = CanvasUtil.eventToCanvas(drawer.c, e);
-            if (p.x >= 0 && p.x <= drawer.w && p.y >= 0 && p.y <= drawer.h) {
-                drawer.flag = true;
-                drawer.drawHandWriting(drawer.ctx, p);
+        touchmove(e) {
+            if (drawer.flag) {
+                drawer.drawHandWriting(drawer.ctx, CanvasUtil.touchEventToCanvas(drawer.c, e));
             }
         },
-        up(e) {
-            drawer.flag = false;
-            delete drawer.lastPoint;
-            delete drawer.lastTimestamp;
+        down(e) {
+            let p = CanvasUtil.eventToCanvas(drawer.c, e);
+            drawer.beginStroke(p);
+        },
+        touchstart(e) {
+            let p = CanvasUtil.touchEventToCanvas(drawer.c, e);
+            drawer.beginStroke(p);
         },
         drawHandWriting(ctx, point) {
             drawer.timestamp = new Date().getTime();
