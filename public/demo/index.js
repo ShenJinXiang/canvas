@@ -68,6 +68,7 @@
             }
         },
         touchmove(e) {
+			e.preventDefault();
             if (drawer.flag) {
                 drawer.drawHandWriting(drawer.ctx, CanvasUtil.touchEventToCanvas(drawer.c, e));
             }
@@ -77,6 +78,7 @@
             drawer.beginStroke(p);
         },
         touchstart(e) {
+			e.preventDefault();
             let p = CanvasUtil.touchEventToCanvas(drawer.c, e);
             drawer.beginStroke(p);
         },
