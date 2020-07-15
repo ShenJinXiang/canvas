@@ -20,7 +20,7 @@
             drawer.maxStrokeWidth = drawer.width * .03;
             drawer.minStrokeWidth = 1;
             drawer.minV = 0.1;
-            drawer.maxV = 10;
+            drawer.maxV = 5;
             console.log(drawer);
 
             drawer.flag = false;
@@ -104,6 +104,7 @@
         widthByDistance(distance, time, lastLineWidth) {
             let v = distance / time,
                 lineWidth;
+			console.log('v: ' + v);
             if (v < drawer.minV) {
                 v = drawer.minV;
             }
@@ -115,7 +116,7 @@
             if (!lastLineWidth) {
                 return lineWidth;
             }
-            return lastLineWidth * 0.75 + lineWidth * 0.25;
+            return lastLineWidth * 0.7 + lineWidth * 0.3;
         }
     };
     drawer.start();
