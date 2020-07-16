@@ -1,0 +1,19 @@
+body {margin: 0; padding: 0; background: #fff;}
+.clear {
+    display: block;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    height: 44px;
+    cursor: pointer;
+    line-height: 44px;
+    text-align: center;
+    font-size: 14px;
+    color: #1d81af;
+    background: rgba(150, 150, 150, 0.2);
+}
+canvas {
+    display: block;
+    margin: 0 auto;
+    padding: 0;
+}

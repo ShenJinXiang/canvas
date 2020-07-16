@@ -68,6 +68,7 @@ npm start
 * [视觉误差动画（二）](https://canvas.shenjinxiang.com/202006/视觉误差动画（二）/)
 * [视觉误差动画（三）](https://canvas.shenjinxiang.com/202007/视觉误差动画（三）/)
 * [鼠标点击效果](https://canvas.shenjinxiang.com/202007/鼠标点击效果/)
+* [写一个字](https://canvas.shenjinxiang.com/202007/写一个字/)
 
 ## 感谢
 <a href="https://www.jetbrains.com/?from=ShenJinXiang/canvas"><img src="./public/images/jetbrains.png" width="120px;"/></a>
