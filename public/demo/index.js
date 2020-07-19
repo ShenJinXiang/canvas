@@ -1,4 +1,7 @@
 {
+    const option = {
+        color: 'green'
+    };
     class Parallelogram {
         constructor(x, y, width1, width2, angle, rotate, style) {
             this.x = x;
@@ -47,17 +50,71 @@
             drawer.c = document.getElementById('canvas');
             drawer.ctx = drawer.c.getContext('2d');
             drawer.init();
-            
-            let ele = new Parallelogram(100, 100, 300, 240, Math.PI / 4, 0, '#000');
-            ele.fill(drawer.ctx, 'green');
-            ele.stroke(drawer.ctx, 'red', 3);
+            drawer.bindEvent();
         },
         init() {
             drawer.w = drawer.c.width = window.innerWidth;
             drawer.h = drawer.c.height = window.innerHeight;
             drawer.width = Math.min(drawer.w, drawer.h);
 
-            // initElements();
+            drawer.sideWidth = drawer.width * 0.02;
+
+            drawer.radius1 = drawer.width * 0.3;
+            drawer.radius2 = drawer.width * 0.4;
+
+            drawer.num1 = Math.floor(drawer.radius1 * Math.PI / drawer.sideWidth);
+            drawer.num2 = Math.floor(drawer.radius2 * Math.PI / drawer.sideWidth);
+
+            drawer.initElements();
+            drawer.draw();
+        },
+        initElements() {
+            drawer.elements  = [];
+            for (let i = 0, angle = 2 * Math.PI / drawer.num1; i < drawer.num1; i++) {
+                drawer.elements.push(new Parallelogram(
+                    drawer.radius1 * Math.cos(i * angle),
+                    drawer.radius1 * Math.sin(i * angle),
+                    drawer.sideWidth,
+                    drawer.sideWidth,
+                    2 * Math.PI / 3,
+                    i * angle - Math.PI / 2,
+                    option.color
+                ));
+            }
+            for (let i = 0, angle = 2 * Math.PI / drawer.num2; i < drawer.num2; i++) {
+                drawer.elements.push(new Parallelogram(
+                    drawer.radius2 * Math.cos(i * angle),
+                    drawer.radius2 * Math.sin(i * angle),
+                    drawer.sideWidth,
+                    drawer.sideWidth,
+                    Math.PI / 3,
+                    i * angle - Math.PI / 2,
+                    // i * angle,
+                    option.color
+                ));
+            }
+        },
+        draw() {
+            let ctx = drawer.ctx;
+            ctx.save();
+            ctx.translate(drawer.w / 2, drawer.h / 2);
+
+            ctx.beginPath();
+            ctx.strokeStyle = option.color;
+            ctx.lineWidth = 4;
+            ctx.moveTo(-drawer.sideWidth, 0);
+            ctx.lineTo(drawer.sideWidth, 0);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(0, -drawer.sideWidth);
+            ctx.lineTo(0, drawer.sideWidth);
+            ctx.stroke();
+
+            drawer.elements.map((item) => item.fill(ctx));
+            ctx.restore();
+        },
+        bindEvent() {
+            window.addEventListener('resize', drawer.init, false);
         }
 
     };
