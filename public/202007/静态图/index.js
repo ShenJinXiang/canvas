@@ -49,6 +49,7 @@
         start() {
             drawer.c = document.getElementById('canvas');
             drawer.ctx = drawer.c.getContext('2d');
+            drawer.mark = CanvasUtil.getMarkCanvas(option.color);
             drawer.init();
             drawer.bindEvent();
         },
@@ -112,6 +113,8 @@
 
             drawer.elements.map((item) => item.fill(ctx));
             ctx.restore();
+
+            CanvasUtil.drawMark(ctx, drawer.mark);
         },
         bindEvent() {
             window.addEventListener('resize', drawer.init, false);
