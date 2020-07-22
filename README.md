@@ -70,6 +70,7 @@ npm start
 * [鼠标点击效果](https://canvas.shenjinxiang.com/202007/鼠标点击效果/)
 * [写一个字](https://canvas.shenjinxiang.com/202007/写一个字/)
 * [静态图](https://canvas.shenjinxiang.com/202007/静态图/)
+* [旋转构建动画（七）](https://canvas.shenjinxiang.com/202007/旋转构建动画（七）/)
 
 ## 感谢
 <a href="https://www.jetbrains.com/?from=ShenJinXiang/canvas"><img src="./public/images/jetbrains.png" width="120px;"/></a>
