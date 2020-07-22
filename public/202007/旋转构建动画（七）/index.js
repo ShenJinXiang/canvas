@@ -2,7 +2,7 @@
     const option = {
         time: 600,
         sideNum: 5,
-        num: 60,
+        num: 40,
     };
 
     class Polygon {
@@ -62,8 +62,10 @@
         start() {
             drawer.c = document.getElementById('canvas');
             drawer.ctx = drawer.c.getContext('2d');
+            drawer.mark = CanvasUtil.getMarkCanvas();
             drawer.init();
             drawer.animate();
+            drawer.bindEvent();
         },
         init() {
             drawer.w = drawer.c.width = window.innerWidth;
@@ -74,9 +76,11 @@
             drawer.oy = drawer.h / 2;
             drawer.initElements();
             drawer.count = 0;
-            // drawer.angle = 0;
             drawer.angleStep = 2 * Math.PI / option.sideNum / option.time;
             drawer.sideAngle = (option.sideNum - 2) * Math.PI / option.sideNum / 2;
+        },
+        bindEvent() {
+            window.addEventListener('resize', drawer.init, false);
         },
         initElements() {
             drawer.elements = [];
@@ -116,6 +120,7 @@
             let ctx = drawer.ctx;
             ctx.clearRect(0, 0, drawer.w, drawer.h);
             drawer.elements.map((item) => item.stroke(ctx));
+            CanvasUtil.drawMark(ctx, drawer.mark);
         }
     };
 
