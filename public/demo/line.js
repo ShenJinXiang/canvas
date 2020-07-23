@@ -143,20 +143,26 @@ function line() {
                             index: index,
                             x: item.x,
                             y: item.y,
-                            xxs: drawer.contentWidth * (item.x - drawer.minX) / (drawer.maxX - drawer.minX),
+                            xxs: drawer.contentWidth * (item.x - start) / (end - start),
                             yxs: drawer.contentHeight * (item.y - drawer.winYRange[0]) / (drawer.winYRange[1] - drawer.winYRange[0]),
                         });
                     }
                 });
                 if (drawer.contentPoints[0].index != 0) {
                     let point = drawer.contentPoints[0],
-                        prevPoint = drawer.datas.points[point.index - 1];
-                    drawer.prevPoint = prevPoint;
+                        prevPoint = drawer.datas.points[point.index - 1],
+                        prevPointXxs = drawer.contentWidth * (prevPoint.x - start) / (end - start),
+                        prevPointYxs = drawer.contentHeight * (prevPoint.y - drawer.winYRange[0]) / (drawer.winYRange[1] - drawer.winYRange[0]),
+                        y = point.yxs - point.xxs * (point.yxs - prevPointYxs) / (point.xxs - prevPointXxs);
+                    drawer.startY = y;
                 }
                 if (drawer.contentPoints[drawer.contentPoints.length - 1].index != drawer.datas.points.length - 1) {
                     let point = drawer.contentPoints[drawer.contentPoints.length - 1],
                         nextPoint = drawer.datas.points[point.index + 1];
-                    drawer.nextPoint = nextPoint;
+                        nextPointXxs = drawer.contentWidth * (nextPoint.x - start) / (end - start),
+                        nextPointYxs = drawer.contentHeight * (nextPoint.y - drawer.winYRange[0]) / (drawer.winYRange[1] - drawer.winYRange[0]),
+                        y = point.yxs + (drawer.contentWidth - point.xxs) * (nextPointYxs - point.yxs) / (nextPointXxs - point.xxs);
+                    drawer.endY = y;
                 }
             }
 
@@ -354,12 +360,29 @@ function line() {
                 ctx.fillStyle = drawer.console.topColor;
                 ctx.fillRect(drawer.console.ox, drawer.console.oy - drawer.console.height, drawer.console.width, drawer.console.height);
             } else {
+
+                ctx.beginPath();
                 ctx.fillStyle = drawer.console.topColor;
-                ctx.fillRect(
-                    drawer.console.ox + drawer.console.top.start,
-                    drawer.console.oy - drawer.console.height,
-                    drawer.console.top.width,
-                    drawer.console.height);
+                ctx.moveTo(drawer.console.ox + drawer.console.top.start,
+                    drawer.console.oy - drawer.console.height);
+                ctx.lineTo(drawer.console.ox + drawer.console.top.start + drawer.console.top.width,
+                    drawer.console.oy - drawer.console.height);
+                ctx.lineTo(drawer.console.ox + drawer.console.top.start + drawer.console.top.width,
+                    drawer.console.oy - drawer.console.height + drawer.console.height);
+                ctx.lineTo(drawer.console.ox + drawer.console.top.start,
+                    drawer.console.oy - drawer.console.height + drawer.console.height);
+                ctx.closePath();
+                if (drawer.currentPoint && ctx.isPointInPath(drawer.currentPoint.x, drawer.currentPoint.y)) {
+                    drawer.c.style.cursor = 'grab';
+                } else {
+                    drawer.c.style.cursor = 'default';
+                }
+                // ctx.fillRect(
+                //     drawer.console.ox + drawer.console.top.start,
+                //     drawer.console.oy - drawer.console.height,
+                //     drawer.console.top.width,
+                //     drawer.console.height);
+                ctx.fill();
             }
 
             ctx.restore();
@@ -371,25 +394,32 @@ function line() {
             ctx.lineWidth = drawer.content.lineWidth;
 
             ctx.beginPath();
+            ctx.lineCap = "round";
+            ctx.lineJoin = "bevel";
+            // ctx.lineTo(drawer.ox + drawer.prevPoint.xxs, drawer.oy - drawer.prevPoint.yxs);
+            ctx.lineTo(drawer.ox, drawer.oy - drawer.startY);
             drawer.contentPoints.forEach((item, index) => {
                 ctx.lineTo(drawer.ox + item.xxs, drawer.oy - item.yxs);
             });
+            ctx.lineTo(drawer.ox + drawer.contentWidth, drawer.oy - drawer.endY);
             ctx.stroke();
 
-            // drawer.contentPoints.forEach((item, index) => {
-            //     ctx.beginPath();
-            //     ctx.fillStyle = drawer.content.pointFillStyle;
-            //     ctx.lineWidth = drawer.content.pointLineWidth;
-            //     ctx.arc(drawer.ox + item.xxs, drawer.oy - item.yxs, drawer.content.pointRadius, 0 , 2 * Math.PI, false);
-            //     ctx.fill();
-            //     ctx.stroke();
-            // });
+            drawer.contentPoints.forEach((item, index) => {
+                ctx.beginPath();
+                ctx.fillStyle = drawer.content.pointFillStyle;
+                ctx.lineWidth = drawer.content.pointLineWidth;
+                ctx.arc(drawer.ox + item.xxs, drawer.oy - item.yxs, drawer.content.pointRadius, 0 , 2 * Math.PI, false);
+                ctx.fill();
+                ctx.stroke();
+            });
 
             ctx.restore();
         },
         bindEvent() {
             drawer.c.addEventListener('mousemove', (e) => {
                 // console.log(drawer.eventToCanvas(e));
+                drawer.currentPoint = drawer.eventToCanvas(e);
+                drawer.draw();
             }, false);
         },
         eventToCanvas(e) {
