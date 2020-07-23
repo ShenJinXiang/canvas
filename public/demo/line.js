@@ -35,7 +35,12 @@ function line() {
         },
         content: {
             xStep: 50,
-        }
+            lineColor: 'red',
+            lineWidth: 2,
+            pointRadius: 3,
+            pointLineWidth: 1,
+            pointFillStyle: '#fff',
+        },
     };
 
     const kit = {
@@ -46,24 +51,27 @@ function line() {
             return Math.min.apply({}, arr);
         },
         range(num1, num2) {
+            // let min = Math.min(num1, num2),
+            //     max = Math.max(num1, num2),
+            //     minAbs = Math.abs(min),
+            //     maxAbs = Math.abs(max),
+            //     minLog = Math.log10(minAbs),
+            //     maxLog = Math.log10(maxAbs),
+            //     floor, ceil;
+            // if (min < 0) {
+            //     floor = -Math.pow(10, Math.ceil(minLog));
+            // } else {
+            //     floor = Math.pow(10, Math.floor(minLog));
+            // }
+            // if (max < 0) {
+            //     ceil = -Math.pow(10, Math.floor(maxLog));
+            // } else {
+            //     ceil = Math.pow(10, Math.ceil(maxLog));
+            // }
+            // return [floor, ceil];
             let min = Math.min(num1, num2),
-                max = Math.max(num1, num2),
-                minAbs = Math.abs(min),
-                maxAbs = Math.abs(max),
-                minLog = Math.log10(minAbs),
-                maxLog = Math.log10(maxAbs),
-                floor, ceil;
-            if (min < 0) {
-                floor = -Math.pow(10, Math.ceil(minLog));
-            } else {
-                floor = Math.pow(10, Math.floor(minLog));
-            }
-            if (max < 0) {
-                ceil = -Math.pow(10, Math.floor(maxLog));
-            } else {
-                ceil = Math.pow(10, Math.ceil(maxLog));
-            }
-            return [floor, ceil];
+                max = Math.max(num1, num2);
+            return [min, max];
         },
     };
 
@@ -73,6 +81,7 @@ function line() {
             drawer.ctx = drawer.c.getContext("2d");
             drawer.initDatas();
             drawer.init();
+            console.log(drawer);
 
             drawer.draw();
             drawer.bindEvent();
@@ -87,13 +96,69 @@ function line() {
             drawer.winHeight = drawer.oy - 50;
             drawer.contentWidth = drawer.winWidth - 20;
             drawer.contentHeight = drawer.winHeight - 20;
-
-
+            drawer.event = {};
 
             // 标题
             initTitle();
             // 底部控制区
             initConsole();
+            initYAxis();
+            initContent();
+
+
+            function initYAxis() {
+                drawer.backgroundLine = {
+                    lineWidth: option.backgroundLine.lineWidth,
+                    lineColor: option.backgroundLine.lineColor,
+                    horizontalLine: option.backgroundLine.horizontalLine,
+                    horizontalLineNum: option.backgroundLine.horizontalLineNum,
+                    verticalLine: option.backgroundLine.verticalLine,
+                    y: []
+                }
+                let yXStep = drawer.contentHeight / drawer.backgroundLine.horizontalLineNum,
+                    yStep = (drawer.winYRange[1] - drawer.winYRange[0]) / drawer.backgroundLine.horizontalLineNum;
+                for (let i = 0; i <= drawer.backgroundLine.horizontalLineNum; i++) {
+                    drawer.backgroundLine.y.push({
+                        y: (drawer.winYRange[0] + yStep * i).toFixed(2),
+                        yxs: yXStep * i,
+                    });
+                }
+
+            }
+
+            function initContent() {
+                drawer.content = {
+                    lineColor: option.content.lineColor,
+                    lineWidth: option.content.lineWidth,
+                    pointRadius: option.content.pointRadius,
+                    pointLineWidth: option.content.pointLineWidth,
+                    pointFillStyle: option.content.pointFillStyle,
+                }
+                let start = drawer.console.top.startX,
+                    end = drawer.console.top.endX;
+                drawer.contentPoints = [];
+                drawer.datas.points.forEach((item, index) => {
+                    if (item.x >= start && item.x <= end) {
+                        drawer.contentPoints.push({
+                            index: index,
+                            x: item.x,
+                            y: item.y,
+                            xxs: drawer.contentWidth * (item.x - drawer.minX) / (drawer.maxX - drawer.minX),
+                            yxs: drawer.contentHeight * (item.y - drawer.winYRange[0]) / (drawer.winYRange[1] - drawer.winYRange[0]),
+                        });
+                    }
+                });
+                if (drawer.contentPoints[0].index != 0) {
+                    let point = drawer.contentPoints[0],
+                        prevPoint = drawer.datas.points[point.index - 1];
+                    drawer.prevPoint = prevPoint;
+                }
+                if (drawer.contentPoints[drawer.contentPoints.length - 1].index != drawer.datas.points.length - 1) {
+                    let point = drawer.contentPoints[drawer.contentPoints.length - 1],
+                        nextPoint = drawer.datas.points[point.index + 1];
+                    drawer.nextPoint = nextPoint;
+                }
+            }
 
             /**
              * 标题
@@ -141,7 +206,20 @@ function line() {
                         y = drawer.console.yRangeWin * (item.y - drawer.minY) / (drawer.maxY - drawer.minY) + drawer.console.yMinWin;
                     drawer.console.data.push({x: x, y: y});
                 });
+
+                if (drawer.contentWidth < option.content.xStep * drawer.datas.x.length) {
+                    drawer.console.topMove = true;
+                    drawer.console.top = {
+                        start: 0,
+                        width: drawer.contentWidth * drawer.contentWidth / (option.content.xStep * drawer.datas.x.length),
+                    };
+                    drawer.console.top.startX = (drawer.maxX - drawer.minX) * drawer.console.top.start / drawer.contentWidth + drawer.minX;
+                    drawer.console.top.endX = (drawer.maxX - drawer.minX) * (drawer.console.top.start + drawer.console.top.width) / drawer.contentWidth + drawer.minX;
+                } else {
+                    drawer.console.topMove = false;
+                }
             }
+
 
         },
         initDatas() {
@@ -172,6 +250,8 @@ function line() {
             drawer.drawTitle(ctx);
             drawer.drawAxis(ctx);
             drawer.drawConsole(ctx);
+            drawer.drawYAxis(ctx);
+            drawer.drawContent(ctx);
         },
         drawTitle(ctx) {
             ctx.save();
@@ -181,6 +261,39 @@ function line() {
             ctx.textBaseline = 'middle';
             ctx.fillText(drawer.title.text, drawer.title.x, drawer.title.y);
             ctx.stroke();
+        },
+        drawYAxis(ctx) {
+
+            ctx.save();
+            ctx.translate(drawer.ox, drawer.oy);
+            drawer.backgroundLine.y.forEach((item) => {
+                // Y 轴刻度
+                ctx.beginPath();
+                ctx.strokeStyle = option.axis.lineColor;
+                ctx.lineWidth = option.axis.lineWidth;
+                ctx.moveTo(0, -item.yxs);
+                ctx.lineTo(-5, -item.yxs);
+                ctx.stroke();
+
+                // Y 轴刻度值
+                ctx.beginPath();
+                ctx.fillStyle = option.axis.lineColor;
+                ctx.font = '12px';
+                ctx.textAlign = 'right';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(item.y, -8, -item.yxs);
+
+                // 水平横线
+                if (drawer.backgroundLine.horizontalLine) {
+                    ctx.beginPath();
+                    ctx.strokeStyle = drawer.backgroundLine.lineColor;
+                    ctx.lineWidth = drawer.backgroundLine.lineWidth;
+                    ctx.moveTo(0, -item.yxs);
+                    ctx.lineTo(drawer.contentWidth, -item.yxs);
+                    ctx.stroke();
+                }
+            });
+            ctx.restore();
         },
         drawAxis(ctx) {
             ctx.save();
@@ -218,7 +331,7 @@ function line() {
         drawConsole(ctx) { // 底部控制区
             ctx.save();
             ctx.fillStyle = drawer.console.background;
-            ctx.fillRect(drawer.console.ox, drawer.console.oy - option.console.height, drawer.console.width, drawer.console.height);
+            ctx.fillRect(drawer.console.ox, drawer.console.oy - drawer.console.height, drawer.console.width, drawer.console.height);
 
             // 数据缩略图
             ctx.save()
@@ -236,11 +349,47 @@ function line() {
             ctx.fill();
             ctx.restore();
 
+            // 控制区遮罩
+            if (!drawer.console.topMove) {
+                ctx.fillStyle = drawer.console.topColor;
+                ctx.fillRect(drawer.console.ox, drawer.console.oy - drawer.console.height, drawer.console.width, drawer.console.height);
+            } else {
+                ctx.fillStyle = drawer.console.topColor;
+                ctx.fillRect(
+                    drawer.console.ox + drawer.console.top.start,
+                    drawer.console.oy - drawer.console.height,
+                    drawer.console.top.width,
+                    drawer.console.height);
+            }
+
+            ctx.restore();
+        },
+        drawContent(ctx) {
+            ctx.save();
+
+            ctx.strokeStyle = drawer.content.lineColor;
+            ctx.lineWidth = drawer.content.lineWidth;
+
+            ctx.beginPath();
+            drawer.contentPoints.forEach((item, index) => {
+                ctx.lineTo(drawer.ox + item.xxs, drawer.oy - item.yxs);
+            });
+            ctx.stroke();
+
+            // drawer.contentPoints.forEach((item, index) => {
+            //     ctx.beginPath();
+            //     ctx.fillStyle = drawer.content.pointFillStyle;
+            //     ctx.lineWidth = drawer.content.pointLineWidth;
+            //     ctx.arc(drawer.ox + item.xxs, drawer.oy - item.yxs, drawer.content.pointRadius, 0 , 2 * Math.PI, false);
+            //     ctx.fill();
+            //     ctx.stroke();
+            // });
+
             ctx.restore();
         },
         bindEvent() {
             drawer.c.addEventListener('mousemove', (e) => {
-                console.log(drawer.eventToCanvas(e));
+                // console.log(drawer.eventToCanvas(e));
             }, false);
         },
         eventToCanvas(e) {
