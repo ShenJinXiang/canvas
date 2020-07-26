@@ -6,6 +6,7 @@
             'hsla(180, 70%, 50%, 1)',
             'hsla(270, 70%, 50%, 1)',
         ],
+        angleStep: Math.PI / 36,
     };
 
     class Element {
@@ -24,6 +25,12 @@
             this.radiusStep = this.radiusRange / this.num;
             this.sizeStep = this.sizeRange / this.num;
             this.angleStep = this.angleRange / this.num;
+        }
+        updateProp(ox, oy, startRadius, startAngle) {
+            this.ox = ox;
+            this.oy = oy;
+            this.startRadius = startRadius;
+            this.startAngle = startAngle;
         }
         draw(ctx) {
             ctx.save();
@@ -56,29 +63,59 @@
             drawer.c = document.getElementById('canvas');
             drawer.ctx = drawer.c.getContext('2d');
             drawer.init();
-
-            let ele = new Element(
-                drawer.ox,
-                drawer.oy,
-                80,
-                drawer.maxRadius,
-                8,
-                0.1,
-                6,
-                0,
-                2 * Math.PI / 3,
-                'red'
-            );
-            ele.draw(drawer.ctx);
+            drawer.initElements();
+            drawer.animate();
+            drawer.bindEvent();
+            drawer.angle = 0;
+            drawer.count = 0;
         },
         init() {
             drawer.w = drawer.c.width = window.innerWidth;
             drawer.h = drawer.c.height = window.innerHeight;
             drawer.width = Math.min(drawer.w, drawer.h);
-            drawer.maxRadius = drawer.width * 0.4;
-            drawer.minRadius = -drawer.width * 0.3;
+            drawer.maxRadius = drawer.width * 0.25;
+            drawer.minRadius = -drawer.width * 0.15;
             drawer.ox = drawer.w / 2;
             drawer.oy = drawer.h / 2;
+            drawer.eleAngleStep = 2 * Math.PI / option.colors.length;
+        },
+        bindEvent() {
+            window.addEventListener('resize', drawer.init, false);
+        },
+        animate() {
+            drawer.update();
+            drawer.draw();
+            requestAnimationFrame(drawer.animate);
+        },
+        update() {
+            drawer.angle += option.angleStep;
+            drawer.count += 0.05;
+            drawer.elements.map((item, index) => {
+                item.updateProp(drawer.ox, drawer.oy, drawer.minRadius + Math.sin(drawer.count) * drawer.maxRadius, drawer.angle + index * drawer.eleAngleStep);
+            });
+        },
+        draw() {
+            let ctx = drawer.ctx;
+            ctx.clearRect(0, 0, drawer.w, drawer.h);
+            drawer.elements.forEach((item) => item.draw(drawer.ctx));
+        },
+        initElements() {
+            drawer.elements = [];
+            option.colors.forEach((item, index) => {
+                drawer.elements.push(new Element(
+                    drawer.ox,
+                    drawer.oy,
+                    80,
+                    drawer.maxRadius,
+                    36,
+                    0.1,
+                    8,
+                    index * drawer.eleAngleStep,
+                    2 * Math.PI / 3,
+                    item
+                ));
+            });
+
         }
     };
 
