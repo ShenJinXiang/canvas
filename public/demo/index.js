@@ -33,9 +33,9 @@
                 size = this.startSize,
                 radius = this.startRadius;
             for (let i = 0; i < this.num; i++) {
-                angle += i * this.angleStep;
+                angle += this.angleStep;
                 size += this.sizeStep;
-                radius += i * this.radiusStep;
+                radius += this.radiusStep;
                 ctx.beginPath();
                 ctx.arc(
                     radius * Math.cos(angle),
@@ -53,11 +53,35 @@
 
     const drawer = {
         start() {
+            drawer.c = document.getElementById('canvas');
+            drawer.ctx = drawer.c.getContext('2d');
+            drawer.init();
 
+            let ele = new Element(
+                drawer.ox,
+                drawer.oy,
+                80,
+                drawer.maxRadius,
+                8,
+                0.1,
+                6,
+                0,
+                2 * Math.PI / 3,
+                'red'
+            );
+            ele.draw(drawer.ctx);
         },
+        init() {
+            drawer.w = drawer.c.width = window.innerWidth;
+            drawer.h = drawer.c.height = window.innerHeight;
+            drawer.width = Math.min(drawer.w, drawer.h);
+            drawer.maxRadius = drawer.width * 0.4;
+            drawer.minRadius = -drawer.width * 0.3;
+            drawer.ox = drawer.w / 2;
+            drawer.oy = drawer.h / 2;
+        }
     };
 
     drawer.start();
-
 
 }
