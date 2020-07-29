@@ -72,6 +72,7 @@ npm start
 * [静态图](https://canvas.shenjinxiang.com/202007/静态图/)
 * [旋转构建动画（七）](https://canvas.shenjinxiang.com/202007/旋转构建动画（七）/)
 * [旋转构建动画（八）](https://canvas.shenjinxiang.com/202007/旋转构建动画（八）/)
+* [彩虹糖动画](https://canvas.shenjinxiang.com/202007/彩虹糖动画/)
 
 ## 感谢
 <a href="https://www.jetbrains.com/?from=ShenJinXiang/canvas"><img src="./public/images/jetbrains.png" width="120px;"/></a>
