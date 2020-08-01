@@ -18,14 +18,27 @@
             this.style = style;
             this.flag = flag;
         }
+        generatePath(a, k, radius, flag) {
+            let path = new Path2D();
+            path.moveTo(0, 0);
+            let r = 0,
+                angle = 0,
+                angleStep = 0.01;
+            while(Math.abs(r) < radius) {
+                r = a * angle * angle + k;
+                path.lineTo(r * Math.cos(angle), (flag ? 1 : -1) * r * Math.sin(angle));
+                angle += angleStep;
+            }
+            return path;
+        }
         draw(ctx) {
             ctx.save();
             ctx.translate(this.ox, this.oy);
             ctx.rotate(this.rotate);
             ctx.lineWidth = this.lineWidth;
             ctx.strokeStyle = this.style;
-            let path = CanvasUtil.logarithmicSpiralPath(this.a, this.k, this.radius, this.flag)
-            // let path = CanvasUtil.archimedesSpiralPath(this.a, this.k, this.radius, this.flag)
+            // let path = CanvasUtil.logarithmicSpiralPath(this.a, this.k, this.radius, this.flag)
+            let path = this.generatePath(this.a, this.k, this.radius, this.flag)
             ctx.stroke(path);
             ctx.restore();
         }
@@ -64,7 +77,7 @@
                     drawer.w / 2,
                     drawer.h / 2,
                     index * angleStep,
-                    1, 5,
+                        40, 0,
                     drawer.radius,
                     1,
                     '#084',
@@ -74,7 +87,7 @@
                     drawer.w / 2,
                     drawer.h / 2,
                     index * angleStep,
-                    .2, 1,
+                    40, 0,
                     drawer.radius,
                     1,
                     '#084',
