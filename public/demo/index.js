@@ -1,30 +1,22 @@
 {
+
+    const option = {
+        num: 10,
+    }
     /**
-     * 阿基米德螺旋线
+     * 螺旋线
      */
-    class ArchimedesSpiral {
-        constructor(ox, oy, rotate, a, b, radius, lineWidth, style) {
+    class Spiral {
+        constructor(ox, oy, rotate, a, k, radius, lineWidth, style, flag) {
             this.ox = ox;
             this.oy = oy;
             this.rotate = rotate;
             this.a = a;
-            this.b = b;
+            this.k = k;
             this.radius = radius;
             this.lineWidth = lineWidth;
             this.style = style;
-        }
-        path(a, b, radius) {
-            let path = new Path2D();
-            path.moveTo(0, 0);
-            let r = 0,
-                angle = 0,
-                angleStep = 0.01;
-            while(r < radius) {
-                r = a  * angle * angle + b;
-                path.lineTo(r * Math.cos(angle), r * Math.sin(angle));
-                angle += angleStep;
-            }
-            return path;
+            this.flag = flag;
         }
         draw(ctx) {
             ctx.save();
@@ -32,11 +24,11 @@
             ctx.rotate(this.rotate);
             ctx.lineWidth = this.lineWidth;
             ctx.strokeStyle = this.style;
-            let path = this.path(this.a, this.b, this.radius);
+            let path = CanvasUtil.logarithmicSpiralPath(this.a, this.k, this.radius, this.flag)
+            // let path = CanvasUtil.archimedesSpiralPath(this.a, this.k, this.radius, this.flag)
             ctx.stroke(path);
             ctx.restore();
         }
-
     }
     const drawer = {
         start() {
@@ -44,13 +36,51 @@
             drawer.ctx = drawer.c.getContext('2d');
             drawer.mark = CanvasUtil.getMarkCanvas();
             drawer.init();
-            let ele = new ArchimedesSpiral(drawer.w / 2, drawer.h / 2, 0, 10, 0, drawer.radius, 1, '#048');
-            ele.draw(drawer.ctx);
+            drawer.animate();
         },
         init() {
             drawer.w = drawer.c.width = window.innerWidth;
             drawer.h = drawer.c.height = window.innerHeight;
-            drawer.radius = Math.min(drawer.w, drawer.h);
+            drawer.radius = Math.max(drawer.w, drawer.h);
+            drawer.initLines();
+        },
+        animate() {
+            drawer.update();
+            drawer.draw();
+        },
+        update() {
+
+        },
+        draw() {
+            let ctx = drawer.ctx;
+            ctx.clearRect(0, 0, drawer.w, drawer.h);
+            drawer.lines.forEach((item) => item.draw(ctx));
+        },
+        initLines() {
+            drawer.lines = [];
+            let angleStep = 2 * Math.PI / option.num;
+            for (let index = 0; index < option.num; index++) {
+                drawer.lines.push(new Spiral(
+                    drawer.w / 2,
+                    drawer.h / 2,
+                    index * angleStep,
+                    1, 5,
+                    drawer.radius,
+                    1,
+                    '#084',
+                    true
+                ));
+                drawer.lines.push(new Spiral(
+                    drawer.w / 2,
+                    drawer.h / 2,
+                    index * angleStep,
+                    .2, 1,
+                    drawer.radius,
+                    1,
+                    '#084',
+                    false
+                ));
+            }
         }
     };
 

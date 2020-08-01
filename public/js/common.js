@@ -143,5 +143,31 @@ const CanvasUtil = {
                 -radius * (13 * Math.cos(angle) - 5 * Math.cos(2 * angle) - 2 * Math.cos(3 * angle) - Math.cos(4 * angle))
             );
         }
+    },
+    archimedesSpiralPath(a, b, maxRadius, flag) {
+        let path = new Path2D();
+        path.moveTo(0, 0);
+        let r = 0,
+            angle = 0,
+            angleStep = 0.01;
+        while(Math.abs(r) < maxRadius) {
+            r = a  * angle + b;
+            path.lineTo(r * Math.cos(angle), (flag ? 1 : -1) * r * Math.sin(angle));
+            angle += angleStep;
+        }
+        return path;
+    },
+    logarithmicSpiralPath(a, k, maxRadius, flag) {
+        let path = new Path2D();
+        path.moveTo(0, 0);
+        let r = 0,
+            angle = 0,
+            angleStep = 0.01;
+        while(Math.abs(r) < maxRadius) {
+            r = a * Math.pow(Math.E, angle * k);
+            path.lineTo(r * Math.cos(angle), (flag ? 1 : -1) * r * Math.sin(angle));
+            angle += angleStep;
+        }
+        return path;
     }
 };
