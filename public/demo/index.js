@@ -20,9 +20,25 @@
             this.flag = flag;
             this.angleStep = angleStep;
 
+            this.maxAngle = Math.sqrt((this.radius - this.k) / this.a);
+            this.ballAngleStep = 0.003;
             this.count = 0;
+            this.maxCount = 150;
+            this.initBalls();
+        }
+        initBalls() {
             this.balls = [];
-            this.addBall();
+            let num = this.maxAngle / (this.ballAngleStep * this.maxCount);
+            for (let i = 1; i <= num; i++) {
+                this.balls.push(new Ball(
+                    this.a * Math.pow(i * this.ballAngleStep * this.maxCount, 2) + this.k,
+                    this.style,
+                    this.a,
+                    this.k,
+                    this.flag,
+                    this.ballAngleStep
+                ));
+            }
         }
         addBall() {
             this.balls.push(new Ball(
@@ -30,7 +46,8 @@
                 this.style,
                 this.a,
                 this.k,
-                this.flag
+                this.flag,
+                this.ballAngleStep
             ));
         }
         generatePath(a, k, radius, flag) {
@@ -49,7 +66,7 @@
         }
         update() {
             this.count++;
-            if (this.count >= 600) {
+            if (this.count >= this.maxCount) {
                 this.addBall();
                 this.count = 0;
             }
@@ -77,22 +94,23 @@
     }
 
     class Ball {
-        constructor(radius, style, a, k, flag) {
+        constructor(radius, style, a, k, flag, ballAngleStep) {
             this.radius = radius;
             this.style = style;
             this.a = a;
             this.k = k;
             this.flag = flag;
+            this.ballAngleStep = ballAngleStep;
             this.angle = Math.sqrt((this.radius - this.k) / this.a);
             this.r = this.radius * 0.03;
         }
         update() {
-            this.radius -= 0.1;
-            this.angle = Math.sqrt((this.radius - this.k) / this.a);
-            this.r = this.radius * 0.03;
-            // this.angle -= 0.1;
-            // this.radius -= this.a * Math.pow(this.angle, 2) + this.k;
+            // this.radius -= 0.1;
+            // this.angle = Math.sqrt((this.radius - this.k) / this.a);
             // this.r = this.radius * 0.03;
+            this.angle -= this.ballAngleStep
+            this.radius = this.a * Math.pow(this.angle, 2) + this.k;
+            this.r = this.angle * 3;
         }
         draw(ctx) {
             ctx.save();
@@ -123,6 +141,7 @@
                 true,
             -option.angleStep
             );
+            console.log(drawer.ele);
             drawer.animate();
         },
         init() {
@@ -139,7 +158,6 @@
         update() {
             // console.log(drawer.lines[0].rotate);
             drawer.lines.forEach((item) => item.update());
-            // console.log(drawer.ele.balls);
             // drawer.ele.update();
         },
         draw() {
@@ -159,7 +177,7 @@
                         40, 0,
                     drawer.radius,
                     1,
-                    '#084',
+                    '#595',
                     true,
                     -option.angleStep
                 ));
@@ -170,7 +188,7 @@
                     40, 0,
                     drawer.radius,
                     1,
-                    '#084',
+                    '#595',
                     false,
                 option.angleStep
             ));
