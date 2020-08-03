@@ -86,9 +86,7 @@
             let path = this.generatePath(this.a, this.k, this.radius, this.flag)
             ctx.stroke(path);
 
-            this.balls.forEach((item) => {
-                item.draw(ctx);
-            });
+            this.balls.forEach((item) => { item.draw(ctx)});
             ctx.restore();
         }
     }
@@ -125,7 +123,7 @@
         start() {
             drawer.c = document.getElementById('canvas');
             drawer.ctx = drawer.c.getContext('2d');
-            drawer.mark = CanvasUtil.getMarkCanvas();
+            drawer.mark = CanvasUtil.getMarkCanvas('#999');
             drawer.init();
             drawer.ele = new Spiral(
             drawer.w / 2,
@@ -138,8 +136,11 @@
                 true,
             -option.angleStep
             );
-            console.log(drawer.ele);
             drawer.animate();
+            drawer.bindEvent();
+        },
+        bindEvent() {
+            window.addEventListener('resize', drawer.init, false);
         },
         init() {
             drawer.w = drawer.c.width = window.innerWidth;
@@ -162,6 +163,7 @@
             ctx.clearRect(0, 0, drawer.w, drawer.h);
             drawer.lines.forEach((item) => item.draw(ctx));
             // drawer.ele.draw(drawer.ctx);
+            CanvasUtil.drawMark(ctx, drawer.mark);
         },
         initLines() {
             drawer.lines = [];
