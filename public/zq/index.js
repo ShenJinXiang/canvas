@@ -8,6 +8,7 @@
             borderColor: setting.borderColor || 'red',
             borderWidth: setting.borderWidth || 2,
             datas: setting.datas,
+            initTime: 1000,
         }
 
         class Element {
@@ -58,18 +59,40 @@
                 drawer.datas = option.datas;
                 drawer.sumValue = drawer.sum(drawer.datas);
                 drawer.initElements();
+
+                // 初始动画
+                drawer.initAnimate = {
+                    completed: false,
+                    time: option.initTime,
+                    count: 0,
+                    angleStep: 2 * Math.PI / option.initTime,
+                };
             },
             animate() {
                 drawer.update();
                 drawer.draw();
+                requestAnimationFrame(drawer.animate);
             },
             update() {
-
+                if (!drawer.initAnimate.completed) {
+                    drawer.initAnimate.count++;
+                    if (drawer.initAnimate.count >= drawer.initAnimate.time) {
+                        drawer.initAnimate.completed = true;
+                    }
+                }
             },
             draw() {
                 const ctx = drawer.ctx;
                 ctx.clearRect(0, 0, drawer.w, drawer.h);
-                drawer.elements.forEach((item) => item.draw(ctx));
+                if (drawer.initAnimate.completed) {
+                    drawer.elements.forEach((item) => item.draw(ctx));
+                } else {
+                    drawer.drawInitAnimate(ctx);
+                }
+            },
+            drawInitAnimate(ctx) {
+                let angle = drawer.initAnimate.count * drawer.initAnimate.angleStep;
+                console.log(angle);
             },
             initElements() {
                 drawer.elements = [];
