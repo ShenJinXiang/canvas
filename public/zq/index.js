@@ -8,7 +8,7 @@
             borderColor: setting.borderColor || 'red',
             borderWidth: setting.borderWidth || 2,
             datas: setting.datas,
-            initTime: 1000,
+            initTime: 50,
         }
 
         class Element {
@@ -24,7 +24,7 @@
                 this.isFirst = isFirst;
                 this.endAngle = this.startAngle + this.angle;
             }
-            draw(ctx) {
+            draw(ctx, endAngle) {
                 ctx.save();
                 ctx.translate(this.ox, this.oy);
                 ctx.fillStyle = this.style;
@@ -33,7 +33,7 @@
                 ctx.beginPath();
                 ctx.moveTo(0, 0);
                 ctx.lineTo(this.radius * Math.cos(this.startAngle), this.radius * Math.sin(this.startAngle));
-                ctx.arc(0, 0, this.radius, this.startAngle, this.endAngle, false);
+                ctx.arc(0, 0, this.radius, this.startAngle, endAngle || this.endAngle, false);
                 ctx.closePath();
                 if (this.isFirst) {
                     ctx.fill();
@@ -58,6 +58,7 @@
                 drawer.h = drawer.c.height = option.height;
                 drawer.datas = option.datas;
                 drawer.sumValue = drawer.sum(drawer.datas);
+                drawer.startAngle = -Math.PI / 2 ;
                 drawer.initElements();
 
                 // 初始动画
@@ -91,12 +92,18 @@
                 }
             },
             drawInitAnimate(ctx) {
-                let angle = drawer.initAnimate.count * drawer.initAnimate.angleStep;
-                console.log(angle);
+                let angle = drawer.startAngle + drawer.initAnimate.count * drawer.initAnimate.angleStep;
+                drawer.elements.forEach((item) => {
+                    if (angle > item.endAngle) {
+                        item.draw(ctx);
+                    } else if (angle > item.startAngle && angle < item.endAngle) {
+                        item.draw(ctx, angle);
+                    }
+                });
             },
             initElements() {
                 drawer.elements = [];
-                let startAngle = -Math.PI / 2;
+                let startAngle = drawer.startAngle;
                 drawer.datas.forEach((item, index) => {
                     let angle = 2 * Math.PI * item.value / drawer.sumValue;
                     drawer.elements.push(new Element(
