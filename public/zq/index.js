@@ -52,6 +52,7 @@
                 drawer.init();
                 // console.log(drawer);
                 drawer.animate();
+                drawer.bindEvent();
             },
             init() {
                 drawer.w = drawer.c.width = option.width;
@@ -68,6 +69,12 @@
                     count: 0,
                     angleStep: 2 * Math.PI / option.initTime,
                 };
+            },
+            bindEvent() {
+                drawer.c.addEventListener('mousemove', (e) => {
+                    let point = drawer.eventToCanvas(drawer.c, e);
+                    console.log(point);
+                }, false);
             },
             animate() {
                 drawer.update();
@@ -119,6 +126,13 @@
                     ));
                     startAngle += angle;
                 });
+            },
+            eventToCanvas(canvas, e) {
+                let box = canvas.getBoundingClientRect();
+                return {
+                    x: e.clientX - box.left,
+                    y: e.clientY - box.top
+                };
             },
             sum(arr) {
                 let sum = 0;
