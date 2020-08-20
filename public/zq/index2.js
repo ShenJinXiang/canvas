@@ -2,17 +2,18 @@
     function zqgzt(setting) {
         const option = {
             el: setting.el,
-            width: setting.width || 400,
-            height: setting.height || 400,
+            width: setting.width || 300,
+            height: setting.height || 300,
             radius: setting.radius || 120,
             borderColor: setting.borderColor || 'red',
-            borderWidth: setting.borderWidth || 1,
+            borderWidth: setting.borderWidth || 2,
+            showText: setting.showText,
             datas: setting.datas,
             initTime: 50,
         }
 
         class Element {
-            constructor(ox, oy, text, value, radius, angle, startAngle, style, isFirst, showText) {
+            constructor(ox, oy, text, value, radius, angle, startAngle, style, isFirst) {
                 this.ox = ox;
                 this.oy = oy;
                 this.text = text;
@@ -22,7 +23,6 @@
                 this.startAngle = startAngle;
                 this.style = style;
                 this.isFirst = isFirst;
-                this.showText = showText;
                 this.endAngle = this.startAngle + this.angle;
 
                 this.drawOx = this.ox;
@@ -31,16 +31,12 @@
 
                 this.animate = {
                     moveStatus: 0,
-                    moveTime: 10,
+                    moveTime: 5,
                     moveCount: 0,
+                    clickTime: 50,
+                    clickCount: 0,
                 };
-                this.maxRadius = this.radius * 1.05;
-                this.animate.radiusStep = (this.maxRadius - this.radius) / this.animate.moveTime;
-
-                this.midAngle = (this.startAngle + this.endAngle) / 2;
-                let clickRadius = this.radius * 0.1;
-                this.maxOx = this.ox + clickRadius * Math.cos(this.midAngle);
-                this.maxOy = this.oy + clickRadius * Math.sin(this.midAngle);
+                this.animate.radiusStep = this.radius * 0.1 / this.animate.moveTime;
 
                 this.event = {
                     checked: false,
@@ -49,39 +45,13 @@
                 this.fill = false;
 
             }
-            checkClick(point) {
-                return this.isInPath(point);
-            }
             update(eventStatus) {
-                // if (this.text !== '印花税') {
-                //     return ;
-                // }
                 this.lastInPath = this.event.isInPath;
-                // this.lastClickTime = this.event.clickTime;
-                if (eventStatus.eventType) {
-                    this.event.eventType = eventStatus.eventType;
-                    if (eventStatus.eventType === 'move' || eventStatus.eventType === 'click') {
-                        this.event.isInPath = this.isInPath(eventStatus.point);
-                        this.event.point = eventStatus.point;
-                    } else {
-                        this.event.isInPath = false;
-                    }
+                let canvasEventStatus = eventStatus;
+                if (canvasEventStatus.eventType === 'move' || canvasEventStatus.eventType === 'click') {
+                    this.event.isInPath = this.isInPath(canvasEventStatus.point);
                 } else {
-                    this.event.eventType = 'none';
-                }
-                // if (this.event.isInPath && this.event.eventType === 'click') {
-                //     this.event.clickTime = new Date().getTime();
-                //     if (!this.lastClickTime || this.event.clickTime -  this.lastClickTime > 100) {
-                //         this.event.checked = !this.event.checked;
-                //     }
-                // }
-
-                if (this.event.checked) {
-                    this.drawOx = this.maxOx;
-                    this.drawOy = this.maxOy;
-                } else {
-                    this.drawOx = this.ox;
-                    this.drawOy = this.oy;
+                    this.event.isInPath = false;
                 }
 
                 // 鼠标移入
@@ -106,15 +76,7 @@
                     if (this.animate.moveCount <= 0) {
                         this.animate.moveCount = 0;
                         this.animate.moveStatus = 0;
-                        this.drawRadius = this.radius;
                     }
-                }
-
-                // 判断是否需要填充
-                if (this.event.isInPath || this.event.checked || this.animate.moveStatus !== 0 ) {
-                    this.fill = true;
-                } else {
-                    this.fill = false;
                 }
                 // console.log(this.animate);
             }
@@ -139,68 +101,39 @@
                 ctx.save();
                 ctx.translate(this.drawOx, this.drawOy);
                 ctx.fillStyle = this.style;
-                if (this.isFirst) {
+                if(this.event.isInPath) {
                     ctx.strokeStyle = this.style;
-                }
-                if (this.fill) {
-                    ctx.strokeStyle = this.style;
-                    ctx.shadowBlur = 5;
+                    ctx.shadowBlur = 10;
                     ctx.shadowColor = 'rgba(0, 0, 0, 0.5)';
                     ctx.shadowOffsetX = 0;
                 } else {
                     ctx.strokeStyle = option.borderColor;
                 }
-                ctx.lineWidth = option.borderWidth;
+                ctx.lineWidth = option.borderColor;
                 ctx.beginPath();
                 ctx.moveTo(0, 0);
                 ctx.lineTo(this.drawRadius * Math.cos(this.startAngle), this.drawRadius * Math.sin(this.startAngle));
                 ctx.arc(0, 0, this.drawRadius, this.startAngle, endAngle || this.endAngle, false);
                 ctx.closePath();
-                if (this.isFirst || this.fill) {
+                if (this.isFirst) {
                     ctx.fill();
                     ctx.stroke();
                 } else {
-                    ctx.stroke();
+                    if (this.event.isInPath) {
+                        ctx.fill();
+                        ctx.stroke();
+                    } else {
+                        ctx.stroke();
+                    }
+                }
+
+                if (option.showText) {
+
                 }
 
                 ctx.restore();
-                if (this.showText) {
-                    ctx.save();
-                    ctx.strokeStyle = this.style;
-                    ctx.lineWidth = 2;
-                    ctx.translate(this.drawOx + this.radius * Math.cos(this.midAngle), this.drawOy + this.radius * Math.sin(this.midAngle));
-                    // ctx.translate(this.drawRadius * Math.cos(this.startAngle), this.drawRadius * Math.sin(this.startAngle));
-                    ctx.beginPath();
-                    ctx.moveTo(0, 0);
-                    ctx.lineTo(15 * Math.cos(this.midAngle), 30 * Math.sin(this.midAngle));
-                    if (this.midAngle < Math.PI / 2) {
-                        ctx.lineTo(15 * Math.cos(this.midAngle) + 10, 30 * Math.sin(this.midAngle));
-                    } else {
-                        ctx.lineTo(15 * Math.cos(this.midAngle) - 10, 30 * Math.sin(this.midAngle));
-                    }
-                    ctx.stroke();
-                    ctx.fillStyle = this.style;
-                    ctx.font = '12px';
-                    // ctx.textAlign = this.midAngle < Math.PI / 2 ? 'left' : 'right';
-                    ctx.textBaseline = 'middle';
-                    if (this.midAngle < Math.PI / 2) {
-                        ctx.textAlign = 'left';
-                        ctx.fillText(this.text, 15 * Math.cos(this.midAngle) + 12, 30 * Math.sin(this.midAngle));
-                    } else {
-                        ctx.textAlign = 'right';
-                        ctx.fillText(this.text, 15 * Math.cos(this.midAngle) - 12, 30 * Math.sin(this.midAngle));
-                    }
-                    ctx.restore();
-                }
-
-                if (this.event.isInPath && this.event.point) {
-                    ctx.save();
-                    ctx.translate(this.event.point.x, this.event.point.y);
-                    ctx.fillStyle = 'rgba(40, 40, 40, 0.5)';
-                    ctx.fillRect(5, 5, 80, 40);
-                    ctx.restore();
-                }
             }
+
         }
 
         const drawer = {
@@ -226,19 +159,15 @@
                     count: 0,
                     angleStep: 2 * Math.PI / option.initTime,
                 };
-                drawer.eventStatus = {}
+                drawer.eventStatus = {
+
+                }
             },
             bindEvent() {
                 drawer.c.addEventListener('mousemove', (e) => {
                     let point = drawer.eventToCanvas(drawer.c, e);
                     drawer.eventStatus.eventType = 'move';
                     drawer.eventStatus.point = point;
-                    let has = drawer.elements.some((item) => item.checkClick(point));
-                    if (has) {
-                        drawer.c.style.cursor = 'pointer';
-                    } else {
-                        drawer.c.style.cursor = 'default';
-                    }
                 }, false);
                 drawer.c.addEventListener('mouseout', (e) => {
                     drawer.eventStatus.eventType = 'out';
@@ -248,17 +177,6 @@
                     let point = drawer.eventToCanvas(drawer.c, e);
                     drawer.eventStatus.eventType = 'click';
                     drawer.eventStatus.point = point;
-                    let has = drawer.elements.some((item) => item.checkClick(point));
-                    if (has) {
-                        drawer.elements.forEach((item) => {
-                            if (item.checkClick(point)) {
-                                item.event.checked = !item.event.checked;
-                            } else {
-                                item.event.checked = false;
-                            }
-                        });
-                    }
-
                 }, false);
             },
             animate() {
@@ -281,7 +199,6 @@
                 ctx.clearRect(0, 0, drawer.w, drawer.h);
                 if (drawer.initAnimate.completed) {
                     drawer.elements.forEach((item) => item.draw(ctx));
-                    drawer.eventStatus = {}
                 } else {
                     drawer.drawInitAnimate(ctx);
                 }
@@ -304,14 +221,13 @@
                     drawer.elements.push(new Element(
                         drawer.w / 2,
                         drawer.h / 2,
-                        item.text,
+                            item.text,
                         item.value,
                         option.radius,
                         angle,
                         startAngle,
                         item.style,
-                        index === 0,
-                        item.showText
+                        index === 0
                     ));
                     startAngle += angle;
                 });
@@ -344,28 +260,28 @@
             {text: '其他', value: 100, style: '#4aa', showText: true},
         ]
     });
-    zqgzt({
-        el: 'canvas2',
-        borderColor: '#048',
-        datas: [
-            {text: '已填写', value: 200, style: '#048', showText: true},
-            {text: '印花税', value: 130, style: '#808', showText: true},
-            {text: '增值税', value: 50, style: '#f84', showText: true},
-            {text: '所得税', value: 100, style: '#aa4', showText: true},
-            {text: '财务报表', value: 100, style: '#84f', showText: true},
-            {text: '其他', value: 80, style: '#4aa', showText: true},
-        ]
-    });
-    zqgzt({
-        el: 'canvas3',
-        datas: [
-            {text: '已填写', value: 200, style: 'red', showText: true},
-            {text: '印花税', value: 50, style: '#808', showText: true},
-            {text: '增值税', value: 150, style: '#f84', showText: true},
-            {text: '所得税', value: 100, style: '#aa4', showText: true},
-            {text: '财务报表', value: 200, style: '#84f', showText: true},
-            {text: '其他', value: 130, style: '#4aa', showText: true},
-        ]
-    });
+    // zqgzt({
+    //     el: 'canvas2',
+    //     borderColor: '#048',
+    //     datas: [
+    //         {text: '已填写', value: 200, style: '#048', showText: true},
+    //         {text: '印花税', value: 130, style: '#808', showText: true},
+    //         {text: '增值税', value: 50, style: '#f84', showText: true},
+    //         {text: '所得税', value: 100, style: '#aa4', showText: true},
+    //         {text: '财务报表', value: 100, style: '#84f', showText: true},
+    //         {text: '其他', value: 80, style: '#4aa', showText: true},
+    //     ]
+    // });
+    // zqgzt({
+    //     el: 'canvas3',
+    //     datas: [
+    //         {text: '已填写', value: 200, style: 'red', showText: true},
+    //         {text: '印花税', value: 50, style: '#808', showText: true},
+    //         {text: '增值税', value: 150, style: '#f84', showText: true},
+    //         {text: '所得税', value: 100, style: '#aa4', showText: true},
+    //         {text: '财务报表', value: 200, style: '#84f', showText: true},
+    //         {text: '其他', value: 130, style: '#4aa', showText: true},
+    //     ]
+    // });
 
 }
