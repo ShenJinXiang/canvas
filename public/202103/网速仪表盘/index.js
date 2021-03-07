@@ -3,7 +3,7 @@
         angleRange: 1.4 * Math.PI, // 角度范围
         maxVal: 160,                // 最大值
         stepNum: 8,                 // 段数
-        width: 400,                 // 最大尺寸
+        width: 300,                 // 最大尺寸
 
     };
 
@@ -28,6 +28,11 @@
                 drawer.r * 0.85,
                 drawer.r * 0.6
             ];
+            drawer.vals = [];
+            drawer.valStep = option.maxVal / option.stepNum;
+            for (let i = 0; i <= option.stepNum; i++) {
+                drawer.vals.push({val: drawer.valStep * i, angle: i * option.angleRange / option.stepNum});
+            }
             drawer.angleStep = option.angleRange / (option.stepNum * 5);
             drawer.startAngle = - (Math.PI / 2) - option.angleRange / 2;
         },
@@ -37,6 +42,9 @@
             ctx.translate(drawer.ox, drawer.oy);
             ctx.rotate(drawer.startAngle);
             ctx.strokeStyle = '#e1e1e1';
+            ctx.fillStyle = '#e1e1e1';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
 
             // 刻度
             for (let i = 0; i <= option.stepNum * 5; i++) {
@@ -55,10 +63,19 @@
                 ctx.restore();
             }
 
+            ctx.rotate(-drawer.startAngle);
+            // 刻度值
+            drawer.vals.forEach(function (item) {
+                ctx.font = '16px cursive';
+                ctx.fillText(item.val, drawer.rs[3] * Math.cos(item.angle + drawer.startAngle), drawer.rs[3] * Math.sin(item.angle + drawer.startAngle));
+            });
+            ctx.rotate(drawer.startAngle);
+
             // 圆弧
             ctx.beginPath();
             ctx.arc(0, 0, drawer.rs[4], 0, option.angleRange, false);
             ctx.stroke();
+
 
             ctx.restore();
         }
