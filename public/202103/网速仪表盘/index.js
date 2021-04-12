@@ -3,7 +3,7 @@
         angleRange: 1.4 * Math.PI, // 角度范围
         maxVal: 160,                // 最大值
         stepNum: 8,                 // 段数
-        width: 300,                 // 最大尺寸
+        width: 400,                 // 最大尺寸
 
     };
 
@@ -18,7 +18,7 @@
         init() {
             drawer.w = drawer.c.width = window.innerWidth;
             drawer.h = drawer.c.height = window.innerHeight;
-            drawer.r = option.width;
+            drawer.r = option.width / 2;
             drawer.ox = drawer.w / 2;
             drawer.oy = drawer.h / 2;
             drawer.rs = [
@@ -66,7 +66,7 @@
             ctx.rotate(-drawer.startAngle);
             // 刻度值
             drawer.vals.forEach(function (item) {
-                ctx.font = '16px cursive';
+                ctx.font = '12px cursive';
                 ctx.fillText(item.val, drawer.rs[3] * Math.cos(item.angle + drawer.startAngle), drawer.rs[3] * Math.sin(item.angle + drawer.startAngle));
             });
             ctx.rotate(drawer.startAngle);
@@ -75,6 +75,19 @@
             ctx.beginPath();
             ctx.arc(0, 0, drawer.rs[4], 0, option.angleRange, false);
             ctx.stroke();
+
+            // 圆弧上的圆点刻度
+            ctx.beginPath();
+            ctx.fillStyle = 'red';
+            ctx.arc(
+                drawer.rs[4] * Math.cos(0),
+                drawer.rs[4] * Math.sin(0),
+                4,
+                0,
+                2 * Math.PI,
+                false
+            );
+            ctx.fill();
 
 
             ctx.restore();
