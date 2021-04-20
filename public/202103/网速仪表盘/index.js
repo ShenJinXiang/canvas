@@ -14,6 +14,7 @@
             drawer.mark = CanvasUtil.getMarkCanvas('#999');
             drawer.init();
             drawer.drawStatic();
+            drawer.drawValues();
         },
         init() {
             drawer.w = drawer.c.width = window.innerWidth;
@@ -35,6 +36,14 @@
             }
             drawer.angleStep = option.angleRange / (option.stepNum * 5);
             drawer.startAngle = - (Math.PI / 2) - option.angleRange / 2;
+
+            drawer.pointRadius = 4;
+
+            drawer.value = 20;
+            drawer.initByValue();
+        },
+        initByValue() {
+
         },
         drawStatic() {
             let ctx = drawer.ctx;
@@ -82,13 +91,17 @@
             ctx.arc(
                 drawer.rs[4] * Math.cos(0),
                 drawer.rs[4] * Math.sin(0),
-                4,
+                drawer.pointRadius,
                 0,
                 2 * Math.PI,
                 false
             );
             ctx.fill();
 
+
+            ctx.restore();
+        },
+        drawValues() {
 
             ctx.restore();
         }
