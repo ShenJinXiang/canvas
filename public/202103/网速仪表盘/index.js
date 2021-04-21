@@ -3,7 +3,7 @@
         angleRange: 1.4 * Math.PI, // 角度范围
         maxVal: 160,                // 最大值
         stepNum: 8,                 // 段数
-        width: 400,                 // 最大尺寸
+        width: 380,                 // 最大尺寸
 
     };
 
@@ -24,7 +24,7 @@
             drawer.oy = drawer.h / 2;
             drawer.rs = [
                 drawer.r * 1.0,  // 最外层半径(长刻度外半径)
-                drawer.r * 0.95, // 短刻度外半径
+                drawer.r * 0.97, // 短刻度外半径
                 drawer.r * 0.92, // 刻度内半径
                 drawer.r * 0.85, // 刻度值位置半径
                 drawer.r * 0.6   // 红点所在圆半径
@@ -61,8 +61,8 @@
             ctx.save();
             ctx.translate(drawer.ox, drawer.oy);
             ctx.rotate(drawer.startAngle);
-            ctx.strokeStyle = '#e1e1e1';
-            ctx.fillStyle = '#e1e1e1';
+            ctx.strokeStyle = '#a1a1a1';
+            ctx.fillStyle = '#a1a1a1';
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
 
@@ -97,7 +97,7 @@
 
             // Mbps
             ctx.beginPath();
-            ctx.font = drawer.mbpsFontSize + 'px Arial';
+            ctx.font = drawer.mbpsFontSize + 'px Times New Roman Arial';
             ctx.fillText('Mbps', 0, drawer.mbpsY);
             ctx.rotate(drawer.startAngle);
 
@@ -114,8 +114,8 @@
             ctx.save();
             ctx.translate(drawer.ox, drawer.oy);
             ctx.rotate(drawer.startAngle);
-            ctx.strokeStyle = '#e1e1e1';
-            ctx.fillStyle = '#e1e1e1';
+            ctx.strokeStyle = '#a1a1a1';
+            ctx.fillStyle = '#a1a1a1';
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
 
@@ -136,7 +136,7 @@
             // 当前值
             ctx.beginPath();
             ctx.fillStyle = '#fff';
-            ctx.font = drawer.currentValueFontSize + 'px Arial';
+            ctx.font = drawer.currentValueFontSize + 'px Times New Roman Arial';
             ctx.fillText(drawer.currentValue.toFixed(1), 0, drawer.currentValueY);
             ctx.rotate(drawer.startAngle);
 
