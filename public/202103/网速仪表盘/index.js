@@ -7,6 +7,45 @@
 
     };
 
+    class Plan {
+        constructor(time, update, draw) {
+            this.time = time;
+            this.updateFun = update;
+            this.drawFun = draw;
+            this.count = 0;
+        }
+        isEnd() {
+            return this.time <= this.count;
+        }
+        update() {
+            this.count++;
+            this.updateFun();
+        }
+    }
+
+    class Plans {
+        constructor() {
+            this.plans = [];
+        }
+        addPlan(plan) {
+            this.plans.push(plan);
+            if (!this.currentPlan) {
+                this.currentPlan = this.plans.shift();
+            }
+        }
+        update() {
+            if (!this.currentPlan) {
+                return;
+            }
+            this.currentPlan.update();
+            this.currentPlan.draw();
+            if (this.currentPlan.isEnd()) {
+                this.currentPlan = this.plans.shift();
+
+            }
+        }
+    }
+
     const drawer = {
         start() {
             drawer.c = document.getElementById('canvas');
