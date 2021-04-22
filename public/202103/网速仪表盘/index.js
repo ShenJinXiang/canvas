@@ -7,19 +7,24 @@
 
     };
 
-    class Plan {
-        constructor(time, update, draw) {
+    class DrawPlan {
+        constructor(time, startVal, endVal) {
             this.time = time;
-            this.updateFun = update;
-            this.drawFun = draw;
-            this.count = 0;
+            this.current = 0;
+            this.start = startVal;
+            this.end = endVal;
+            this.step = (this.end - this.start) / this.time;
+            this.val = this.start;
         }
         isEnd() {
-            return this.time <= this.count;
+            return this.time <= this.current;
         }
         update() {
-            this.count++;
-            this.updateFun();
+            this.current++;
+            this.val = this.current * this.step;
+        }
+        draw(ctx) {
+            
         }
     }
 
@@ -31,9 +36,10 @@
             this.plans.push(plan);
             if (!this.currentPlan) {
                 this.currentPlan = this.plans.shift();
+                this.isEnd = !this.currentPlan;
             }
         }
-        update() {
+        run() {
             if (!this.currentPlan) {
                 return;
             }
@@ -41,7 +47,9 @@
             this.currentPlan.draw();
             if (this.currentPlan.isEnd()) {
                 this.currentPlan = this.plans.shift();
-
+                if (!this.currentPlan) {
+                    this.isEnd = true;
+                }
             }
         }
     }
