@@ -22,9 +22,32 @@
         update() {
             this.current++;
             this.val = this.current * this.step;
+            this.currentAngle = option.angleRange * this.val / option.maxVal;
         }
         draw(ctx) {
-            
+            ctx.save();
+            // 圆弧上的圆点刻度
+            ctx.beginPath();
+            ctx.fillStyle = 'red';
+            ctx.arc(
+                drawer.rs[4] * Math.cos(this.currentAngle),
+                drawer.rs[4] * Math.sin(this.currentAngle),
+                drawer.pointRadius,
+                0,
+                2 * Math.PI,
+                false
+            );
+            ctx.fill();
+
+            ctx.rotate(-drawer.startAngle);
+            // 当前值
+            ctx.beginPath();
+            ctx.fillStyle = '#fff';
+            ctx.font = drawer.currentValueFontSize + 'px Times New Roman Arial';
+            ctx.fillText(this.val.toFixed(1), 0, drawer.currentValueY);
+            ctx.rotate(drawer.startAngle);
+
+            ctx.restore();
         }
     }
 
@@ -39,18 +62,33 @@
                 this.isEnd = !this.currentPlan;
             }
         }
-        run() {
+        lastPlan() {
+            if (this.plans.length) {
+                return this.plans[this.plans.length - 1];
+            }
+            if (this.currentPlan) {
+                return this.currentPlan;
+            }
+            return null;
+        }
+        update() {
             if (!this.currentPlan) {
                 return;
             }
             this.currentPlan.update();
-            this.currentPlan.draw();
+        }
+        draw(ctx) {
+            if (!this.currentPlan) {
+                return;
+            }
+            this.currentPlan.draw(ctx);
             if (this.currentPlan.isEnd()) {
                 this.currentPlan = this.plans.shift();
                 if (!this.currentPlan) {
                     this.isEnd = true;
                 }
             }
+
         }
     }
 
@@ -60,8 +98,9 @@
             drawer.ctx = drawer.c.getContext('2d');
             drawer.mark = CanvasUtil.getMarkCanvas('#999');
             drawer.init();
-            drawer.drawStatic();
-            drawer.drawValues();
+            drawer.animate();
+            // drawer.drawStatic();
+            // drawer.drawValues();
         },
         init() {
             drawer.w = drawer.c.width = window.innerWidth;
@@ -98,12 +137,42 @@
             drawer.mbpsFontSize = drawer.r * .06
 
 
-            // 当前值
-            drawer.currentValue = 40;
-            // 当前值对应的角度
-            drawer.currentAngle = option.angleRange * drawer.currentValue / option.maxVal;
+            // // 当前值
+            // drawer.currentValue = 40;
+            // // 当前值对应的角度
+            // drawer.currentAngle = option.angleRange * drawer.currentValue / option.maxVal;
+
+            drawer.initData();
         },
-        drawStatic() {
+        initData() {
+            drawer.plans = new Plans();
+            drawer.plans.addPlan(drawer.createPlan());
+            drawer.plans.addPlan(drawer.createPlan());
+        },
+        createPlan() {
+            let startVal = 0,
+                endVal,
+                randomD = random(-1, 1),
+                d = randomD > 0 ? 1 : (randomD < 0 ? -1 : 0),
+                time = 0,
+                lastPlan = drawer.plans.lastPlan();
+            if (lastPlan) {
+                startVal = lastPlan.end;
+            }
+            endVal = startVal + d * random(option.maxVal * 0.25);
+            endVal = endVal < 0 ? 0 : endVal;
+            endVal = endVal > option.maxVal ? option.maxVal : endVal;
+            time = Math.abs(endVal - startVal) * 100;
+            return new DrawPlan(time, startVal, endVal);
+        },
+        animate() {
+            drawer.update();
+            drawer.draw();
+        },
+        update() {
+            this.plans.update();
+        },
+        draw() {
             let ctx = drawer.ctx;
             ctx.save();
             ctx.translate(drawer.ox, drawer.oy);
@@ -113,6 +182,12 @@
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
 
+            drawer.drawStatic(ctx);
+            this.plans.draw(ctx);
+
+            ctx.restore();
+        },
+        drawStatic(ctx) {
             // 刻度
             for (let i = 0; i <= option.stepNum * 5; i++) {
                 ctx.save();
@@ -152,42 +227,6 @@
             ctx.beginPath();
             ctx.arc(0, 0, drawer.rs[4], 0, option.angleRange, false);
             ctx.stroke();
-
-
-            ctx.restore();
-        },
-        drawValues() {
-            let ctx = drawer.ctx;
-            ctx.save();
-            ctx.translate(drawer.ox, drawer.oy);
-            ctx.rotate(drawer.startAngle);
-            ctx.strokeStyle = '#a1a1a1';
-            ctx.fillStyle = '#a1a1a1';
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'middle';
-
-            // 圆弧上的圆点刻度
-            ctx.beginPath();
-            ctx.fillStyle = 'red';
-            ctx.arc(
-                drawer.rs[4] * Math.cos(drawer.currentAngle),
-                drawer.rs[4] * Math.sin(drawer.currentAngle),
-                drawer.pointRadius,
-                0,
-                2 * Math.PI,
-                false
-            );
-            ctx.fill();
-
-            ctx.rotate(-drawer.startAngle);
-            // 当前值
-            ctx.beginPath();
-            ctx.fillStyle = '#fff';
-            ctx.font = drawer.currentValueFontSize + 'px Times New Roman Arial';
-            ctx.fillText(drawer.currentValue.toFixed(1), 0, drawer.currentValueY);
-            ctx.rotate(drawer.startAngle);
-
-            ctx.restore();
         }
     }
 
