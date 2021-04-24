@@ -8,21 +8,29 @@
     };
 
     class DrawPlan {
-        constructor(time, startVal, endVal) {
+        constructor(time, stopTime, startVal, endVal) {
             this.time = time;
             this.current = 0;
+            this.stopTime = stopTime;
+            this.currentStop = 0;
             this.start = startVal;
             this.end = endVal;
             this.step = this.time == 0 ? 0 : (this.end - this.start) / this.time;
             this.val = this.start;
         }
         isEnd() {
-            return this.time <= this.current;
+            return this.time <= this.current && this.stopTime <= this.currentStop;
         }
         update() {
-            this.current++;
-            this.val = this.current * this.step;
-            this.currentAngle = option.angleRange * this.val / option.maxVal;
+            if (this.current < this.time) {
+                this.current++;
+                this.val = this.start + this.current * this.step;
+                this.currentAngle = option.angleRange * this.val / option.maxVal;
+            } else if (this.currentStop < this.stopTime) {
+                this.currentStop++;
+                this.val = this.end;
+                this.currentAngle = option.angleRange * this.val / option.maxVal;
+            }
         }
         draw(ctx) {
             ctx.clearRect(0, 0, drawer.w, drawer.h);
@@ -62,61 +70,13 @@
         }
     }
 
-    class Plans {
-        constructor() {
-            this.plans = [];
-            this.addPlan(this.createPlan());
-            this.addPlan(this.createPlan());
-        }
-        addPlan(plan) {
-            this.plans.push(plan);
-            if (!this.currentPlan) {
-                this.currentPlan = this.plans.shift();
-                this.isEnd = !this.currentPlan;
-            }
-        }
-        lastPlan() {
-            if (this.plans.length) {
-                return this.plans[this.plans.length - 1];
-            }
-            if (this.currentPlan) {
-                return this.currentPlan;
-            }
-            return null;
-        }
-        run(ctx) {
-            this.ctx = ctx;
-            this.animate();
-        }
-        animate() {
-            if (!this.currentPlan) {
-                this.currentPlan = this.plans.shift();
-                if (!this.currentPlan) {
-                    return;
-                }
-            }
-
-            this.currentPlan.update();
-            this.currentPlan.draw(this.ctx);
-            if (this.currentPlan.isEnd()) {
-                this.currentPlan = this.plans.shift();
-                this.addPlan(this.createPlan());
-            }
-            requestAnimationFrame(this.animate);
-        }
-
-    }
-
     const drawer = {
         start() {
             drawer.c = document.getElementById('canvas');
             drawer.ctx = drawer.c.getContext('2d');
             drawer.mark = CanvasUtil.getMarkCanvas('#999');
             drawer.init();
-            console.log(drawer);
             drawer.animate();
-            // drawer.drawStatic();
-            // drawer.drawValues();
         },
         init() {
             drawer.w = drawer.c.width = window.innerWidth;
@@ -174,15 +134,35 @@
             endVal = startVal + d * random(option.maxVal * 0.25);
             endVal = endVal < 0 ? 0 : endVal;
             endVal = endVal > option.maxVal ? option.maxVal : endVal;
-            time = Math.abs(endVal - startVal) * 10;
-            let plan = new DrawPlan(time, startVal, endVal);
-            console.log("创建plan：", plan);
+            time = Math.abs(endVal - startVal) * 8;
+            let plan = new DrawPlan(time, random(20, 50), startVal, endVal);
             return plan;
         },
         animate() {
-            drawer.update();
+            drawer.currentPlan.update();
             drawer.draw();
+            if (drawer.currentPlan.isEnd()) {
+                drawer.currentPlan = drawer.nextPlan;
+                drawer.nextPlan = drawer.createPlan(drawer.currentPlan.end);
+            }
             requestAnimationFrame(drawer.animate);
+        },
+        draw() {
+            let ctx = drawer.ctx;
+            ctx.clearRect(0, 0, drawer.w, drawer.h);
+            ctx.save();
+            ctx.translate(drawer.ox, drawer.oy);
+            ctx.rotate(drawer.startAngle);
+            ctx.strokeStyle = '#a1a1a1';
+            ctx.fillStyle = '#a1a1a1';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+
+            drawer.drawStatic(ctx);
+            if (this.currentPlan) {
+                this.currentPlan.drawVal(ctx);
+            }
+            ctx.restore();
         },
         drawStatic(ctx) {
             // 刻度
