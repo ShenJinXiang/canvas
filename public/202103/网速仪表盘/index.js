@@ -13,7 +13,7 @@
             this.current = 0;
             this.start = startVal;
             this.end = endVal;
-            this.step = (this.end - this.start) / this.time;
+            this.step = this.time == 0 ? 0 : (this.end - this.start) / this.time;
             this.val = this.start;
         }
         isEnd() {
@@ -25,7 +25,20 @@
             this.currentAngle = option.angleRange * this.val / option.maxVal;
         }
         draw(ctx) {
+            ctx.clearRect(0, 0, drawer.w, drawer.h);
             ctx.save();
+            ctx.translate(drawer.ox, drawer.oy);
+            ctx.rotate(drawer.startAngle);
+            ctx.strokeStyle = '#a1a1a1';
+            ctx.fillStyle = '#a1a1a1';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+
+           drawer.drawStatic(ctx);
+           this.drawVal(ctx);
+           ctx.restore();
+        }
+        drawVal(ctx) {
             // 圆弧上的圆点刻度
             ctx.beginPath();
             ctx.fillStyle = 'red';
@@ -46,14 +59,14 @@
             ctx.font = drawer.currentValueFontSize + 'px Times New Roman Arial';
             ctx.fillText(this.val.toFixed(1), 0, drawer.currentValueY);
             ctx.rotate(drawer.startAngle);
-
-            ctx.restore();
         }
     }
 
     class Plans {
         constructor() {
             this.plans = [];
+            this.addPlan(this.createPlan());
+            this.addPlan(this.createPlan());
         }
         addPlan(plan) {
             this.plans.push(plan);
@@ -71,25 +84,27 @@
             }
             return null;
         }
-        update() {
-            if (!this.currentPlan) {
-                return;
-            }
-            this.currentPlan.update();
+        run(ctx) {
+            this.ctx = ctx;
+            this.animate();
         }
-        draw(ctx) {
+        animate() {
             if (!this.currentPlan) {
-                return;
-            }
-            this.currentPlan.draw(ctx);
-            if (this.currentPlan.isEnd()) {
                 this.currentPlan = this.plans.shift();
                 if (!this.currentPlan) {
-                    this.isEnd = true;
+                    return;
                 }
             }
 
+            this.currentPlan.update();
+            this.currentPlan.draw(this.ctx);
+            if (this.currentPlan.isEnd()) {
+                this.currentPlan = this.plans.shift();
+                this.addPlan(this.createPlan());
+            }
+            requestAnimationFrame(this.animate);
         }
+
     }
 
     const drawer = {
@@ -98,6 +113,7 @@
             drawer.ctx = drawer.c.getContext('2d');
             drawer.mark = CanvasUtil.getMarkCanvas('#999');
             drawer.init();
+            console.log(drawer);
             drawer.animate();
             // drawer.drawStatic();
             // drawer.drawValues();
@@ -136,56 +152,37 @@
             drawer.currentValueFontSize = drawer.r * 0.4;
             drawer.mbpsFontSize = drawer.r * .06
 
-
-            // // 当前值
-            // drawer.currentValue = 40;
-            // // 当前值对应的角度
-            // drawer.currentAngle = option.angleRange * drawer.currentValue / option.maxVal;
-
             drawer.initData();
         },
         initData() {
-            drawer.plans = new Plans();
-            drawer.plans.addPlan(drawer.createPlan());
-            drawer.plans.addPlan(drawer.createPlan());
+            drawer.currentPlan = drawer.createPlan(0);
+            drawer.nextPlan = drawer.createPlan(drawer.currentPlan.end);
         },
-        createPlan() {
-            let startVal = 0,
-                endVal,
+        createPlan(startVal) {
+            let endVal,
                 randomD = random(-1, 1),
-                d = randomD > 0 ? 1 : (randomD < 0 ? -1 : 0),
                 time = 0,
-                lastPlan = drawer.plans.lastPlan();
-            if (lastPlan) {
-                startVal = lastPlan.end;
+                d;
+            if (startVal < option.maxVal * 0.25) {
+                d = 1;
+            } else
+            if (startVal > option.maxVal * 0.75) {
+                d = -1;
+            } else {
+                d = randomD > 0 ? 1 : (randomD < 0 ? -1 : 0);
             }
             endVal = startVal + d * random(option.maxVal * 0.25);
             endVal = endVal < 0 ? 0 : endVal;
             endVal = endVal > option.maxVal ? option.maxVal : endVal;
-            time = Math.abs(endVal - startVal) * 100;
-            return new DrawPlan(time, startVal, endVal);
+            time = Math.abs(endVal - startVal) * 10;
+            let plan = new DrawPlan(time, startVal, endVal);
+            console.log("创建plan：", plan);
+            return plan;
         },
         animate() {
             drawer.update();
             drawer.draw();
-        },
-        update() {
-            this.plans.update();
-        },
-        draw() {
-            let ctx = drawer.ctx;
-            ctx.save();
-            ctx.translate(drawer.ox, drawer.oy);
-            ctx.rotate(drawer.startAngle);
-            ctx.strokeStyle = '#a1a1a1';
-            ctx.fillStyle = '#a1a1a1';
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'middle';
-
-            drawer.drawStatic(ctx);
-            this.plans.draw(ctx);
-
-            ctx.restore();
+            requestAnimationFrame(drawer.animate);
         },
         drawStatic(ctx) {
             // 刻度
