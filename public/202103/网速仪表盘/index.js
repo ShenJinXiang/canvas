@@ -163,6 +163,8 @@
                 this.currentPlan.drawVal(ctx);
             }
             ctx.restore();
+
+            CanvasUtil.drawMark(ctx, drawer.mark);
         },
         drawStatic(ctx) {
             // 刻度
