@@ -29,5 +29,14 @@
         }
     };
 
+    /*
+    x * x + y * y = r * r;
+    y = Math.tan(ang) * x + b
+    x * x + (kx + b)^2 = r * r
+    x * x + k^2 * x^2 + 2 * k * b * x + b^2 = r^2
+    
+
+     */
+
     drawer.start();
 }
