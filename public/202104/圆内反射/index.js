@@ -24,6 +24,13 @@
         }
         draw(ctx) {
             ctx.save();
+            ctx.strokeStyle = 'red';
+            ctx.beginPath();
+            ctx.moveTo(-20, 0);
+            ctx.lineTo(20, 0);
+            ctx.moveTo(0, -20);
+            ctx.lineTo(0, 20);
+            ctx.stroke();
             ctx.restore();
         }
     }
@@ -63,6 +70,8 @@
             ctx.strokeStyle = '#fff';
             ctx.arc(0, 0, drawer.radius, 0, 2 * Math.PI, false);
             ctx.stroke();
+
+            drawer.path.draw(ctx);
             ctx.restore();
         }
     };
