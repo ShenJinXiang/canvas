@@ -1,7 +1,32 @@
 {
     const option = {
-        radius: 0.4
+        radius: 0.4,
+        pointsLength: 400
     };
+
+    class Point {
+        constructor(x, y, color) {
+            this.x = x;
+            this.y = y;
+            this.color = color;
+        }
+    }
+
+    class PointPath {
+        constructor() {
+            this.points = [];
+        }
+        addPoint(point) {
+            this.points.push(point);
+            if (this.points.length > option.pointsLength) {
+                this.points.shift();
+            }
+        }
+        draw(ctx) {
+            ctx.save();
+            ctx.restore();
+        }
+    }
 
     const drawer = {
         start() {
@@ -15,6 +40,19 @@
             drawer.w = drawer.c.width = window.innerWidth;
             drawer.h = drawer.c.height = window.innerHeight;
             drawer.radius = Math.min(drawer.w, drawer.h) * option.radius;
+            drawer.path = new PointPath();
+            drawer.path.addPoint(drawer.randomStartPoint());
+        },
+        randomStartPoint() {
+            let r = random(drawer.radius * .4, drawer.radius * .7),
+                angle = random(2 * Math.PI),
+                x = r * Math.cos(angle),
+                y = r * Math.sin(angle),
+                color = drawer.color(1);
+            return new Point(x, y, color);
+        },
+        color(hue) {
+            return "hsl(" + hue + ", 100%, 50%)";
         },
         draw() {
             let ctx = drawer.ctx;
@@ -28,15 +66,6 @@
             ctx.restore();
         }
     };
-
-    /*
-    x * x + y * y = r * r;
-    y = Math.tan(ang) * x + b
-    x * x + (kx + b)^2 = r * r
-    x * x + k^2 * x^2 + 2 * k * b * x + b^2 = r^2
-    
-
-     */
 
     drawer.start();
 }
