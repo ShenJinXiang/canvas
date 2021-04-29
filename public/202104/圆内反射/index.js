@@ -24,7 +24,9 @@
         }
         draw(ctx) {
             ctx.save();
-            ctx.strokeStyle = 'red';
+            let firstPoint = this.points[0];
+            ctx.strokeStyle = firstPoint.color;
+            ctx.translate(firstPoint.x, firstPoint.y);
             ctx.beginPath();
             ctx.moveTo(-20, 0);
             ctx.lineTo(20, 0);
