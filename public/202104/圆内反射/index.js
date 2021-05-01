@@ -21,7 +21,7 @@
             this.speed = speed;
             this.speedX = this.speed * Math.cos(angle);
             this.speedY = this.speed * Math.sin(angle);
-            this.radius = this.radius;
+            this.radius = radius;
             this.rl = this.radius * this.radius;
         }
         addPoint(point) {
@@ -33,9 +33,27 @@
         update() {
             let last = this.points[this.points.length - 1],
                 next = new Point(last.x + this.speedX, last.y + this.speedY, last.hue + 1),
-                nr = next.x * next.x + next.y * next.y;
-
-
+                nr = next.x * next.x + next.y * next.y,
+                rPoint;
+            if (nr < this.rl) {
+                this.points.push(next);
+            } else if (Math.abs(nr - this.rl) > 1) {
+                let max = {x: next.x, y: next.y},
+                    min = {x: last.x, y: last.y},
+                    mid;
+                while (Math.abs(nr - this.rl) > 1) {
+                    mid = {x: (max.x + min.x) / 2, y: (max.y + min.y) / 2};
+                    nr = mid.x * mid.x + mid.y + mid.y;
+                    if (nr > this.rl) {
+                        max = mid;
+                    } else {
+                        min = mid;
+                    }
+                }
+                rPoint = mid;
+            } else if (nr == this.rl) {
+                
+            }
         }
         draw(ctx) {
             if (this.points.length <= 1) {
@@ -59,7 +77,6 @@
             drawer.ctx = drawer.c.getContext('2d');
             drawer.mark = CanvasUtil.getMarkCanvas('#999');
             drawer.init();
-            console.log(drawer);
             drawer.animate();
             drawer.draw();
         },
@@ -67,7 +84,7 @@
             drawer.w = drawer.c.width = window.innerWidth;
             drawer.h = drawer.c.height = window.innerHeight;
             drawer.radius = Math.min(drawer.w, drawer.h) * option.radius;
-            drawer.path = new PointPath(drawer.randomStartPoint(), random(2 * Math.PI));
+            drawer.path = new PointPath(drawer.randomStartPoint(), random(2 * Math.PI), option.speed, drawer.radius);
         },
         animate() {
             drawer.update();
