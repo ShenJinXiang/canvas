@@ -2,7 +2,8 @@
     const option = {
         radius: 0.4,
         pointsLength: 400,
-        speed: 10
+        speed: 20,
+        hueDiff: 0
     };
 
     class Point {
@@ -19,10 +20,10 @@
             this.points = [startPoint];
             this.angle = angle;
             this.speed = speed;
-            this.speedX = this.speed * Math.cos(angle);
-            this.speedY = this.speed * Math.sin(angle);
+            this.speedX = this.speed * Math.cos(this.angle);
+            this.speedY = this.speed * Math.sin(this.angle);
             this.radius = radius;
-            this.rl = this.radius * this.radius;
+            this.rl = Math.round(this.radius * this.radius);
         }
         addPoint(point) {
             this.points.push(point);
@@ -32,28 +33,43 @@
         }
         update() {
             let last = this.points[this.points.length - 1],
-                next = new Point(last.x + this.speedX, last.y + this.speedY, last.hue + 1),
-                nr = next.x * next.x + next.y * next.y,
-                rPoint;
+                next = new Point(last.x + this.speedX, last.y + this.speedY, last.hue + option.hueDiff),
+                nr = Math.round(next.x * next.x + next.y * next.y);
             if (nr < this.rl) {
                 this.points.push(next);
-            } else if (Math.abs(nr - this.rl) > 1) {
+            } else if (nr != this.rl) {
                 let max = {x: next.x, y: next.y},
                     min = {x: last.x, y: last.y},
                     mid;
-                while (Math.abs(nr - this.rl) > 1) {
+                while (nr != this.rl) {
                     mid = {x: (max.x + min.x) / 2, y: (max.y + min.y) / 2};
-                    nr = mid.x * mid.x + mid.y + mid.y;
+                    nr = Math.round(mid.x * mid.x + mid.y * mid.y);
                     if (nr > this.rl) {
                         max = mid;
                     } else {
                         min = mid;
                     }
                 }
-                rPoint = mid;
-            } else if (nr == this.rl) {
-                
+                next = new Point(mid.x, mid.y, last.hue + option.hueDiff);
+                this.points.push(next);
+                this.changeAngle(next);
+            } else {
+                this.points.push(next);
+                this.changeAngle(next);
             }
+        }
+        changeAngle(p) {
+            let rAng;
+            if (Math.abs(p.x) <= 0.5) {
+                rAng = p.y > 0 ? Math.PI / 2 : -Math.PI / 2;
+            } else {
+                rAng = Math.atan(p.y / p.x);
+            }
+            rAng = rAng % (2 * Math.PI);
+            rAng = rAng < 0 ? rAng + 2 * Math.PI : rAng;
+            this.angle = Math.PI + (2 * rAng  - this.angle);
+            this.speedX = this.speed * Math.cos(this.angle);
+            this.speedY = this.speed * Math.sin(this.angle);
         }
         draw(ctx) {
             if (this.points.length <= 1) {
@@ -93,6 +109,7 @@
         },
         update() {
             drawer.path.update();
+            console.log(drawer.path.points)
         },
         draw() {
             let ctx = drawer.ctx;
@@ -110,9 +127,8 @@
             let r = random(drawer.radius * .4, drawer.radius * .7),
                 angle = random(2 * Math.PI),
                 x = r * Math.cos(angle),
-                y = r * Math.sin(angle),
-                color = drawer.color(1);
-            return new Point(x, y, color);
+                y = r * Math.sin(angle);
+            return new Point(x, y, 1);
         },
         color(hue) {
             return "hsl(" + hue + ", 100%, 50%)";
