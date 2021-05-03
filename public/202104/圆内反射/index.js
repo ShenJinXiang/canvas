@@ -2,7 +2,7 @@
     const option = {
         radius: 0.4,
         pointsLength: 400,
-        speed: 20,
+        speed: 50,
         hueDiff: 0
     };
 
@@ -53,6 +53,10 @@
                 next = new Point(mid.x, mid.y, last.hue + option.hueDiff);
                 this.points.push(next);
                 this.changeAngle(next);
+                let ln = Math.sqrt(Math.pow(next.x - last.x, 2) + Math.pow(next.y - last.y, 2)),
+                    sn = this.speed - ln,
+                    nnext = new Point(next.x + sn * Math.cos(this.angle), next.y + sn * Math.sin(this.angle), last.hue + option.hueDiff);
+                this.points.push(nnext);
             } else {
                 this.points.push(next);
                 this.changeAngle(next);
@@ -122,16 +126,14 @@
             ctx.stroke();
             drawer.path.draw(ctx);
             ctx.restore();
+            CanvasUtil.drawMark(ctx, drawer.mark);
         },
         randomStartPoint() {
-            let r = random(drawer.radius * .4, drawer.radius * .7),
-                angle = random(2 * Math.PI),
+            let r = random(drawer.radius * .4, drawer.radius * .9),
+            angle = random(2 * Math.PI),
                 x = r * Math.cos(angle),
                 y = r * Math.sin(angle);
             return new Point(x, y, 1);
-        },
-        color(hue) {
-            return "hsl(" + hue + ", 100%, 50%)";
         }
     };
 
