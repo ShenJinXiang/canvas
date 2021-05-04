@@ -1,9 +1,10 @@
 {
     const option = {
         radius: 0.4,
-        pointsLength: 400,
-        speed: 50,
-        hueDiff: 0
+        pointsLength: 100,
+        linePointsLength: 400,
+        speed: 40,
+        hueDiff: 0.04
     };
 
     class Point {
@@ -18,6 +19,7 @@
     class PointPath {
         constructor(startPoint, angle, speed, radius) {
             this.points = [startPoint];
+            this.linePoints = [];
             this.angle = angle;
             this.speed = speed;
             this.speedX = this.speed * Math.cos(this.angle);
@@ -31,12 +33,21 @@
                 this.points.shift();
             }
         }
+        clearPoints() {
+            this.points = [];
+        }
+        addLinePoint(point) {
+            this.linePoints.push(point);
+            if (this.linePoints.length > option.linePointsLength) {
+                this.linePoints.shift();
+            }
+        }
         update() {
             let last = this.points[this.points.length - 1],
                 next = new Point(last.x + this.speedX, last.y + this.speedY, last.hue + option.hueDiff),
                 nr = Math.round(next.x * next.x + next.y * next.y);
             if (nr < this.rl) {
-                this.points.push(next);
+                this.addPoint(next);
             } else if (nr != this.rl) {
                 let max = {x: next.x, y: next.y},
                     min = {x: last.x, y: last.y},
@@ -51,14 +62,18 @@
                     }
                 }
                 next = new Point(mid.x, mid.y, last.hue + option.hueDiff);
-                this.points.push(next);
+                this.addLinePoint(next);
+                this.clearPoints();
+                this.addPoint(next);
                 this.changeAngle(next);
                 let ln = Math.sqrt(Math.pow(next.x - last.x, 2) + Math.pow(next.y - last.y, 2)),
                     sn = this.speed - ln,
                     nnext = new Point(next.x + sn * Math.cos(this.angle), next.y + sn * Math.sin(this.angle), last.hue + option.hueDiff);
-                this.points.push(nnext);
+                this.addPoint(nnext);
             } else {
-                this.points.push(next);
+                this.addLinePoint(next);
+                this.clearPoints();
+                this.addPoint(next);
                 this.changeAngle(next);
             }
         }
@@ -76,10 +91,17 @@
             this.speedY = this.speed * Math.sin(this.angle);
         }
         draw(ctx) {
-            if (this.points.length <= 1) {
+            if (this.points.length < 1 && this.linePoints.length < 1) {
                 return
             }
             ctx.save();
+            for (let i = 0; i < this.linePoints.length - 1; i++) {
+                ctx.beginPath()
+                ctx.strokeStyle = this.linePoints[i].color;
+                ctx.lineTo(this.linePoints[i].x, this.linePoints[i].y);
+                ctx.lineTo(this.linePoints[i + 1].x, this.linePoints[i + 1].y);
+                ctx.stroke();
+            }
             for (let i = 0; i < this.points.length - 1; i++) {
                 ctx.beginPath()
                 ctx.strokeStyle = this.points[i].color;
@@ -113,7 +135,6 @@
         },
         update() {
             drawer.path.update();
-            console.log(drawer.path.points)
         },
         draw() {
             let ctx = drawer.ctx;
