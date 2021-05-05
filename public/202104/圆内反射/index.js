@@ -1,10 +1,10 @@
 {
     const option = {
         radius: 0.4,
-        pointsLength: 100,
-        linePointsLength: 400,
+        pointsLength: 50,
+        linePointsLength: 1000,
         speed: 40,
-        hueDiff: 0.04
+        hueDiff: 0.01
     };
 
     class Point {
@@ -120,7 +120,6 @@
             drawer.mark = CanvasUtil.getMarkCanvas('#999');
             drawer.init();
             drawer.animate();
-            drawer.draw();
         },
         init() {
             drawer.w = drawer.c.width = window.innerWidth;
