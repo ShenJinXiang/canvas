@@ -23,11 +23,15 @@
         backgroundColor: '#000',
         scaleColor: '#ccc',
         hourHandColor: '#fff',
-        minuteHandColor: '#F00'
+        minuteHandColor: '#F00',
+        timeInterval: 5,
+        taskTimeInterval: 20
     };
 
     class Element {
-        constructor(sPoint, ePoint, color, lineWidth) {
+        constructor(hourHandAngle, minuteHandAngle, sPoint, ePoint, color, lineWidth) {
+            this.hourHandAngle = hourHandAngle;
+            this.minuteHandAngle = minuteHandAngle;
             this.sPoint = sPoint;
             this.ePoint = ePoint;
             this.color = color
@@ -55,7 +59,48 @@
             this.init();
         }
         init() {
+            this.current = 0;
+            this.stopTime = 0;
+            this.end = false;
+            this.elements = [];
 
+        }
+        run() {
+            this.draw();
+            this.update();
+        }
+        draw() {
+            this.drawStatic();
+            this.drawElements();
+            this.drawHands();
+        }
+        drawStatic() {
+
+        }
+        drawElements() {
+
+        }
+        drawHands() {
+            
+        }
+        update() {
+            this.stopTime++;
+            if (this.stopTime >= this.option.timeInterval) {
+                this.current++;
+                if (this.current >= this.elements.length) {
+                    this.end = true;
+                }
+                this.stopTime = 0;
+            }
+        }
+        reset() {
+            this.end = false;
+            this.current = 0;
+            this.stopTime = 0;
+
+        }
+        isEnd() {
+            return this.end;
         }
     }
 
@@ -66,6 +111,8 @@
             drawer.mark = CanvasUtil.getMarkCanvas('#999');
             drawer.initSize();
             drawer.initTasks();
+            drawer.current = 0;
+            drawer.stopTime = 0;
             drawer.animate();
         },
         initSize() {
@@ -88,7 +135,8 @@
                 backgroundColor: option.backgroundColor,
                 scaleColor: option.scaleColor,
                 hourHandColor: option.hourHandColor,
-                minuteHandColor: option.minuteHandColor
+                minuteHandColor: option.minuteHandColor,
+                timeInterval: option.timeInterval
             };
         },
         initTasks() {
@@ -96,10 +144,31 @@
             option.tasks.forEach((item, index) => {
                 drawer.tasks.push(new Task(drawer.ctx, drawer.option, item.hourNum, item.minuteNum, drawer.color(index * 360 / option.tasks.length)));
             });
-            console.log(drawer.tasks);
         },
         animate() {
-
+            let ctx = drawer.ctx;
+            ctx.clearRect(0, 0, drawer.w, drawer.h);
+            ctx.fillStyle = option.backgroundColor;
+            ctx.fillRect(0, 0, drawer.w, drawer.h);
+            ctx.save();
+            ctx.translate(drawer.w / 2, drawer.h / 2);
+            let currentTask = drawer.tasks[drawer.current];
+            if (!currentTask.isEnd) {
+                currentTask.run();
+            } else {
+                drawer.stopTime += 1;
+                if (drawer.stopTime >= option.taskTimeInterval) {
+                    currentTask.reset();
+                    drawer.current += 1;
+                    if (drawer.current >= drawer.tasks.length) {
+                        drawer.current = 0;
+                    }
+                    drawer.stopTime = 0;
+                }
+            }
+            ctx.restore();
+            CanvasUtil.drawMark(ctx, drawer.mark);
+            requestAnimationFrame(drawer.animate);
         },
         color: function (hue) {
             return "hsl(" + hue + ", 100%, 50%)";
