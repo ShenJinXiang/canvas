@@ -12,8 +12,14 @@
         minuteHandLen: 0.34, // 分针长度
         minuteHandEndLen: 0.34, // 分针长度
         minuteHandWid: 1,    // 分针宽度
-        hourHandNums: [2, 3, 4, 6, 12, 24],
-        minuteHandNum: 120,
+        tasks: [
+            {hourNum: 2, minuteNum: 60},
+            {hourNum: 3, minuteNum: 60},
+            {hourNum: 4, minuteNum: 60},
+            {hourNum: 6, minuteNum: 60},
+            {hourNum: 12, minuteNum: 60},
+            {hourNum: 24, minuteNum: 120}
+        ],
         backgroundColor: '#000',
         scaleColor: '#ccc',
         hourHandColor: '#fff',
@@ -41,9 +47,12 @@
 
     class Task {
         constructor(ctx, option, hourNum, minuteNum, color) {
+            this.ctx = ctx;
+            this.option = option;
             this.hourNum = hourNum;
             this.minuteNum = minuteNum;
             this.color = color;
+            this.init();
         }
         init() {
 
@@ -84,11 +93,17 @@
         },
         initTasks() {
             drawer.tasks = [];
-
-
+            option.tasks.forEach((item, index) => {
+                drawer.tasks.push(new Task(drawer.ctx, drawer.option, item.hourNum, item.minuteNum, drawer.color(index * 360 / option.tasks.length)));
+            });
+            console.log(drawer.tasks);
         },
         animate() {
 
+        },
+        color: function (hue) {
+            return "hsl(" + hue + ", 100%, 50%)";
         }
     };
+    drawer.start();
 }
