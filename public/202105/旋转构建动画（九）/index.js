@@ -3,9 +3,9 @@
         radius: 0.4,
         scaleOuter: 0.38,
         largeScale: 0.35,
-        smallScale: 0.37,
+        smallScale: 0.36,
         scaleWidth: 1,
-        largeScaleWidth: 2,
+        largeScaleWidth: 4,
         hourHandLen: 0.22, // 时针长度
         hourHandEndLen: 0.02, // 时针长度
         hourHandWid: 2,    // 时针宽度
@@ -93,23 +93,45 @@
             this.drawHands();
         }
         drawStatic() {
-            this.ctx.save();
-            this.ctx.fillStyle = this.option.scaleColor;
+            let ctx = this.ctx;
+            ctx.save();
+            ctx.fillStyle = this.option.scaleColor;
 
             // 外圈
-            this.ctx.beginPath();
-            this.ctx.arc(0, 0, this.option.radius, 0, 2 * Math.PI, false);
-            this.ctx.arc(0, 0, this.option.scaleOuter, 0, 2 * Math.PI, true);
-            this.ctx.fill();
+            ctx.beginPath();
+            ctx.arc(0, 0, this.option.radius, 0, 2 * Math.PI, false);
+            ctx.arc(0, 0, this.option.scaleOuter, 0, 2 * Math.PI, true);
+            ctx.fill();
 
+            for (let m = 0; m < this.minuteNum; m++) {
+                ctx.save();
+                ctx.rotate(this.startAngle + m * this.minuteAngleStep);
+                ctx.strokeStyle = this.option.scaleColor;
+                ctx.beginPath();
+                ctx.moveTo(this.option.scaleOuter, 0);
+                ctx.lineTo(this.option.smallScale, 0);
+                ctx.stroke();
+                ctx.restore();
+            }
+            for (let h = 0; h < this.hourNum; h++) {
+                ctx.save();
+                ctx.rotate(this.startAngle + h * this.hourLargeAngleStep);
+                ctx.strokeStyle = this.option.scaleColor;
+                ctx.lineWidth = this.option.largeScaleWidth;
+                ctx.beginPath();
+                ctx.moveTo(this.option.scaleOuter, 0);
+                ctx.lineTo(this.option.largeScale, 0);
+                ctx.stroke();
+                ctx.restore();
+            }
 
-            this.ctx.restore();
+            ctx.restore();
         }
         drawElements() {
 
         }
         drawHands() {
-            
+
         }
         update() {
             this.stopTime++;
