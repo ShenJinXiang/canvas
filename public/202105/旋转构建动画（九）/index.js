@@ -12,6 +12,7 @@
         minuteHandLen: 0.34, // 分针长度
         minuteHandEndLen: 0.34, // 分针长度
         minuteHandWid: 1,    // 分针宽度
+        lineWidth: 1,
         tasks: [
             {hourNum: 2, minuteNum: 60},
             {hourNum: 3, minuteNum: 60},
@@ -62,8 +63,25 @@
             this.current = 0;
             this.stopTime = 0;
             this.end = false;
+            this.hourLargeAngleStep = 2 * Math.PI / this.hourNum;
+            this.hourSamllAngleStep = this.hourLargeAngleStep / this.minuteNum;
+            this.minuteAngleStep = 2 * Math.PI / this.minuteNum;
             this.elements = [];
-
+            this.startAngle = -Math.PI / 2;
+            for (let h = 0; h < this.hourNum; h++) {
+                for (let m = 0; m < this.minuteNum; m++) {
+                    let hourAngle = this.startAngle + h * this.hourLargeAngleStep + m * this.hourSamllAngleStep,
+                        minuteAngle = this.startAngle + m * this.minuteAngleStep;
+                    this.elements.push(new Element(
+                        hourAngle,
+                        minuteAngle,
+                        {x: this.option.hourHandLen * Math.cos(hourAngle), y: this.option.hourHandLen * Math.sin(hourAngle)},
+                        {x: this.option.minuteHandLen * Math.cos(minuteAngle), y: this.option.minuteHandLen * Math.sin(minuteAngle)},
+                        this.color,
+                        this.option.lineWidth
+                    ));
+                }
+            }
         }
         run() {
             this.draw();
@@ -75,7 +93,17 @@
             this.drawHands();
         }
         drawStatic() {
+            this.ctx.save();
+            this.ctx.fillStyle = this.option.scaleColor;
 
+            // 外圈
+            this.ctx.beginPath();
+            this.ctx.arc(0, 0, this.option.radius, 0, 2 * Math.PI, false);
+            this.ctx.arc(0, 0, this.option.scaleOuter, 0, 2 * Math.PI, true);
+            this.ctx.fill();
+
+
+            this.ctx.restore();
         }
         drawElements() {
 
@@ -132,6 +160,7 @@
                 minuteHandLen: drawer.width * option.minuteHandLen,
                 minuteHandEndLen: drawer.width * option.minuteHandEndLen,
                 minuteHandWid: option.minuteHandWid,
+                lineWidth: option.lineWidth,
                 backgroundColor: option.backgroundColor,
                 scaleColor: option.scaleColor,
                 hourHandColor: option.hourHandColor,
@@ -144,6 +173,7 @@
             option.tasks.forEach((item, index) => {
                 drawer.tasks.push(new Task(drawer.ctx, drawer.option, item.hourNum, item.minuteNum, drawer.color(index * 360 / option.tasks.length)));
             });
+            console.log(drawer.tasks);
         },
         animate() {
             let ctx = drawer.ctx;
@@ -153,7 +183,7 @@
             ctx.save();
             ctx.translate(drawer.w / 2, drawer.h / 2);
             let currentTask = drawer.tasks[drawer.current];
-            if (!currentTask.isEnd) {
+            if (!currentTask.isEnd()) {
                 currentTask.run();
             } else {
                 drawer.stopTime += 1;
@@ -168,7 +198,7 @@
             }
             ctx.restore();
             CanvasUtil.drawMark(ctx, drawer.mark);
-            requestAnimationFrame(drawer.animate);
+            // requestAnimationFrame(drawer.animate);
         },
         color: function (hue) {
             return "hsl(" + hue + ", 100%, 50%)";
