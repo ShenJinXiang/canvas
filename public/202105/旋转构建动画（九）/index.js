@@ -6,12 +6,12 @@
         smallScale: 0.36,
         scaleWidth: 1,
         largeScaleWidth: 4,
-        hourHandLen: 0.22, // 时针长度
+        hourHandLen: 0.18, // 时针长度
         hourHandEndLen: 0.02, // 时针长度
-        hourHandWid: 2,    // 时针宽度
+        hourHandWid: 4,    // 时针宽度
         minuteHandLen: 0.34, // 分针长度
         minuteHandEndLen: 0.03, // 分针长度
-        minuteHandWid: 1,    // 分针宽度
+        minuteHandWid: 3,    // 分针宽度
         lineWidth: 1,
         tasks: [
             {hourNum: 2, minuteNum: 60},
@@ -62,6 +62,7 @@
         init() {
             this.current = 0;
             this.stopTime = 0;
+            this.endTime = 0;
             this.end = false;
             this.hourLargeAngleStep = 2 * Math.PI / this.hourNum;
             this.hourSamllAngleStep = this.hourLargeAngleStep / this.minuteNum;
@@ -166,7 +167,11 @@
             if (this.stopTime >= this.option.timeInterval) {
                 this.current++;
                 if (this.current >= this.elements.length) {
-                    this.end = true;
+                    // this.end = true;
+                    this.endTime++;
+                    if (this.endTime >= this.option.taskTimeInterval) {
+                        
+                    }
                 }
                 this.stopTime = 0;
             }
@@ -175,6 +180,7 @@
             this.end = false;
             this.current = 0;
             this.stopTime = 0;
+            this.endTime = 0;
 
         }
         isEnd() {
@@ -215,7 +221,8 @@
                 scaleColor: option.scaleColor,
                 hourHandColor: option.hourHandColor,
                 minuteHandColor: option.minuteHandColor,
-                timeInterval: option.timeInterval
+                timeInterval: option.timeInterval,
+                taskTimeInterval: option.taskTimeInterval
             };
         },
         initTasks() {
@@ -236,16 +243,20 @@
             if (!currentTask.isEnd()) {
                 currentTask.run();
             } else {
-                // currentTask.draw();
-                drawer.stopTime += 1;
-                if (drawer.stopTime >= option.taskTimeInterval) {
-                    currentTask.reset();
-                    drawer.current += 1;
-                    if (drawer.current >= drawer.tasks.length) {
-                        drawer.current = 0;
-                    }
-                    drawer.stopTime = 0;
+                drawer.current++;
+                if (drawer.current >= drawer.tasks.length) {
+                    drawer.current = 0;
                 }
+                // currentTask.draw();
+                // drawer.stopTime += 1;
+                // if (drawer.stopTime >= option.taskTimeInterval) {
+                //     currentTask.reset();
+                //     drawer.current += 1;
+                //     if (drawer.current >= drawer.tasks.length) {
+                //         drawer.current = 0;
+                //     }
+                //     drawer.stopTime = 0;
+                // }
             }
             ctx.restore();
             CanvasUtil.drawMark(ctx, drawer.mark);
