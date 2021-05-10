@@ -10,7 +10,7 @@
         hourHandEndLen: 0.02, // 时针长度
         hourHandWid: 2,    // 时针宽度
         minuteHandLen: 0.34, // 分针长度
-        minuteHandEndLen: 0.34, // 分针长度
+        minuteHandEndLen: 0.03, // 分针长度
         minuteHandWid: 1,    // 分针宽度
         lineWidth: 1,
         tasks: [
@@ -18,15 +18,15 @@
             {hourNum: 3, minuteNum: 60},
             {hourNum: 4, minuteNum: 60},
             {hourNum: 6, minuteNum: 60},
-            {hourNum: 12, minuteNum: 60},
-            {hourNum: 24, minuteNum: 120}
+            {hourNum: 12, minuteNum: 60}
+            // {hourNum: 24, minuteNum: 120}
         ],
         backgroundColor: '#000',
         scaleColor: '#ccc',
         hourHandColor: '#fff',
         minuteHandColor: '#F00',
         timeInterval: 5,
-        taskTimeInterval: 20
+        taskTimeInterval: 50
     };
 
     class Element {
@@ -103,6 +103,7 @@
             ctx.arc(0, 0, this.option.scaleOuter, 0, 2 * Math.PI, true);
             ctx.fill();
 
+            // 刻度
             for (let m = 0; m < this.minuteNum; m++) {
                 ctx.save();
                 ctx.rotate(this.startAngle + m * this.minuteAngleStep);
@@ -128,10 +129,37 @@
             ctx.restore();
         }
         drawElements() {
-
+            let ctx = this.ctx;
+            for (let i = 0; i <= this.current; i++) {
+                this.elements[i].draw(ctx);
+            }
         }
         drawHands() {
+            let ctx = this.ctx;
 
+            // 时针
+            ctx.save();
+            ctx.beginPath();
+            let hourHandAngle = this.elements[this.current].hourHandAngle;
+            ctx.strokeStyle = this.option.hourHandColor;
+            ctx.lineWidth = this.option.hourHandWid;
+            ctx.rotate(hourHandAngle);
+            ctx.moveTo(-this.option.hourHandEndLen, 0);
+            ctx.lineTo(this.option.hourHandLen, 0);
+            ctx.stroke();
+            ctx.restore();
+
+            // 分针
+            ctx.save();
+            ctx.beginPath();
+            let minuteHandAngle = this.elements[this.current].minuteHandAngle;
+            ctx.strokeStyle = this.option.minuteHandColor;
+            ctx.lineWidth = this.option.minuteHandWid;
+            ctx.rotate(minuteHandAngle);
+            ctx.moveTo(-this.option.minuteHandEndLen, 0);
+            ctx.lineTo(this.option.minuteHandLen, 0);
+            ctx.stroke();
+            ctx.restore();
         }
         update() {
             this.stopTime++;
@@ -208,6 +236,7 @@
             if (!currentTask.isEnd()) {
                 currentTask.run();
             } else {
+                // currentTask.draw();
                 drawer.stopTime += 1;
                 if (drawer.stopTime >= option.taskTimeInterval) {
                     currentTask.reset();
@@ -220,7 +249,7 @@
             }
             ctx.restore();
             CanvasUtil.drawMark(ctx, drawer.mark);
-            // requestAnimationFrame(drawer.animate);
+            requestAnimationFrame(drawer.animate);
         },
         color: function (hue) {
             return "hsl(" + hue + ", 100%, 50%)";
