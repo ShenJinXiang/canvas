@@ -14,17 +14,20 @@
         minuteHandWid: 3,    // 分针宽度
         lineWidth: 1,
         tasks: [
-            {hourNum: 2, minuteNum: 60},
-            {hourNum: 3, minuteNum: 60},
-            {hourNum: 4, minuteNum: 60},
+            {hourNum: 12, minuteNum: 60},
             {hourNum: 6, minuteNum: 60},
-            {hourNum: 12, minuteNum: 60}
+            {hourNum: 5, minuteNum: 60},
+            {hourNum: 4, minuteNum: 60},
+            {hourNum: 3, minuteNum: 60},
+            {hourNum: 2, minuteNum: 60}
             // {hourNum: 24, minuteNum: 120}
         ],
-        backgroundColor: '#000',
-        scaleColor: '#ccc',
-        hourHandColor: '#fff',
-        minuteHandColor: '#F00',
+        backgroundColor: '#80abe7',
+        outerColor: '#ddd',
+        innerColor: '#fff',
+        scaleColor: '#000',
+        hourHandColor: '#000',
+        minuteHandColor: '#444',
         timeInterval: 5,
         taskTimeInterval: 50
     };
@@ -96,15 +99,22 @@
         drawStatic() {
             let ctx = this.ctx;
             ctx.save();
-            ctx.fillStyle = this.option.scaleColor;
 
             // 外圈
             ctx.beginPath();
+            ctx.fillStyle = this.option.outerColor;
             ctx.arc(0, 0, this.option.radius, 0, 2 * Math.PI, false);
             ctx.arc(0, 0, this.option.scaleOuter, 0, 2 * Math.PI, true);
             ctx.fill();
 
+            // 内圆
+            ctx.beginPath();
+            ctx.fillStyle = this.option.innerColor;
+            ctx.arc(0, 0, this.option.scaleOuter, 0, 2 * Math.PI, false);
+            ctx.fill();
+
             // 刻度
+            ctx.fillStyle = this.option.scaleColor;
             for (let m = 0; m < this.minuteNum; m++) {
                 ctx.save();
                 ctx.rotate(this.startAngle + m * this.minuteAngleStep);
@@ -193,7 +203,7 @@
         start() {
             drawer.c = document.getElementById('canvas');
             drawer.ctx = drawer.c.getContext('2d');
-            drawer.mark = CanvasUtil.getMarkCanvas('#999');
+            drawer.mark = CanvasUtil.getMarkCanvas('#fff');
             drawer.initSize();
             drawer.initTasks();
             drawer.current = 0;
@@ -219,6 +229,8 @@
                 minuteHandWid: option.minuteHandWid,
                 lineWidth: option.lineWidth,
                 backgroundColor: option.backgroundColor,
+                outerColor: option.outerColor,
+                innerColor: option.innerColor,
                 scaleColor: option.scaleColor,
                 hourHandColor: option.hourHandColor,
                 minuteHandColor: option.minuteHandColor,
@@ -249,15 +261,6 @@
                 if (drawer.current >= drawer.tasks.length) {
                     drawer.current = 0;
                 }
-                // currentTask.draw();
-                // drawer.stopTime += 1;
-                // if (drawer.stopTime >= option.taskTimeInterval) {
-                //     drawer.current += 1;
-                //     if (drawer.current >= drawer.tasks.length) {
-                //         drawer.current = 0;
-                //     }
-                //     drawer.stopTime = 0;
-                // }
             }
             ctx.restore();
             CanvasUtil.drawMark(ctx, drawer.mark);
