@@ -141,7 +141,7 @@
             // 时针
             ctx.save();
             ctx.beginPath();
-            let hourHandAngle = this.elements[this.current].hourHandAngle;
+            let hourHandAngle = this.current >= this.elements.length ? -Math.PI / 2 : this.elements[this.current].hourHandAngle;
             ctx.strokeStyle = this.option.hourHandColor;
             ctx.lineWidth = this.option.hourHandWid;
             ctx.rotate(hourHandAngle);
@@ -153,7 +153,7 @@
             // 分针
             ctx.save();
             ctx.beginPath();
-            let minuteHandAngle = this.elements[this.current].minuteHandAngle;
+            let minuteHandAngle = this.current >= this.elements.length ? -Math.PI / 2 : this.elements[this.current].minuteHandAngle;
             ctx.strokeStyle = this.option.minuteHandColor;
             ctx.lineWidth = this.option.minuteHandWid;
             ctx.rotate(minuteHandAngle);
@@ -167,10 +167,9 @@
             if (this.stopTime >= this.option.timeInterval) {
                 this.current++;
                 if (this.current >= this.elements.length) {
-                    // this.end = true;
                     this.endTime++;
                     if (this.endTime >= this.option.taskTimeInterval) {
-                        
+                        this.end = true;
                     }
                 }
                 this.stopTime = 0;
@@ -243,6 +242,7 @@
             if (!currentTask.isEnd()) {
                 currentTask.run();
             } else {
+                currentTask.reset();
                 drawer.current++;
                 if (drawer.current >= drawer.tasks.length) {
                     drawer.current = 0;
@@ -250,7 +250,6 @@
                 // currentTask.draw();
                 // drawer.stopTime += 1;
                 // if (drawer.stopTime >= option.taskTimeInterval) {
-                //     currentTask.reset();
                 //     drawer.current += 1;
                 //     if (drawer.current >= drawer.tasks.length) {
                 //         drawer.current = 0;
