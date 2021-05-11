@@ -8,7 +8,7 @@
         largeScaleWidth: 4,
         hourHandLen: 0.18, // 时针长度
         hourHandEndLen: 0.02, // 时针长度
-        hourHandWid: 4,    // 时针宽度
+        hourHandWid: 6,    // 时针宽度
         minuteHandLen: 0.34, // 分针长度
         minuteHandEndLen: 0.03, // 分针长度
         minuteHandWid: 3,    // 分针宽度
@@ -132,7 +132,9 @@
         drawElements() {
             let ctx = this.ctx;
             for (let i = 0; i <= this.current; i++) {
-                this.elements[i].draw(ctx);
+                if (i < this.elements.length) {
+                    this.elements[i].draw(ctx);
+                }
             }
         }
         drawHands() {
