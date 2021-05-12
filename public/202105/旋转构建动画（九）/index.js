@@ -15,12 +15,11 @@
         lineWidth: 1,
         lastLineWidth: 2,
         tasks: [
+            {hourNum: 2, minuteNum: 60},
             {hourNum: 12, minuteNum: 60},
             {hourNum: 6, minuteNum: 60},
             {hourNum: 5, minuteNum: 60},
-            {hourNum: 4, minuteNum: 60},
-            {hourNum: 3, minuteNum: 60},
-            {hourNum: 2, minuteNum: 60}
+            {hourNum: 4, minuteNum: 60}
             // {hourNum: 24, minuteNum: 120}
         ],
         backgroundColor: '#80abe7',
