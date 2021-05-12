@@ -13,6 +13,7 @@
         minuteHandEndLen: 0.03, // 分针长度
         minuteHandWid: 3,    // 分针宽度
         lineWidth: 1,
+        lastLineWidth: 2,
         tasks: [
             {hourNum: 12, minuteNum: 60},
             {hourNum: 6, minuteNum: 60},
@@ -41,10 +42,10 @@
             this.color = color
             this.lineWidth = lineWidth;
         }
-        draw(ctx) {
+        draw(ctx, lineWidth) {
             ctx.save();
             ctx.beginPath()
-            ctx.lineWidth = this.lineWidth;
+            ctx.lineWidth = !lineWidth ? this.lineWidth : lineWidth;
             ctx.strokeStyle = this.color;
             ctx.moveTo(this.sPoint.x, this.sPoint.y);
             ctx.lineTo(this.ePoint.x, this.ePoint.y);
@@ -143,7 +144,11 @@
             let ctx = this.ctx;
             for (let i = 0; i <= this.current; i++) {
                 if (i < this.elements.length) {
-                    this.elements[i].draw(ctx);
+                    if (i == this.current) {
+                        this.elements[i].draw(ctx, this.option.lastLineWidth);
+                    } else {
+                        this.elements[i].draw(ctx);
+                    }
                 }
             }
         }
@@ -228,6 +233,7 @@
                 minuteHandEndLen: drawer.width * option.minuteHandEndLen,
                 minuteHandWid: option.minuteHandWid,
                 lineWidth: option.lineWidth,
+                lastLineWidth: option.lastLineWidth,
                 backgroundColor: option.backgroundColor,
                 outerColor: option.outerColor,
                 innerColor: option.innerColor,
