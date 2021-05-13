@@ -5,8 +5,42 @@
         speed: 10,
         backgroundColor: '#000',
         outerColor: '#ccc',
-        innerColor: '#999'
+        innerColor: '#ddd',
+        centerLineColor: '#444',
+        centerLineWid: 2,
+        centerLineRadius: 0.03,
+        elementNumber: 10,
+        elementSize: 4,
+        elementDiff: 2
     };
+
+    class Element {
+        constructor(sx, sy, angle, speed, size, color, outerRadius) {
+            this.sx = sx;
+            this.sy = sy;
+            this.x = this.sx;
+            this.y = this.sy;
+            this.angle = angle;
+            this.speed = speed;
+            this.size = size;
+            this.color = color;
+            this.outerRadius = outerRadius;
+            this.speedX = this.speed * Math.cos(this.angle);
+            this.speedY = this.speed * Math.sin(this.angle);
+            this.rl = Math.round(this.outerRadius * this.outerRadius);
+        }
+        update() {
+
+        }
+        draw(ctx) {
+            ctx.save();
+            ctx.fillStyle = this.color;
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.size, 0, 2 * Math.PI, false);
+            ctx.fill();
+            ctx.restore();
+        }
+    }
 
     const drawer = {
         start() {
@@ -22,6 +56,23 @@
             drawer.width = Math.min(drawer.w, drawer.h);
             drawer.innerRadius = drawer.width * option.innerRadius;
             drawer.outerRadius = drawer.width * option.outerRadius;
+            drawer.centerLineRadius = drawer.width * option.centerLineRadius;
+            drawer.elements = [];
+
+            let x = -drawer.width * 0.7,
+                angle = random(2 * Math.PI);
+            for (let i = 0; i < option.elementNumber; i++) {
+                drawer.elements.push(
+                    new Element(
+                        x + option.elementDiff * i,
+                        0,
+                        angle,
+                        option.speed,
+                        option.elementSize,
+                        '#000',
+                        drawer.innerRadius)
+                )
+            }
         },
         animate() {
             drawer.update();
@@ -55,7 +106,20 @@
             ctx.arc(0, 0, drawer.innerRadius, 0, 2 * Math.PI, false);
             ctx.fill();
 
+            ctx.strokeStyle = option.centerLineColor;
+            ctx.lineWidth = option.centerLineWid;
+            ctx.beginPath();
+            ctx.moveTo(-drawer.centerLineRadius, 0);
+            ctx.lineTo(drawer.centerLineRadius, 0);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(0, -drawer.centerLineRadius);
+            ctx.lineTo(0, drawer.centerLineRadius);
+            ctx.stroke();
+
             ctx.restore();
+        },
+        randomStartPoint() {
         }
     }
 
