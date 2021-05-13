@@ -1,7 +1,7 @@
 {
     const option = {
-        innerRadius: 0.42,
-        outerRadius: 0.4,
+        outerRadius: 0.42,
+        innerRadius: 0.4,
         speed: 10,
         backgroundColor: '#000',
         outerColor: '#ccc',
@@ -11,7 +11,7 @@
     const drawer = {
         start() {
             drawer.c = document.getElementById('canvas');
-            drawer.ctx = document.c.getContext('2d');
+            drawer.ctx = drawer.c.getContext('2d');
             drawer.mark = CanvasUtil.getMarkCanvas('#999');
             drawer.init();
             drawer.animate();
@@ -42,6 +42,7 @@
             ctx.fillRect(0, 0, drawer.w, drawer.h);
 
             ctx.save();
+
             ctx.translate(drawer.w / 2, drawer.h / 2);
             ctx.beginPath();
             ctx.fillStyle = option.outerColor;
@@ -53,7 +54,10 @@
             ctx.fillStyle = option.innerColor;
             ctx.arc(0, 0, drawer.innerRadius, 0, 2 * Math.PI, false);
             ctx.fill();
+
             ctx.restore();
         }
     }
+
+    drawer.start();
 }
