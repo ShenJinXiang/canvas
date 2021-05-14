@@ -33,6 +33,7 @@
 
         }
         draw(ctx) {
+            console.log(this);
             ctx.save();
             ctx.fillStyle = this.color;
             ctx.beginPath();
@@ -59,7 +60,7 @@
             drawer.centerLineRadius = drawer.width * option.centerLineRadius;
             drawer.elements = [];
 
-            let x = -drawer.width * 0.7,
+            let x = -drawer.innerRadius * 0.7,
                 angle = random(2 * Math.PI);
             for (let i = 0; i < option.elementNumber; i++) {
                 drawer.elements.push(
@@ -69,10 +70,11 @@
                         angle,
                         option.speed,
                         option.elementSize,
-                        '#000',
+                        '#fff',
                         drawer.innerRadius)
                 )
             }
+            console.log(drawer.elements);
         },
         animate() {
             drawer.update();
@@ -84,7 +86,12 @@
         draw() {
             let ctx = drawer.ctx;
             drawer.drawStatic(ctx);
-
+            ctx.save();
+            ctx.translate(drawer.w / 2, drawer.h / 2);
+            drawer.elements.forEach((item) => {
+                item.draw(ctx);
+            });
+            ctx.restore();
             CanvasUtil.drawMark(ctx, drawer.mark);
         },
         drawStatic(ctx) {
@@ -118,8 +125,6 @@
             ctx.stroke();
 
             ctx.restore();
-        },
-        randomStartPoint() {
         }
     }
 
