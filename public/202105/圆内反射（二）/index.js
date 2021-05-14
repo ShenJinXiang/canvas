@@ -8,8 +8,8 @@
         innerColor: '#ddd',
         centerLineColor: '#444',
         centerLineWid: 2,
-        centerLineRadius: 0.03,
-        elementNumber: 10,
+        centerLineRadius: 0.01,
+        elementNumber: 25,
         elementSize: 4,
         elementDiff: 2
     };
@@ -30,16 +30,56 @@
             this.rl = Math.round(this.outerRadius * this.outerRadius);
         }
         update() {
-
+            let nx = this.x + this.speedX,
+                ny = this.y + this.speedY,
+                nr = Math.round(nx * nx + ny * ny);
+            if (nr < this.rl) {
+                this.x = nx;
+                this.y = ny;
+            } else if (nr != this.rl) {
+                let max = {x: nx, y: ny},
+                    min = {x: this.x, y: this.y},
+                    mid;
+                while (nr != this.rl) {
+                    mid = {x: (max.x + min.x) / 2, y: (max.y + min.y) / 2};
+                    nr = Math.round(mid.x * mid.x + mid.y * mid.y);
+                    if (nr > this.rl) {
+                        max = mid;
+                    } else {
+                        min = mid;
+                    }
+                }
+                this.changeAngle(mid.x, mid.y);
+                let ln = Math.sqrt(Math.pow(mid.x - this.x, 2) + Math.pow(mid.y - this.y, 2)),
+                    sn = this.speed - ln;
+                this.x = mid.x + sn * Math.cos(this.angle);
+                this.y = mid.y + sn * Math.sin(this.angle);
+            } else {
+                this.x = nx;
+                this.y = ny;
+                this.changeAngle(this.x, this.y);
+            }
         }
         draw(ctx) {
-            console.log(this);
             ctx.save();
             ctx.fillStyle = this.color;
             ctx.beginPath();
             ctx.arc(this.x, this.y, this.size, 0, 2 * Math.PI, false);
             ctx.fill();
             ctx.restore();
+        }
+        changeAngle(x, y) {
+            let rAng;
+            if (Math.abs(x) <= 0.5) {
+                rAng = y > 0 ? Math.PI / 2 : -Math.PI / 2;
+            } else {
+                rAng = Math.atan(y / x);
+            }
+            rAng = rAng % (2 * Math.PI);
+            rAng = rAng < 0 ? rAng + 2 * Math.PI : rAng;
+            this.angle = Math.PI + (2 * rAng  - this.angle);
+            this.speedX = this.speed * Math.cos(this.angle);
+            this.speedY = this.speed * Math.sin(this.angle);
         }
     }
 
@@ -74,14 +114,14 @@
                         drawer.innerRadius)
                 )
             }
-            console.log(drawer.elements);
         },
         animate() {
-            drawer.update();
             drawer.draw();
+            drawer.update();
+            requestAnimationFrame(drawer.animate);
         },
         update() {
-
+            drawer.elements.forEach((item) => item.update());
         },
         draw() {
             let ctx = drawer.ctx;
