@@ -101,7 +101,8 @@
             drawer.elements = [];
 
             let x = -drawer.innerRadius * 0.7,
-                angle = random(2 * Math.PI);
+                angle = random(2 * Math.PI),
+                hueStep = 360 / option.elementNumber;
             for (let i = 0; i < option.elementNumber; i++) {
                 drawer.elements.push(
                     new Element(
@@ -110,7 +111,7 @@
                         angle,
                         option.speed,
                         option.elementSize,
-                        '#fff',
+                        drawer.color(hueStep * i),
                         drawer.innerRadius)
                 )
             }
@@ -165,6 +166,9 @@
             ctx.stroke();
 
             ctx.restore();
+        },
+        color: function (hue) {
+            return "hsl(" + hue + ", 100%, 50%)";
         }
     }
 
