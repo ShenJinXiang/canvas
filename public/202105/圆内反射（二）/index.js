@@ -111,7 +111,7 @@
                         angle,
                         option.speed,
                         option.elementSize,
-                        drawer.color(hueStep * i),
+                        drawer.color(hueStep * i, 1),
                         drawer.innerRadius)
                 )
             }
@@ -167,8 +167,8 @@
 
             ctx.restore();
         },
-        color: function (hue) {
-            return "hsl(" + hue + ", 100%, 50%)";
+        color: function (hue, alpha) {
+            return "hsl(" + hue + ", 100%, 50%, " + 1 + ")";
         }
     }
 
