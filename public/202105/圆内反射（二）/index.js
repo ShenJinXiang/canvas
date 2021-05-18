@@ -11,11 +11,20 @@
         centerLineRadius: 0.01,
         elementNumber: 25,
         elementSize: 4,
-        elementDiff: 2
+        elementDiff: 1,
+        wakeLen: 10
     };
 
+    class Point {
+        constructor(x, y, angle) {
+            this.x = x;
+            this.y = y;
+            this.angle = angle;
+        }
+    }
+
     class Element {
-        constructor(sx, sy, angle, speed, size, color, outerRadius) {
+        constructor(sx, sy, angle, speed, size, hue, outerRadius, wakeLen) {
             this.sx = sx;
             this.sy = sy;
             this.x = this.sx;
@@ -23,11 +32,14 @@
             this.angle = angle;
             this.speed = speed;
             this.size = size;
-            this.color = color;
+            this.hue = hue;
+            this.color = this.colorStr(this.hue, 1);
             this.outerRadius = outerRadius;
             this.speedX = this.speed * Math.cos(this.angle);
             this.speedY = this.speed * Math.sin(this.angle);
             this.rl = Math.round(this.outerRadius * this.outerRadius);
+            this.wakeLen = wakeLen;
+            this.points = [];
         }
         update() {
             let nx = this.x + this.speedX,
@@ -36,6 +48,7 @@
             if (nr < this.rl) {
                 this.x = nx;
                 this.y = ny;
+                this.addPoint(this.x, this.y);
             } else if (nr != this.rl) {
                 let max = {x: nx, y: ny},
                     min = {x: this.x, y: this.y},
@@ -50,18 +63,35 @@
                     }
                 }
                 this.changeAngle(mid.x, mid.y);
+                this.addPoint(mid.x, mid.y);
                 let ln = Math.sqrt(Math.pow(mid.x - this.x, 2) + Math.pow(mid.y - this.y, 2)),
                     sn = this.speed - ln;
                 this.x = mid.x + sn * Math.cos(this.angle);
                 this.y = mid.y + sn * Math.sin(this.angle);
+                this.addPoint(this.x, this.y);
             } else {
                 this.x = nx;
                 this.y = ny;
+                this.addPoint(this.x, this.y);
                 this.changeAngle(this.x, this.y);
             }
         }
+        addPoint(x, y) {
+            this.points.push({x: x, y: y});
+            if (this.points.length > this.wakeLen) {
+                this.points.shift();
+            }
+        }
         draw(ctx) {
+            this.alphaStep = 1 / this.points.length;
             ctx.save();
+            this.points.forEach((item, index) => {
+                ctx.fillStyle = this.colorStr(this.hue, this.alphaStep * index);
+                console.log(ctx.fillStyle);
+                ctx.beginPath();
+                ctx.arc(item.x, item.y, this.size, 0, 2 * Math.PI, false);
+                ctx.fill();
+            });
             ctx.fillStyle = this.color;
             ctx.beginPath();
             ctx.arc(this.x, this.y, this.size, 0, 2 * Math.PI, false);
@@ -80,6 +110,9 @@
             this.angle = Math.PI + (2 * rAng  - this.angle);
             this.speedX = this.speed * Math.cos(this.angle);
             this.speedY = this.speed * Math.sin(this.angle);
+        }
+        colorStr (hue, alpha) {
+            return "hsl(" + hue + ", 100%, 50%, " + alpha + ")";
         }
     }
 
@@ -111,8 +144,9 @@
                         angle,
                         option.speed,
                         option.elementSize,
-                        drawer.color(hueStep * i, 1),
-                        drawer.innerRadius)
+                        hueStep * i,
+                        drawer.innerRadius,
+                        option.wakeLen)
                 )
             }
         },
@@ -167,9 +201,7 @@
 
             ctx.restore();
         },
-        color: function (hue, alpha) {
-            return "hsl(" + hue + ", 100%, 50%, " + 1 + ")";
-        }
+
     }
 
     drawer.start();
