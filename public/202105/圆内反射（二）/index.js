@@ -16,10 +16,15 @@
     };
 
     class Point {
-        constructor(x, y, angle) {
+        constructor(x, y, angle, size) {
             this.x = x;
             this.y = y;
             this.angle = angle;
+            this.size = size;
+            this.x1 = this.x + this.size * Math.cos(this.angle - Math.PI / 2);
+            this.y1 = this.y + this.size * Math.sin(this.angle - Math.PI / 2);
+            this.x2 = this.x + this.size * Math.cos(this.angle + Math.PI / 2);
+            this.y2 = this.y + this.size * Math.sin(this.angle + Math.PI / 2);
         }
     }
 
@@ -27,8 +32,8 @@
         constructor(sx, sy, angle, speed, size, hue, outerRadius, wakeLen) {
             this.sx = sx;
             this.sy = sy;
-            this.x = this.sx;
-            this.y = this.sy;
+            // this.x = this.sx;
+            // this.y = this.sy;
             this.angle = angle;
             this.speed = speed;
             this.size = size;
@@ -39,19 +44,18 @@
             this.speedY = this.speed * Math.sin(this.angle);
             this.rl = Math.round(this.outerRadius * this.outerRadius);
             this.wakeLen = wakeLen;
-            this.points = [];
+            this.points = [new Point(sx, sy, this.angle, this.size)];
         }
         update() {
-            let nx = this.x + this.speedX,
-                ny = this.y + this.speedY,
+            let currentPoint = this.points[this.points.length - 1],
+                nx = currentPoint.x + this.speedX,
+                ny = currentPoint.y + this.speedY,
                 nr = Math.round(nx * nx + ny * ny);
             if (nr < this.rl) {
-                this.x = nx;
-                this.y = ny;
-                this.addPoint(this.x, this.y);
+                this.addPoint(new Point(nx, ny, this.angle, this.size));
             } else if (nr != this.rl) {
                 let max = {x: nx, y: ny},
-                    min = {x: this.x, y: this.y},
+                    min = {x: currentPoint.x, y: currentPoint.y},
                     mid;
                 while (nr != this.rl) {
                     mid = {x: (max.x + min.x) / 2, y: (max.y + min.y) / 2};
@@ -63,21 +67,19 @@
                     }
                 }
                 this.changeAngle(mid.x, mid.y);
-                this.addPoint(mid.x, mid.y);
-                let ln = Math.sqrt(Math.pow(mid.x - this.x, 2) + Math.pow(mid.y - this.y, 2)),
+                this.addPoint(new Point(mid.x, mid.y, this.angle, this.size));
+                let ln = Math.sqrt(Math.pow(mid.x - currentPoint.x, 2) + Math.pow(mid.y - currentPoint.y, 2)),
                     sn = this.speed - ln;
-                this.x = mid.x + sn * Math.cos(this.angle);
-                this.y = mid.y + sn * Math.sin(this.angle);
-                this.addPoint(this.x, this.y);
+                nx = mid.x + sn * Math.cos(this.angle);
+                ny = mid.y + sn * Math.sin(this.angle);
+                this.addPoint(new Point(nx, ny, this.angle, this.size));
             } else {
-                this.x = nx;
-                this.y = ny;
-                this.addPoint(this.x, this.y);
-                this.changeAngle(this.x, this.y);
+                this.changeAngle(nx, ny);
+                this.addPoint(new Point(nx, ny, this.angle, this.size));
             }
         }
-        addPoint(x, y) {
-            this.points.push({x: x, y: y});
+        addPoint(point) {
+            this.points.push(point);
             if (this.points.length > this.wakeLen) {
                 this.points.shift();
             }
@@ -85,16 +87,22 @@
         draw(ctx) {
             this.alphaStep = 1 / this.points.length;
             ctx.save();
-            this.points.forEach((item, index) => {
-                ctx.fillStyle = this.colorStr(this.hue, this.alphaStep * index);
-                console.log(ctx.fillStyle);
-                ctx.beginPath();
-                ctx.arc(item.x, item.y, this.size, 0, 2 * Math.PI, false);
-                ctx.fill();
+            this.points.forEach((item, index, arr) => {
+                if (index < arr.length - 1) {
+                    ctx.fillStyle = this.colorStr(this.hue, this.alphaStep * index);
+                    ctx.beginPath();
+                    ctx.moveTo(item.x1, item.y1);
+                    ctx.lineTo(item.x2, item.y2);
+                    ctx.lineTo(arr[index + 1].x2, arr[index + 1].y2);
+                    ctx.lineTo(arr[index + 1].x1, arr[index + 1].y1);
+                    ctx.closePath();
+                    ctx.fill();
+                }
             });
+            let currentPoint = this.points[this.points.length - 1];
             ctx.fillStyle = this.color;
             ctx.beginPath();
-            ctx.arc(this.x, this.y, this.size, 0, 2 * Math.PI, false);
+            ctx.arc(currentPoint.x, currentPoint.y, this.size, 0, 2 * Math.PI, false);
             ctx.fill();
             ctx.restore();
         }
