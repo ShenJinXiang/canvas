@@ -2,17 +2,17 @@
     const option = {
         outerRadius: 0.42,
         innerRadius: 0.4,
-        speed: 10,
+        speed: 8,
         backgroundColor: '#000',
         outerColor: '#ccc',
         innerColor: '#ddd',
         centerLineColor: '#444',
         centerLineWid: 2,
         centerLineRadius: 0.01,
-        elementNumber: 25,
+        elementNumber: 20,
         elementSize: 4,
         elementDiff: 1,
-        wakeLen: 10
+        wakeLen: 30
     };
 
     class Point {
