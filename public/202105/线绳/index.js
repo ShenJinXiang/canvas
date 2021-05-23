@@ -78,13 +78,29 @@
             drawer.ctx = drawer.c.getContext('2d');
             drawer.mark = CanvasUtil.getMarkCanvas('#fff');
             drawer.initSize();
+            drawer.initTasks();
         },
         initSize() {
             drawer.w = drawer.c.width = window.innerWidth;
             drawer.h = drawer.c.height = window.innerHeight;
             drawer.width = Math.min(drawer.w, drawer.h);
             drawer.radius = drawer.width * option.radius;
+        },
+        initTasks() {
+            drawer.tasks = [];
+            let taskOption = {
+                msgRadius: option.msgRadius,
+                msgSize: option.msgSize,
+                msgText: option.msgText,
 
+            };
+            option.taskEndpointNums.forEach(item => {
+                drawer.tasks.push(new Task(
+                    item,
+                    drawer.radius,
+                    taskOption
+                ));
+            });
         }
     };
 
