@@ -1,8 +1,8 @@
 {
     const option = {
-        radius: 0.4,
-        msgRadius: 0.45,
-        msgSize: 0.05,
+        radius: 0.35,
+        msgRadius: 0.43,
+        msgSize: 0.02,
         msgText: '端点数：',
         msgColor: '#fff',
         backgroundColor: '#000',
@@ -40,6 +40,7 @@
             this.radius = radius;
             this.option = option;
             this.init();
+            this.reset();
         }
         init() {
             this.initEndpoints();
@@ -70,6 +71,7 @@
         }
         draw(ctx) {
             this.drawMsg(ctx);
+            this.drawEndpoints(ctx);
         }
         drawMsg(ctx) {
             ctx.save();
@@ -80,6 +82,13 @@
             ctx.fillStyle = this.option.msgColor;
             ctx.fillText(this.option.msgText + this.endpointNum, 0, this.option.msgY);
             ctx.restore();
+        }
+        drawEndpoints(ctx) {
+            this.endpoints.forEach((item, index) => {
+                if (index <= this.endpointIndex) {
+                    item.draw(ctx);
+                }
+            });
         }
         update() {
             if (this.stage === 'endpoint') {
@@ -92,16 +101,16 @@
                     }
                 }
             }
-            if (this.stage === 'line') {
-                this.lineCounter++;
-                if (this.lineCounter >= this.option.lineTimeInterval) {
-                    this.lineCounter = 0;
-                    this.lineIndex++;
-                }
-            }
-            if (this.stage === 'end') {
-
-            }
+            // if (this.stage === 'line') {
+            //     this.lineCounter++;
+            //     if (this.lineCounter >= this.option.lineTimeInterval) {
+            //         this.lineCounter = 0;
+            //         this.lineIndex++;
+            //     }
+            // }
+            // if (this.stage === 'end') {
+            //
+            // }
         }
     }
 
@@ -125,9 +134,10 @@
             drawer.tasks = [];
             let taskOption = {
                 msgRadius: option.msgRadius,
-                msgSize: option.msgSize,
+                msgSize: drawer.width * option.msgSize,
                 msgText: option.msgText,
                 msgColor: option.msgColor,
+                msgY: -drawer.width * option.msgRadius,
                 endpointRadius: option.endpointRadius,
                 endpointColor: option.endpointColor,
                 startAngle: option.startAngle,
@@ -148,6 +158,7 @@
         animate() {
             drawer.draw();
             drawer.update();
+            requestAnimationFrame(drawer.animate);
         },
         update() {
             let currentTask = drawer.tasks[drawer.current];
