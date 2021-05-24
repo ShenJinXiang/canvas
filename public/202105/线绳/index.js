@@ -44,6 +44,17 @@
         init() {
             this.initEndpoints();
         }
+        reset() {
+            this.endpointCounter = 0;
+            this.endpointIndex = 0;
+            this.lineCounter = 0;
+            this.lineIndex = 0;
+            this.lineGroupCounter = 0;
+            this.lineGroupIndex = 0;
+            this.endCounter = 0;
+            this.stage = 'endpoint';
+            this.isEnd = false;
+        }
         initEndpoints() {
             this.endpoints = [];
             this.angleStep = 2 * Math.PI / this.endpointNum;
@@ -70,6 +81,28 @@
             ctx.fillText(this.option.msgText + this.endpointNum, 0, this.option.msgY);
             ctx.restore();
         }
+        update() {
+            if (this.stage === 'endpoint') {
+                this.endpointCounter++;
+                if (this.endpointCounter >= this.option.endpointTimeInterval) {
+                    this.endpointCounter = 0;
+                    this.endpointIndex++;
+                    if (this.endpointIndex >= this.endpoints.length) {
+                        this.stage = 'line';
+                    }
+                }
+            }
+            if (this.stage === 'line') {
+                this.lineCounter++;
+                if (this.lineCounter >= this.option.lineTimeInterval) {
+                    this.lineCounter = 0;
+                    this.lineIndex++;
+                }
+            }
+            if (this.stage === 'end') {
+
+            }
+        }
     }
 
     const drawer = {
@@ -77,8 +110,10 @@
             drawer.c = document.getElementById('canvas');
             drawer.ctx = drawer.c.getContext('2d');
             drawer.mark = CanvasUtil.getMarkCanvas('#fff');
+            drawer.current = 0;
             drawer.initSize();
             drawer.initTasks();
+            drawer.animate();
         },
         initSize() {
             drawer.w = drawer.c.width = window.innerWidth;
@@ -92,7 +127,15 @@
                 msgRadius: option.msgRadius,
                 msgSize: option.msgSize,
                 msgText: option.msgText,
-
+                msgColor: option.msgColor,
+                endpointRadius: option.endpointRadius,
+                endpointColor: option.endpointColor,
+                startAngle: option.startAngle,
+                endpointTimeInterval: option.endpointTimeInterval,
+                lineTimeInterval: option.lineTimeInterval,
+                lineGroupTimeInterval: option.lineGroupTimeInterval,
+                taskTimeInterval: option.taskTimeInterval,
+                lineWidth: option.lineWidth
             };
             option.taskEndpointNums.forEach(item => {
                 drawer.tasks.push(new Task(
@@ -101,6 +144,32 @@
                     taskOption
                 ));
             });
+        },
+        animate() {
+            drawer.draw();
+            drawer.update();
+        },
+        update() {
+            let currentTask = drawer.tasks[drawer.current];
+            currentTask.update();
+            if (currentTask.isEnd) {
+                drawer.current++;
+                if (drawer.current >= drawer.tasks.length) {
+                    drawer.current = 0;
+                }
+            }
+
+        },
+        draw() {
+            let ctx = drawer.ctx;
+            ctx.clearRect(0, 0, drawer.w, drawer.h);
+            ctx.fillStyle = option.backgroundColor;
+            ctx.fillRect(0, 0, drawer.w, drawer.h);
+            ctx.save();
+            ctx.translate(drawer.w / 2, drawer.h / 2);
+            drawer.tasks[drawer.current].draw(ctx);
+            ctx.restore();
+            CanvasUtil.drawMark(ctx, drawer.mark);
         }
     };
 
