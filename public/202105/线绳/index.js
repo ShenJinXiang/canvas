@@ -15,6 +15,15 @@
         taskTimeInterval: 20,
         lineWidth: 1,
         taskEndpointNums: [5, 6, 7, 11, 17, 23, 29, 37, 43, 47, 101]
+        /*  17 * 7 = 119
+
+        5  5     1
+        6  9  6  1
+        7  14    2    0 3  3 - 2 = 1
+        11 44    4    0 5  5 - 2 = 3
+        17 119   7    0 8  8 - 2 = 6
+
+         */
     };
 
     class Endpoint {
@@ -34,6 +43,25 @@
         }
     }
 
+    class Line {
+        constructor(startIndex, endIndex, lineWidth, lineColor) {
+            this.startIndex = startIndex;
+            this.endIndex = endIndex;
+            this.lineWidth = lineWidth;
+            this.lineColor = lineColor;
+        }
+        draw(ctx, endpoints) {
+            ctx.save();
+            ctx.beginPath();
+            ctx.lineWidth = this.lineWidth;
+            ctx.strokeStyle = this.lineColor;
+            ctx.moveTo(endpoints[this.startIndex].x, endpoints[this.startIndex].y);
+            ctx.lineTo(endpoints[this.endIndex].x, endpoints[this.endIndex].y);
+            ctx.stroke();
+            ctx.restore();
+        }
+    }
+
     class Task {
         constructor(endpointNum, radius, option) {
             this.endpointNum = endpointNum;
@@ -44,6 +72,7 @@
         }
         init() {
             this.initEndpoints();
+            this.initLineGroups();
         }
         reset() {
             this.endpointCounter = 0;
@@ -68,6 +97,33 @@
                     this.option.endpointColor
                 ));
             }
+        }
+        initLineGroups() {
+            this.lineGroups = [];
+            if (this.endpointNum < 5) {
+                return;
+            }
+            let maxEndpointStep = (this.endpointNum % 2 == 0) ? (this.endpointNum / 2 - 1) : ((this.endpointNum - 1) / 2),
+                groupNum = maxEndpointStep - 1,
+                hueStep = 360 / groupNum;
+            for (let pointStep = maxEndpointStep, index = 0; pointStep >= 2; index++, pointStep--) {
+                let lines = [],
+                    endpointIndexs = [0],
+                    color = "hsl(" + (hueStep * index) + ", 100%, 50%)",
+                    nextPointIndex = (endpointIndexs[endpointIndexs.length - 1] + pointStep) % this.endpointNum
+                while (endpointIndexs.indexOf(nextPointIndex) <= 0) {
+                    lines.push(new Line(
+                        endpointIndexs[endpointIndexs.length - 1],
+                        nextPointIndex,
+                        this.option.lineWidth,
+                        color
+                    ));
+                    endpointIndexs.push(nextPointIndex);
+                    nextPointIndex = (endpointIndexs[endpointIndexs.length - 1] + pointStep) % this.endpointNum
+                }
+                this.lineGroups.push(lines);
+            }
+            console.log(this.lineGroups);
         }
         draw(ctx) {
             this.drawMsg(ctx);
@@ -98,6 +154,7 @@
                     this.endpointIndex++;
                     if (this.endpointIndex >= this.endpoints.length) {
                         this.stage = 'line';
+                        // this.isEnd = true;
                     }
                 }
             }
@@ -168,6 +225,7 @@
                 if (drawer.current >= drawer.tasks.length) {
                     drawer.current = 0;
                 }
+                currentTask.reset();
             }
 
         },
