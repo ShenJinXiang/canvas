@@ -128,6 +128,7 @@
         draw(ctx) {
             this.drawMsg(ctx);
             this.drawEndpoints(ctx);
+            this.drawLines(ctx);
         }
         drawMsg(ctx) {
             ctx.save();
@@ -146,6 +147,19 @@
                 }
             });
         }
+        drawLines(ctx) {
+            ctx.save();
+            this.lineGroups.forEach((lines, groupIndex) => {
+                if (groupIndex <= this.lineGroupIndex) {
+                    lines.forEach((line, index) => {
+                        if (index <= this.lineIndex) {
+                            line.draw(ctx, this.endpoints);
+                        }
+                    });
+                }
+            });
+            ctx.restore();
+        }
         update() {
             if (this.stage === 'endpoint') {
                 this.endpointCounter++;
@@ -158,16 +172,34 @@
                     }
                 }
             }
-            // if (this.stage === 'line') {
-            //     this.lineCounter++;
-            //     if (this.lineCounter >= this.option.lineTimeInterval) {
-            //         this.lineCounter = 0;
-            //         this.lineIndex++;
-            //     }
-            // }
-            // if (this.stage === 'end') {
-            //
-            // }
+            if (this.stage === 'line') {
+                this.lineCounter++;
+                if (this.lineCounter >= this.option.lineTimeInterval) {
+                    this.lineCounter = 0;
+                    this.lineIndex++;
+                    if (this.lineIndex >= this.lineGroups[this.lineGroupIndex].length) {
+                        this.stage = 'lineGroup';
+                    }
+                }
+            }
+            if (this.stage === 'lineGroup') {
+                this.lineGroupCounter++;
+                if (this.lineGroupCounter >= this.option.lineGroupTimeInterval) {
+                    this.lineGroupIndex++;
+                    if (this.lineGroupIndex >= this.lineGroups.length) {
+                        this.stage = 'end';
+                    } else {
+                        this.stage = 'line';
+                        this.lineIndex = 0;
+                    }
+                }
+            }
+            if (this.stage === 'end') {
+                this.endCounter++;
+                if (this.endCounter >= option.taskTimeInterval) {
+                    this.isEnd = true;
+                }
+            }
         }
     }
 
