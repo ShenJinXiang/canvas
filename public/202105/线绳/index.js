@@ -11,8 +11,8 @@
         startAngle: -Math.PI / 2,
         endpointTimeInterval: 5,
         lineTimeInterval: 5,
-        lineGroupTimeInterval: 15,
-        taskTimeInterval: 20,
+        lineGroupTimeInterval: 25,
+        taskTimeInterval: 40,
         lineWidth: 1,
         taskEndpointNums: [5, 7, 11, 17, 23, 29, 37, 43, 47, 101]
         /*  17 * 7 = 119
@@ -192,6 +192,7 @@
             if (this.stage === 'lineGroup') {
                 this.lineGroupCounter++;
                 if (this.lineGroupCounter >= this.option.lineGroupTimeInterval) {
+                    this.lineGroupCounter = 0;
                     this.lineGroupIndex++;
                     if (this.lineGroupIndex >= this.lineGroups.length) {
                         this.stage = 'end';
