@@ -11,10 +11,10 @@
         startAngle: -Math.PI / 2,
         endpointTimeInterval: 5,
         lineTimeInterval: 5,
-        lineGroupTimeInterval: 10,
+        lineGroupTimeInterval: 15,
         taskTimeInterval: 20,
         lineWidth: 1,
-        taskEndpointNums: [5, 6, 7, 11, 17, 23, 29, 37, 43, 47, 101]
+        taskEndpointNums: [5, 7, 11, 17, 23, 29, 37, 43, 47, 101]
         /*  17 * 7 = 119
 
         5  5     1
@@ -128,7 +128,9 @@
         draw(ctx) {
             this.drawMsg(ctx);
             this.drawEndpoints(ctx);
-            this.drawLines(ctx);
+            if (this.stage != 'endpoint') {
+                this.drawLines(ctx);
+            }
         }
         drawMsg(ctx) {
             ctx.save();
@@ -150,7 +152,12 @@
         drawLines(ctx) {
             ctx.save();
             this.lineGroups.forEach((lines, groupIndex) => {
-                if (groupIndex <= this.lineGroupIndex) {
+                if (groupIndex < this.lineGroupIndex) {
+                    lines.forEach((line) => {
+                        line.draw(ctx, this.endpoints);
+                    });
+                }
+                if (groupIndex === this.lineGroupIndex) {
                     lines.forEach((line, index) => {
                         if (index <= this.lineIndex) {
                             line.draw(ctx, this.endpoints);
