@@ -15,15 +15,6 @@
         taskTimeInterval: 40,
         lineWidth: 1,
         taskEndpointNums: [5, 7, 11, 17, 23, 29, 37, 43, 47, 101]
-        /*  17 * 7 = 119
-
-        5  5     1
-        6  9  6  1
-        7  14    2    0 3  3 - 2 = 1
-        11 44    4    0 5  5 - 2 = 3
-        17 119   7    0 8  8 - 2 = 6
-
-         */
     };
 
     class Endpoint {
