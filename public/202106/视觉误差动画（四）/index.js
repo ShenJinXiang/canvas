@@ -2,10 +2,9 @@
     const option = {
         backgroundColor: '#999',
         eleInnerColor: '#333',
-        eleInnerRadius: 0.1,
-        eleMinOuterRadius: 0.2,
-        eleMaxOuterRadius: 0.3,
-        angleSpeed: Math.PI / 180
+        eleInnerRadius: 0.15,
+        eleMinOuterRadius: 0.3,
+        eleMaxOuterRadius: 0.45
     };
 
     class Element {
@@ -20,6 +19,13 @@
             this.clockwise = clockwise;
             this.angle = 0;
             this.angleStep = Math.PI / 180;
+        }
+        update() {
+            if (this.clockwise) {
+                this.angle -= this.angleSpeed;
+            } else {
+                this.angle += this.angleSpeed;
+            }
         }
         draw(ctx) {
             ctx.save();
@@ -43,8 +49,6 @@
                 ctx.fill();
                 ctx.restore();
             }
-
-
             ctx.restore();
         }
     }
@@ -73,8 +77,8 @@
             drawer.minOuterRadius = option.eleMinOuterRadius * drawer.width;
             drawer.maxOuterRadius = option.eleMaxOuterRadius * drawer.width;
             drawer.elements = [
-                new Element(drawer.p1.x, drawer.p1.y, drawer.innerRadius, option.eleInnerColor, drawer.minOuterRadius, drawer.maxOuterRadius, option.angleSpeed, true),
-                new Element(drawer.p2.x, drawer.p2.y, drawer.innerRadius, option.eleInnerColor, drawer.minOuterRadius, drawer.maxOuterRadius, option.angleSpeed, false)
+                new Element(drawer.p1.x, drawer.p1.y, drawer.innerRadius, option.eleInnerColor, drawer.minOuterRadius, drawer.maxOuterRadius, Math.PI / 10, true),
+                new Element(drawer.p2.x, drawer.p2.y, drawer.innerRadius, option.eleInnerColor, drawer.minOuterRadius, drawer.maxOuterRadius, Math.PI / 7, false)
             ];
             console.log(drawer.elements);
         },
@@ -95,7 +99,7 @@
             CanvasUtil.drawMark(ctx, drawer.mark);
         },
         update() {
-
+            drawer.elements.forEach(item => item.update());
         }
     };
 
