@@ -18,6 +18,8 @@
             this.maxOuterRadius = maxOuterRadius;
             this.angleSpeed = angleSpeed;
             this.clockwise = clockwise;
+            this.angle = 0;
+            this.angleStep = Math.PI / 180;
         }
         draw(ctx) {
             ctx.save();
@@ -28,11 +30,20 @@
             ctx.arc(0, 0, this.innerRadius, 0, 2 * Math.PI, false);
             ctx.fill();
 
-            ctx.beginPath();
-            ctx.fillStyle = 'red';
-            ctx.arc(0, 0, this.minOuterRadius, 0, 2 * Math.PI, false);
-            ctx.arc(0, 0, this.maxOuterRadius, 0, 2 * Math.PI, true);
-            ctx.fill();
+            ctx.rotate(this.angle);
+            for (let i = 0; i < 360; i++) {
+                ctx.save();
+                ctx.beginPath();
+                ctx.fillStyle = "hsl(" + i + ", 100%, 50%, 1)";
+                ctx.rotate(i * this.angleStep);
+                ctx.arc(0, 0, this.minOuterRadius, this.angleStep, 0, true);
+                ctx.lineTo(this.maxOuterRadius, 0);
+                ctx.arc(0, 0, this.maxOuterRadius, 0, this.angleStep, false);
+                ctx.closePath();
+                ctx.fill();
+                ctx.restore();
+            }
+
 
             ctx.restore();
         }
