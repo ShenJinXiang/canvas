@@ -2,9 +2,9 @@
     const option = {
         backgroundColor: '#999',
         eleInnerColor: '#333',
-        eleInnerRadius: 0.15,
-        eleMinOuterRadius: 0.3,
-        eleMaxOuterRadius: 0.4,
+        eleInnerRadius: 0.1,
+        eleMinOuterRadius: 0.2,
+        eleMaxOuterRadius: 0.3,
         angleSpeed: Math.PI / 180
     };
 
@@ -62,9 +62,10 @@
             drawer.minOuterRadius = option.eleMinOuterRadius * drawer.width;
             drawer.maxOuterRadius = option.eleMaxOuterRadius * drawer.width;
             drawer.elements = [
-                new Element(drawer.p1.x, drawer.p1.y, option.eleInnerRadius, option.eleInnerColor, drawer.minOuterRadius, drawer.maxOuterRadius, option.angleSpeed, true),
-                new Element(drawer.p2.x, drawer.p2.y, option.eleInnerRadius, option.eleInnerColor, drawer.minOuterRadius, drawer.maxOuterRadius, option.angleSpeed, false)
+                new Element(drawer.p1.x, drawer.p1.y, drawer.innerRadius, option.eleInnerColor, drawer.minOuterRadius, drawer.maxOuterRadius, option.angleSpeed, true),
+                new Element(drawer.p2.x, drawer.p2.y, drawer.innerRadius, option.eleInnerColor, drawer.minOuterRadius, drawer.maxOuterRadius, option.angleSpeed, false)
             ];
+            console.log(drawer.elements);
         },
         animate() {
             drawer.draw();
