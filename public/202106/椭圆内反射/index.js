@@ -26,6 +26,33 @@
         }
     }
 
+    class PointPath {
+        constructor(startPoint, angle, speed, fixLength, color) {
+            this.startPoint = startPoint;
+            this.angle = angle;
+            this.speed = speed;
+            this.fixLength = fixLength;
+            this.color = color;
+            this.points = [];
+            this.linePoints = [];
+        }
+        addPoint(point) {
+            this.points.push(point);
+            if (this.points.length > option.pointsLength) {
+                this.points.shift();
+            }
+        }
+        clearPoints() {
+            this.points = [];
+        }
+        addLinePoint(point) {
+            this.linePoints.push(point);
+            if (this.linePoints.length > option.linePointsLength) {
+                this.linePoints.shift();
+            }
+        }
+    }
+
     const drawer = {
         start() {
             drawer.c = document.getElementById('canvas');
