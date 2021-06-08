@@ -11,6 +11,26 @@
         speed: 40,
     }
 
+    const kit = {
+        distanceSquared(point1, point2) {
+            return Math.pow(point1.x - point2.x, 2) + Math.pow(point1.y - point2.y, 2);
+        },
+        distance(point1, point2) {
+            return Math.sqrt(this.distanceSquared(point1, point2));
+        },
+        drawLines(ctx, points, color) {
+            ctx.save();
+            for (let i = 0; i < points.length - 1; i++) {
+                ctx.beginPath();
+                ctx.strokeStyle = color;
+                ctx.lineTo(points[i].x, points[i].y);
+                ctx.lineTo(points[i + 1].x, points[i + 1].y);
+                ctx.stroke();
+            }
+            ctx.restore();
+        }
+    }
+
     class Point {
         constructor(x, y) {
             this.x = x;
@@ -27,12 +47,14 @@
     }
 
     class PointPath {
-        constructor(startPoint, angle, speed, fixLength, color) {
+        constructor(startPoint, angle, speed, color, fixLength, origin1, origin2) {
             this.startPoint = startPoint;
             this.angle = angle;
             this.speed = speed;
-            this.fixLength = fixLength;
             this.color = color;
+            this.fixLength = fixLength;
+            this.origin1 = origin1;
+            this.origin2 = origin2;
             this.points = [];
             this.linePoints = [];
         }
@@ -51,6 +73,16 @@
                 this.linePoints.shift();
             }
         }
+        draw(ctx) {
+            if (this.points.length < 1 && this.linePoints.length < 1) {
+                return
+            }
+            ctx.save();
+            kit.drawLines(ctx, this.linePoints, this.color);
+            kit.drawLines(ctx, this.points, this.color);
+            ctx.restore();
+        }
+
     }
 
     const drawer = {
