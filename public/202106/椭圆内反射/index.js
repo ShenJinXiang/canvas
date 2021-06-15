@@ -55,7 +55,7 @@
             this.fixLength = fixLength;
             this.origin1 = origin1;
             this.origin2 = origin2;
-            this.points = [];
+            this.points = [this.startPoint];
             this.linePoints = [];
         }
         addPoint(point) {
@@ -82,7 +82,24 @@
             kit.drawLines(ctx, this.points, this.color);
             ctx.restore();
         }
+        update() {
+            let last = this.points[this.points.length - 1],
+                next = new Point(last.x + this.speedX, last.y + this.speedY),
+                nr = Math.round(Kit.distance(next, this.origin1) + Kit.distance(next, this.origin2));
+            if (nr < this.fixLength) {
+                this.addPoint(next);
+            } else if (nr != this.fixLength) {
 
+            } else {
+                this.addLinePoint(next);
+                this.clearPoints();
+                this.addPoint(next);
+                this.changeAngle(next);
+            }
+        }
+        changeAngle(point) {
+
+        }
     }
 
     const drawer = {
