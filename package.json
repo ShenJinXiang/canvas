@@ -1,23 +1,41 @@
 {
-  "name": "mycanvas",
-  "version": "1.0.0",
-  "description": "Canvas_demo",
-  "main": "app.js",
+  "name": "canvas",
+  "version": "1.1.0",
+  "description": "canvas Canvas_demo",
   "scripts": {
-    "start": "node app.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "lint": "vue-cli-service lint"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ShenJinXiang/myCanvas.git"
+    "url": "git+https://github.com/ShenJinXiang/canvas.git"
   },
   "author": "shenjinxiang",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/ShenJinXiang/myCanvas/issues"
+    "url": "https://github.com/ShenJinXiang/canvas/issues"
   },
-  "homepage": "https://github.com/ShenJinXiang/myCanvas#readme",
+  "homepage": "https://github.com/ShenJinXiang/canvas#readme",
   "dependencies": {
-    "express": "^4.17.1"
+    "core-js": "^3.6.5",
+    "vue": "^3.0.0",
+    "vue-router": "^4.0.0-0",
+    "vuex": "^4.0.0-0"
+  },
+  "devDependencies": {
+    "@vue/cli-plugin-babel": "~4.5.12",
+    "@vue/cli-plugin-eslint": "~4.5.12",
+    "@vue/cli-plugin-router": "~4.5.12",
+    "@vue/cli-plugin-vuex": "~4.5.12",
+    "@vue/cli-service": "~4.5.12",
+    "@vue/compiler-sfc": "^3.0.0",
+    "@vue/eslint-config-airbnb": "^5.0.2",
+    "babel-eslint": "^10.1.0",
+    "eslint": "^6.7.2",
+    "eslint-plugin-import": "^2.20.2",
+    "eslint-plugin-vue": "^7.0.0",
+    "less": "^3.0.4",
+    "less-loader": "^5.0.0"
   }
 }
