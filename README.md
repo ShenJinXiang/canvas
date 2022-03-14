@@ -9,10 +9,10 @@ npm install
 ```
 安装完成后，执行
 ```
-npm start
+npm run serve
 ```
 启动服务，浏览器访问：
-> http://localhost:4001
+> http://localhost:4004
 
 ## 目录
 * [中国国旗](https://canvas.shenjinxiang.com/202003/中国国旗/)

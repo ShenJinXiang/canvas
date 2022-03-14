@@ -1,4 +1,5 @@
 import { createRouter, createWebHashHistory } from 'vue-router';
+import config from '@/config';
 import Home from '../views/Home.vue';
 
 const routes = [
@@ -22,4 +23,7 @@ const router = createRouter({
   routes,
 });
 
+router.beforeEach((to) => {
+  document.title = to.meta.title ? `${config.title} - ${to.meta.title}` : config.title;
+});
 export default router;
