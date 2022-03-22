@@ -1,6 +1,9 @@
 import { createRouter, createWebHashHistory } from 'vue-router';
+import NProgress from 'nprogress';
 import config from '@/config';
 import Home from '../views/Home.vue';
+
+NProgress.configure({ showSpinner: false });
 
 const routes = [
   {
@@ -24,6 +27,12 @@ const router = createRouter({
 });
 
 router.beforeEach((to) => {
+  NProgress.start();
   document.title = to.meta.title ? `${config.title} - ${to.meta.title}` : config.title;
 });
+
+router.afterEach(() => {
+  NProgress.done();
+});
+
 export default router;
