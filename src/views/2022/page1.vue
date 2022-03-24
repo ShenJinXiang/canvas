@@ -4,5 +4,6 @@
 <script>
 export default {
   name: 'page1',
+  title: '涵涵',
 };
 </script>

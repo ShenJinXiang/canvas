@@ -24,6 +24,7 @@ const routes = [
 const viewFiles = require.context('../views', true, /\.vue$/);
 viewFiles.keys().forEach((key) => {
   console.log(key, viewFiles(key));
+
 });
 console.log(viewFiles.keys());
 console.log(viewFiles.id);
