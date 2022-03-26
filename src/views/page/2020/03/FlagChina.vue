@@ -3,14 +3,16 @@
     <div class="flag-box">
       <flag-china :show-lines="showLines" :width="width"></flag-china>
     </div>
-    <el-row>
-      <el-col :span="2" :offset="6">
-        <el-button @click="showLines = !showLines">{{ showLines ? '隐藏辅助线' : '显示辅助线'}}</el-button>
-      </el-col>
-      <el-col :span="10">
-        <el-slider v-model="width" :min="minWidth" :max="maxWidth" :step="10" />
-      </el-col>
-    </el-row>
+    <div class="contro-con">
+      <el-row>
+        <el-col :span="2" :offset="6">
+          <el-button type="primary" @click="showLines = !showLines">{{ showLines ? '隐藏辅助线' : '显示辅助线'}}</el-button>
+        </el-col>
+        <el-col :span="10">
+          <el-slider v-model="width" :min="minWidth" :max="maxWidth" :step="10" />
+        </el-col>
+      </el-row>
+    </div>
   </div>
 </template>
 <script>
@@ -46,6 +48,9 @@ export default {
     canvas {
       display: block;
     }
+  }
+  .contro-con {
+    padding-bottom: 20px;
   }
 }
 </style>
