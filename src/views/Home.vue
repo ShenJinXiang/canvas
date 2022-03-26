@@ -4,7 +4,7 @@
       <h1>CANVAS</h1>
       <ul>
         <li v-for="(item, index) in pages" :key="index">
-          <router-link :to="item.path">{{ index + 1 }}. {{ item.title }}</router-link>
+          <router-link :to="`/page/${item.path}`">{{ index + 1 }}. {{ item.title }}</router-link>
         </li>
 <!--        <li><a href="./202003/中国国旗">1. 中国国旗</a></li>-->
 <!--        <li><a href="./202003/象棋棋盘">2. 象棋棋盘</a></li>-->
@@ -81,7 +81,7 @@
 
 <script>
 import vFooter from '@/components/layout/Footer.vue';
-import pages from '@/config/page';
+import pages from '@/router/page';
 
 export default {
   name: 'home',
