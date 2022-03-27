@@ -3,6 +3,9 @@
 body {margin: 0px; padding: 0px;}
 .common_border {border: 1px solid #f1f1f1;}
 .main-container{padding: 32px!important;}
+.main-container .title-con {border-bottom: 1px solid #eaecef;}
+.main-container .title-con h1 {font-size: 2em; font-weight: 600; display: inline-block; width: 50%;}
+.main-container .title-con a {display: inline-block; float: right; line-height: 88px;}
 
 .fixed-footer {
     text-align: center;
@@ -44,7 +47,7 @@ body {margin: 0px; padding: 0px;}
     float: left;
     margin: 0px 0px 0px 5px;
 }
-h1 {padding-bottom: .3em; border-bottom: 1px solid #eaecef; font-size: 2em; margin-bottom: 16px; font-weight: 600; line-height: 1.25;}
+/*h1 {padding-bottom: .3em; border-bottom: 1px solid #eaecef; font-size: 2em; margin-bottom: 16px; font-weight: 600; line-height: 1.25;}*/
 ul {margin-bottom: 40px;}
 ul li {list-style: none;}
 a {display: block; color: rgb(54, 65, 73); text-decoration: none; padding: 10px 15px;}

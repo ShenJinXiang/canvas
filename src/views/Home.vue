@@ -1,7 +1,10 @@
 <template>
   <div class="home">
     <div class="main-container">
-      <h1>CANVAS</h1>
+      <div class="title-con">
+        <h1>CANVAS</h1>
+        <a target="_self" href="/index-bck.html">旧版</a>
+      </div>
       <ul>
         <li v-for="(item, index) in pages" :key="index">
           <router-link :to="`/page/${item.path}`">{{ index + 1 }}. {{ item.title }}</router-link>
