@@ -5,4 +5,10 @@ export default [
     name: 'vFlagChina',
     component: import('@/views/page/2020/03/FlagChina.vue'),
   },
+  {
+    title: '中国象棋棋盘',
+    path: '2020/03/ChineseChessBoard',
+    name: 'vChineseChessBoard',
+    component: import('@/views/page/2020/03/ChineseChessBoard.vue'),
+  },
 ];
