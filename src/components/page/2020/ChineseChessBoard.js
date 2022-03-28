@@ -16,17 +16,29 @@ export default class ChineseChessBoard {
   }
 
   initData() {
-    this.width = 8 * this.option.gridWidth + 2 * this.option.margin + 2 * this.option.outerWidth;
-    this.height = 9 * this.option.gridWidth + 2 * this.option.margin + 2 * this.option.outerWidth;
+    const { gridWidth } = this.option;
+    this.width = 8 * gridWidth + 2 * this.option.margin + 2 * this.option.outerWidth;
+    this.height = 9 * gridWidth + 2 * this.option.margin + 2 * this.option.outerWidth;
     this.ox = this.option.outerWidth + this.option.margin;
     this.lines = [];
     for (let index = 0; index < 10; index += 1) {
       this.lines.push(new Line(
-        0,
-        index * this.option.gridWidth,
-        8 * this.option.gridWidth,
-        index * this.option.gridWidth,
+        0, index * gridWidth, 8 * gridWidth, index * gridWidth,
       ));
+    }
+    for (let index = 0; index < 9; index += 1) {
+      if (index === 0 || index === 8) {
+        this.lines.push(new Line(
+          index * gridWidth, 0, index * gridWidth, 9 * gridWidth,
+        ));
+      } else {
+        this.lines.push(new Line(
+          index * gridWidth, 0, index * gridWidth, 4 * gridWidth,
+        ));
+        this.lines.push(new Line(
+          index * gridWidth, 5 * gridWidth, index * gridWidth, 9 * gridWidth,
+        ));
+      }
     }
   }
 
