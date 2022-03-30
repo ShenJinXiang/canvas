@@ -40,6 +40,18 @@ export default class ChineseChessBoard {
         ));
       }
     }
+    this.lines.push(new Line(
+      3 * gridWidth, 0, 5 * gridWidth, 2 * gridWidth,
+    ));
+    this.lines.push(new Line(
+      3 * gridWidth, 2 * gridWidth, 5 * gridWidth, 0 * gridWidth,
+    ));
+    this.lines.push(new Line(
+      3 * gridWidth, 7 * gridWidth, 5 * gridWidth, 9 * gridWidth,
+    ));
+    this.lines.push(new Line(
+      3 * gridWidth, 9 * gridWidth, 5 * gridWidth, 7 * gridWidth,
+    ));
   }
 
   initCanvas(canvas) {
