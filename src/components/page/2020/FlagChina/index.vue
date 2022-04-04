@@ -5,7 +5,7 @@
 </template>
 <script>
 import { onMounted, ref, watch } from 'vue';
-import FlagChina from './FlagChina';
+import FlagChina from '.';
 
 export default {
   name: 'FlagChina',

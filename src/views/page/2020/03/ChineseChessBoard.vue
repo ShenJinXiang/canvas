@@ -4,7 +4,7 @@
   </div>
 </template>
 <script>
-import ChineseChessBoard from '@/components/page/2020/ChineseChessBoard.vue';
+import ChineseChessBoard from '@/components/page/2020/ChineseChessBoard/index.vue';
 
 export default {
   name: 'vChineseChessBoard',

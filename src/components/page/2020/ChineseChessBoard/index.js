@@ -1,4 +1,5 @@
-import Line from '@/components/page/2020/Line';
+import Line from '@/lib/Line';
+import Corner from './Corner';
 
 export default class ChineseChessBoard {
   constructor(gridWidth) {
@@ -21,11 +22,13 @@ export default class ChineseChessBoard {
     this.height = 9 * gridWidth + 2 * this.option.margin + 2 * this.option.outerWidth;
     this.ox = this.option.outerWidth + this.option.margin;
     this.lines = [];
+    // 横线
     for (let index = 0; index < 10; index += 1) {
       this.lines.push(new Line(
         0, index * gridWidth, 8 * gridWidth, index * gridWidth,
       ));
     }
+    // 纵线
     for (let index = 0; index < 9; index += 1) {
       if (index === 0 || index === 8) {
         this.lines.push(new Line(
@@ -40,6 +43,7 @@ export default class ChineseChessBoard {
         ));
       }
     }
+    // 九宫线
     this.lines.push(new Line(
       3 * gridWidth, 0, 5 * gridWidth, 2 * gridWidth,
     ));
@@ -52,6 +56,23 @@ export default class ChineseChessBoard {
     this.lines.push(new Line(
       3 * gridWidth, 9 * gridWidth, 5 * gridWidth, 7 * gridWidth,
     ));
+
+    // 拐角线
+    this.corners = [];
+    this.corners.push(new Corner(1 * gridWidth, 2 * gridWidth, [0, 1, 2, 3], this.option.cornerDistance, this.option.cornerWidth));
+    this.corners.push(new Corner(7 * gridWidth, 2 * gridWidth, [0, 1, 2, 3], this.option.cornerDistance, this.option.cornerWidth));
+    this.corners.push(new Corner(0 * gridWidth, 3 * gridWidth, [0, 3], this.option.cornerDistance, this.option.cornerWidth));
+    this.corners.push(new Corner(2 * gridWidth, 3 * gridWidth, [0, 1, 2, 3], this.option.cornerDistance, this.option.cornerWidth));
+    this.corners.push(new Corner(4 * gridWidth, 3 * gridWidth, [0, 1, 2, 3], this.option.cornerDistance, this.option.cornerWidth));
+    this.corners.push(new Corner(6 * gridWidth, 3 * gridWidth, [0, 1, 2, 3], this.option.cornerDistance, this.option.cornerWidth));
+    this.corners.push(new Corner(8 * gridWidth, 3 * gridWidth, [1, 2], this.option.cornerDistance, this.option.cornerWidth));
+    this.corners.push(new Corner(0 * gridWidth, 6 * gridWidth, [0, 3], this.option.cornerDistance, this.option.cornerWidth));
+    this.corners.push(new Corner(2 * gridWidth, 6 * gridWidth, [0, 1, 2, 3], this.option.cornerDistance, this.option.cornerWidth));
+    this.corners.push(new Corner(4 * gridWidth, 6 * gridWidth, [0, 1, 2, 3], this.option.cornerDistance, this.option.cornerWidth));
+    this.corners.push(new Corner(6 * gridWidth, 6 * gridWidth, [0, 1, 2, 3], this.option.cornerDistance, this.option.cornerWidth));
+    this.corners.push(new Corner(8 * gridWidth, 6 * gridWidth, [1, 2], this.option.cornerDistance, this.option.cornerWidth));
+    this.corners.push(new Corner(1 * gridWidth, 7 * gridWidth, [0, 1, 2, 3], this.option.cornerDistance, this.option.cornerWidth));
+    this.corners.push(new Corner(7 * gridWidth, 7 * gridWidth, [0, 1, 2, 3], this.option.cornerDistance, this.option.cornerWidth));
   }
 
   initCanvas(canvas) {
@@ -72,6 +93,9 @@ export default class ChineseChessBoard {
     this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
     this.context.translate(this.ox, this.ox);
     this.lines.forEach((item) => {
+      item.draw(this.context, this.option.lineColor, 1);
+    });
+    this.corners.forEach((item) => {
       item.draw(this.context, this.option.lineColor, 1);
     });
     this.context.restore();

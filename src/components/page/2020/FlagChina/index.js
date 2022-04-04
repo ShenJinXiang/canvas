@@ -1,5 +1,5 @@
-import Start from '@/components/page/2020/Star';
-import Line from '@/components/page/2020/Line';
+import Start from '@/lib/Star';
+import Line from '@/lib/Line';
 
 export default class FlagChina {
   constructor(width, showLines = false) {

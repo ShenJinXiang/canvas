@@ -5,7 +5,7 @@
 </template>
 <script>
 import { onMounted, ref } from 'vue';
-import ChineseChessBoard from '@/components/page/2020/ChineseChessBoard';
+import ChineseChessBoard from '.';
 
 export default {
   name: 'ChineseChessBoard',

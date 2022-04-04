@@ -16,8 +16,8 @@
   </div>
 </template>
 <script>
-import FlagChina from '@/components/page/2020/FlagChina.vue';
 import { ref } from 'vue';
+import FlagChina from '@/components/page/2020/FlagChina/index.vue';
 
 export default {
   name: 'vFlagChina',

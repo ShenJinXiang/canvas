@@ -14,6 +14,7 @@ export default class Line {
     ctx.beginPath();
     ctx.moveTo(this.sx, this.sy);
     ctx.lineTo(this.ex, this.ey);
+    ctx.closePath();
     ctx.stroke();
     ctx.restore();
   }
