@@ -1,6 +1,6 @@
-import { createRouter, createWebHashHistory } from 'vue-router';
-import NProgress from 'nprogress';
 import config from '@/config';
+import NProgress from 'nprogress';
+import { createRouter, createWebHashHistory } from 'vue-router';
 import Home from '../views/Home.vue';
 import pages from './page';
 
@@ -15,7 +15,7 @@ const routes = [
   {
     path: '/page',
     name: 'Page',
-    component: import('@/views/Page.vue'),
+    component: () => import('@/views/Page.vue'),
     children: pages,
   },
 ];
