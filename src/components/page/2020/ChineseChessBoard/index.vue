@@ -1,13 +1,13 @@
 <template>
   <div class="">
-    <canvas ref="canvasRef"></canvas>
+    <canvas ref="canvasRef" />
   </div>
 </template>
-<script>
-import { onMounted, ref } from 'vue';
-import ChineseChessBoard from '.';
+<script lang="ts">
+import { defineComponent, onMounted, ref, Ref } from 'vue';
+import ChineseChessBoardVue from '.';
 
-export default {
+export default defineComponent({
   name: 'ChineseChessBoard',
   props: {
     gridWidth: {
@@ -16,8 +16,8 @@ export default {
     },
   },
   setup(props) {
-    const canvasRef = ref();
-    const canvas = new ChineseChessBoard(props.gridWidth);
+    const canvasRef: Ref = ref();
+    const canvas = new ChineseChessBoardVue(props.gridWidth);
     onMounted(() => {
       canvas.initCanvas(canvasRef.value);
     });
@@ -25,5 +25,5 @@ export default {
       canvasRef,
     };
   },
-};
+})
 </script>

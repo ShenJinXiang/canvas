@@ -15,20 +15,20 @@
     </div>
   </div>
 </template>
-<script>
-import { ref } from 'vue';
+<script lang="ts">
+import { ref, defineComponent, Ref } from 'vue';
 import FlagChina from '@/components/page/2020/FlagChina/index.vue';
 
-export default {
+export default defineComponent({
   name: 'vFlagChina',
   components: {
     FlagChina,
   },
   setup() {
-    const showLines = ref(false);
-    const width = ref(900);
-    const maxWidth = 1200;
-    const minWidth = 400;
+    const showLines: Ref<boolean> = ref(false);
+    const width: Ref<number> = ref(900);
+    const maxWidth: number = 1200;
+    const minWidth: number = 400;
     return {
       showLines,
       width,
@@ -36,7 +36,7 @@ export default {
       minWidth,
     };
   },
-};
+});
 </script>
 <style lang="less">
 @width: 1200px;

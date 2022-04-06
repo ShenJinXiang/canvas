@@ -1,17 +1,16 @@
 <template>
-  <div class="flagChina-con">
+  <div>
     <chinese-chess-board />
   </div>
 </template>
-<script>
+<script lang="ts">
 import ChineseChessBoard from '@/components/page/2020/ChineseChessBoard/index.vue';
+import { defineComponent } from 'vue';
 
-export default {
+export default defineComponent({
   name: 'vChineseChessBoard',
   components: {
     ChineseChessBoard,
   },
-  setup() {
-  },
-};
+});
 </script>

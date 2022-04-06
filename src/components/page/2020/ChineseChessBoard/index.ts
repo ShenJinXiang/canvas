@@ -1,8 +1,36 @@
 import Line from '@/lib/Line';
 import Corner from './Corner';
 
+interface IOption {
+  background: string,
+  lineColor: string,
+  gridWidth: number,
+  cornerDistance: number,
+  cornerWidth: number,
+  margin: number,
+  borderWidth: number,
+  outerWidth: number,
+}
+
+interface IRect {
+  oringX: number,
+  oringY: number,
+  width: number,
+  height: number,
+}
+
 export default class ChineseChessBoard {
-  constructor(gridWidth) {
+  private canvas: HTMLCanvasElement | null = null;
+  private context: CanvasRenderingContext2D | null = null;
+  private width: number = 0;
+  private height: number = 0;
+  private ox: number = 0;
+  private oy: number = 0;
+  private option: IOption;
+  private lines: Line[] = [];
+  private corners: Corner[] = [];
+  private outerRect: IRect | null = null;
+  constructor(gridWidth: number) {
     this.option = {
       background: '#fdf5db',
       lineColor: '#444',
@@ -21,6 +49,7 @@ export default class ChineseChessBoard {
     this.width = 8 * gridWidth + 2 * this.option.margin + 2 * this.option.outerWidth;
     this.height = 9 * gridWidth + 2 * this.option.margin + 2 * this.option.outerWidth;
     this.ox = this.option.outerWidth + this.option.margin;
+    this.oy = this.ox;
     this.lines = [];
     // 横线
     for (let index = 0; index < 10; index += 1) {
@@ -75,14 +104,14 @@ export default class ChineseChessBoard {
     this.corners.push(new Corner(7 * gridWidth, 7 * gridWidth, [0, 1, 2, 3], this.option.cornerDistance, this.option.cornerWidth));
 
     this.outerRect = {
-      ox: -this.option.margin,
-      oy: -this.option.margin,
+      oringX: -this.option.margin,
+      oringY: -this.option.margin,
       width: 2 * this.option.margin + 8 * this.option.gridWidth,
       height: 2 * this.option.margin + 9 * this.option.gridWidth,
     };
   }
 
-  initCanvas(canvas) {
+  initCanvas(canvas: HTMLCanvasElement) {
     if (!canvas) {
       throw new Error('初始化canvas错误：对象为空！');
     }
@@ -94,26 +123,32 @@ export default class ChineseChessBoard {
   }
 
   draw() {
+    if (!this.canvas || !this.context) {
+      return;
+    }
     this.context.save();
     this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
     this.context.fillStyle = this.option.background;
     this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
-    this.context.translate(this.ox, this.ox);
+    this.context.translate(this.ox, this.oy);
     this.lines.forEach((item) => {
       item.draw(this.context, this.option.lineColor, 1);
     });
     this.corners.forEach((item) => {
       item.draw(this.context, this.option.lineColor, 1);
     });
-    this.context.beginPath();
-    this.context.lineWidth = this.option.borderWidth;
-    this.context.strokeStyle = this.option.lineColor;
-    this.context.strokeRect(
-      this.outerRect.ox,
-      this.outerRect.oy,
-      this.outerRect.width,
-      this.outerRect.height,
-    );
+
+    if (this.outerRect) {
+      this.context.beginPath();
+      this.context.lineWidth = this.option.borderWidth;
+      this.context.strokeStyle = this.option.lineColor;
+      this.context.strokeRect(
+        this.outerRect.oringX,
+        this.outerRect.oringY,
+        this.outerRect.width,
+        this.outerRect.height
+      );
+    }
     this.context.restore();
   }
 }

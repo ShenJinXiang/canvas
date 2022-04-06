@@ -1,15 +1,31 @@
-import Start from '@/lib/Star';
-import Line from '@/lib/Line';
+import Line from "@/lib/Line";
+import Star from "@/lib/Star";
 
+interface Iconfig {
+  flagColor: string,
+  starColor: string,
+  lineColor: string,
+}
 export default class FlagChina {
-  constructor(width, showLines = false) {
+  private canvas: HTMLCanvasElement | null = null;
+  private context: CanvasRenderingContext2D | null = null;
+  private width: number;
+  private height: number;
+  private config: Iconfig;
+  private showLines: boolean;
+  private stars: Star[] = [];
+  private lines: Line[] = [];
+  constructor(width: number, showLines: boolean = false) {
     this.width = width;
+    this.height = (this.width * 2) / 3;
     this.showLines = showLines;
     this.config = {
       flagColor: '#F00',
       starColor: '#FF0',
       lineColor: '#fff',
     };
+    this.canvas = null;
+    this.context = null;
     this.initData();
   }
 
@@ -17,11 +33,11 @@ export default class FlagChina {
     this.height = (this.width * 2) / 3;
     const gridWidth = this.width / 30;
     this.stars = [
-      new Start(5 * gridWidth, 5 * gridWidth, 3 * gridWidth, -Math.PI / 2),
-      new Start(10 * gridWidth, 2 * gridWidth, 1 * gridWidth, Math.PI - Math.atan(3 / 5)),
-      new Start(12 * gridWidth, 4 * gridWidth, 1 * gridWidth, Math.PI - Math.atan(1 / 7)),
-      new Start(12 * gridWidth, 7 * gridWidth, 1 * gridWidth, Math.PI - Math.atan(2 / 7)),
-      new Start(10 * gridWidth, 9 * gridWidth, 1 * gridWidth, Math.PI - Math.atan(4 / 5)),
+      new Star(5 * gridWidth, 5 * gridWidth, 3 * gridWidth, -Math.PI / 2),
+      new Star(10 * gridWidth, 2 * gridWidth, 1 * gridWidth, Math.PI - Math.atan(3 / 5)),
+      new Star(12 * gridWidth, 4 * gridWidth, 1 * gridWidth, Math.PI - Math.atan(1 / 7)),
+      new Star(12 * gridWidth, 7 * gridWidth, 1 * gridWidth, Math.PI - Math.atan(2 / 7)),
+      new Star(10 * gridWidth, 9 * gridWidth, 1 * gridWidth, Math.PI - Math.atan(4 / 5)),
     ];
     this.lines = [];
     this.lines.push(new Line(this.width / 2, 0, this.width / 2, this.height));
@@ -33,13 +49,13 @@ export default class FlagChina {
       }
       if (index < 5) {
         this.lines.push(new Line(
-          this.stars.at(0).ox, this.stars.at(0).oy, this.stars.at(index).ox, this.stars.at(index).oy,
+          this.stars[0].ox, this.stars[0].oy, this.stars[index].ox, this.stars[index].oy,
         ));
       }
     }
   }
 
-  initCanvas(canvas) {
+  initCanvas(canvas: HTMLCanvasElement) {
     if (!canvas) {
       throw new Error('初始化canvas错误：对象为空！');
     }
@@ -51,6 +67,9 @@ export default class FlagChina {
   }
 
   draw() {
+    if (!this.canvas || !this.context) {
+      return;
+    }
     this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
     this.context.fillStyle = this.config.flagColor;
     this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
@@ -64,7 +83,7 @@ export default class FlagChina {
     }
   }
 
-  setWidth(width) {
+  setWidth(width: number) {
     this.width = width;
     this.initData();
     if (this.canvas) {
@@ -74,10 +93,11 @@ export default class FlagChina {
     }
   }
 
-  setShowLines(showLines) {
+  setShowLines(showLines: boolean) {
     this.showLines = showLines;
     if (this.canvas) {
       this.draw();
     }
   }
+
 }

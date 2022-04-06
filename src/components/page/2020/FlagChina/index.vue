@@ -3,13 +3,10 @@
     <canvas ref="canvasRef"></canvas>
   </div>
 </template>
-<script>
-import { onMounted, ref, watch } from 'vue';
+<script lang="ts" setup>
+import { onMounted, Ref, ref, watch } from 'vue';
 import FlagChina from '.';
-
-export default {
-  name: 'FlagChina',
-  props: {
+const props = defineProps({
     width: {
       type: Number,
       default: 600,
@@ -18,28 +15,22 @@ export default {
       type: Boolean,
       default: false,
     },
+});
+const canvasRef: Ref = ref();
+const flagChina = new FlagChina(props.width, props.showLines);
+watch(
+  () => props.width,
+  (newVal) => {
+    flagChina.setWidth(newVal);
   },
-  setup(props) {
-    const canvasRef = ref();
-    const flagChina = new FlagChina(props.width, props.showLines);
-    watch(
-      () => props.width,
-      (newVal) => {
-        flagChina.setWidth(newVal);
-      },
-    );
-    watch(
-      () => props.showLines,
-      (newVal) => {
-        flagChina.setShowLines(newVal);
-      },
-    );
-    onMounted(() => {
-      flagChina.initCanvas(canvasRef.value);
-    });
-    return {
-      canvasRef,
-    };
+);
+watch(
+  () => props.showLines,
+  (newVal) => {
+    flagChina.setShowLines(newVal);
   },
-};
+);
+onMounted(() => {
+  flagChina.initCanvas(canvasRef.value);
+});
 </script>

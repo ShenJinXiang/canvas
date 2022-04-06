@@ -1,12 +1,17 @@
-export default class Start {
-  constructor(ox, oy, radius, rotate) {
+export default class Star {
+  ox: number;
+  oy: number;
+  radius: number;
+  rotate: number;
+
+  constructor(ox: number, oy: number, radius: number, rotate: number) {
     this.ox = ox;
     this.oy = oy;
     this.radius = radius;
     this.rotate = rotate;
   }
 
-  path(ctx) {
+  path(ctx: CanvasRenderingContext2D) {
     ctx.translate(this.ox, this.oy);
     ctx.scale(this.radius, this.radius);
     ctx.rotate(this.rotate);
@@ -19,18 +24,22 @@ export default class Start {
     ctx.closePath();
   }
 
-  stroke(context, lineWidth, style) {
-    const ctx = context;
-    ctx.save();
-    this.path(ctx);
-    ctx.lineWidth = lineWidth;
-    ctx.strokeStyle = style;
-    ctx.stroke();
-    ctx.restore();
+  stroke(context: CanvasRenderingContext2D | null, lineWidth: number, style: string) {
+    if (!context) {
+      return;
+    }
+    context.save();
+    this.path(context);
+    context.lineWidth = lineWidth;
+    context.strokeStyle = style;
+    context.stroke();
+    context.restore();
   }
 
-  fill(context, style) {
-    const ctx = context;
+  fill(ctx: CanvasRenderingContext2D | null, style: string) {
+    if (!ctx) {
+      return;
+    }
     ctx.save();
     this.path(ctx);
     ctx.fillStyle = style;
