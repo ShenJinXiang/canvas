@@ -73,6 +73,13 @@ export default class ChineseChessBoard {
     this.corners.push(new Corner(8 * gridWidth, 6 * gridWidth, [1, 2], this.option.cornerDistance, this.option.cornerWidth));
     this.corners.push(new Corner(1 * gridWidth, 7 * gridWidth, [0, 1, 2, 3], this.option.cornerDistance, this.option.cornerWidth));
     this.corners.push(new Corner(7 * gridWidth, 7 * gridWidth, [0, 1, 2, 3], this.option.cornerDistance, this.option.cornerWidth));
+
+    this.outerRect = {
+      ox: -this.option.margin,
+      oy: -this.option.margin,
+      width: 2 * this.option.margin + 8 * this.option.gridWidth,
+      height: 2 * this.option.margin + 9 * this.option.gridWidth,
+    };
   }
 
   initCanvas(canvas) {
@@ -98,6 +105,15 @@ export default class ChineseChessBoard {
     this.corners.forEach((item) => {
       item.draw(this.context, this.option.lineColor, 1);
     });
+    this.context.beginPath();
+    this.context.lineWidth = this.option.borderWidth;
+    this.context.strokeStyle = this.option.lineColor;
+    this.context.strokeRect(
+      this.outerRect.ox,
+      this.outerRect.oy,
+      this.outerRect.width,
+      this.outerRect.height,
+    );
     this.context.restore();
   }
 }
