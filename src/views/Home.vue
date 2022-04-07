@@ -14,20 +14,7 @@
     <v-footer />
   </div>
 </template>
-<script lang="ts">
+<script lang="ts" setup>
 import vFooter from '@/components/layout/Footer.vue';
 import pages from '@/router/page';
-import { defineComponent } from 'vue';
-
-export default defineComponent({
-  name: 'Home',
-  components: {
-    vFooter,
-  },
-  setup() {
-    return {
-      pages,
-    };
-  }
-})
 </script>

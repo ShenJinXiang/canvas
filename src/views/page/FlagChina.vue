@@ -15,28 +15,14 @@
     </div>
   </div>
 </template>
-<script lang="ts">
-import { ref, defineComponent, Ref } from 'vue';
+<script lang="ts" setup>
 import FlagChina from '@/components/page/2020/FlagChina/index.vue';
+import { ref, Ref } from 'vue';
 
-export default defineComponent({
-  name: 'vFlagChina',
-  components: {
-    FlagChina,
-  },
-  setup() {
-    const showLines: Ref<boolean> = ref(false);
-    const width: Ref<number> = ref(900);
-    const maxWidth: number = 1200;
-    const minWidth: number = 400;
-    return {
-      showLines,
-      width,
-      maxWidth,
-      minWidth,
-    };
-  },
-});
+const showLines: Ref<boolean> = ref(false);
+const width: Ref<number> = ref(900);
+const maxWidth: number = 1200;
+const minWidth: number = 400;
 </script>
 <style lang="less">
 @width: 1200px;

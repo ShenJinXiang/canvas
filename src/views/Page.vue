@@ -6,16 +6,8 @@
     <v-footer />
   </div>
 </template>
-<script lang="ts">
+<script lang="ts" setup>
 import VFooter from '@/components/layout/Footer.vue';
-import { defineComponent } from 'vue';
-
-export default defineComponent({
-  name: 'Page',
-  components: {
-    VFooter,
-  },
-});
 </script>
 <style lang="less">
 .page-con{
