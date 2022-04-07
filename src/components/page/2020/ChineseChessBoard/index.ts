@@ -1,15 +1,17 @@
 import Line from '@/lib/Line';
 import Corner from './Corner';
+import Text from './Text';
 
 interface IOption {
   background: string,
   lineColor: string,
-  gridWidth: number,
   cornerDistance: number,
   cornerWidth: number,
   margin: number,
   borderWidth: number,
   outerWidth: number,
+  font: string,
+  fontStyle: string,
 }
 
 interface IRect {
@@ -24,28 +26,42 @@ export default class ChineseChessBoard {
   private context: CanvasRenderingContext2D | null = null;
   private width: number = 0;
   private height: number = 0;
+  private gridWidth: number = 80;
   private ox: number = 0;
   private oy: number = 0;
-  private option: IOption;
+  private option: IOption = {
+    background: '',
+    lineColor: '',
+    cornerDistance: 0,
+    cornerWidth: 0,
+    margin: 0,
+    borderWidth: 0,
+    outerWidth: 0,
+    font: '',
+    fontStyle: ''
+  };
   private lines: Line[] = [];
   private corners: Corner[] = [];
+  private texts: Text[] = [];
   private outerRect: IRect | null = null;
   constructor(gridWidth: number) {
-    this.option = {
-      background: '#fdf5db',
-      lineColor: '#444',
-      gridWidth: gridWidth || 80,
-      cornerDistance: 6,
-      cornerWidth: 14,
-      margin: 10,
-      borderWidth: 5,
-      outerWidth: 40,
-    };
+    this.gridWidth = gridWidth;
     this.initData();
   }
 
-  initData() {
-    const { gridWidth } = this.option;
+  private initData() {
+    const { gridWidth } = this;
+    this.option = {
+      background: '#fdf5db',
+      lineColor: '#444',
+      cornerDistance: gridWidth * .076,
+      cornerWidth: gridWidth * .175,
+      margin: gridWidth * .125,
+      borderWidth: gridWidth * .0625,
+      outerWidth: gridWidth * .5,
+      font: `bold ${gridWidth * .55}px cursive`,
+      fontStyle: '#444',
+    };
     this.width = 8 * gridWidth + 2 * this.option.margin + 2 * this.option.outerWidth;
     this.height = 9 * gridWidth + 2 * this.option.margin + 2 * this.option.outerWidth;
     this.ox = this.option.outerWidth + this.option.margin;
@@ -103,11 +119,18 @@ export default class ChineseChessBoard {
     this.corners.push(new Corner(1 * gridWidth, 7 * gridWidth, [0, 1, 2, 3], this.option.cornerDistance, this.option.cornerWidth));
     this.corners.push(new Corner(7 * gridWidth, 7 * gridWidth, [0, 1, 2, 3], this.option.cornerDistance, this.option.cornerWidth));
 
+    this.texts = [
+      new Text('楚', 1.5 * gridWidth, 4.5 * gridWidth, -Math.PI / 2),
+      new Text('河', 3 * gridWidth, 4.5 * gridWidth, -Math.PI / 2),
+      new Text('漢', 6.5 * gridWidth, 4.5 * gridWidth, Math.PI / 2),
+      new Text('界', 5 * gridWidth, 4.5 * gridWidth, Math.PI / 2),
+    ];
+
     this.outerRect = {
       oringX: -this.option.margin,
       oringY: -this.option.margin,
-      width: 2 * this.option.margin + 8 * this.option.gridWidth,
-      height: 2 * this.option.margin + 9 * this.option.gridWidth,
+      width: 2 * this.option.margin + 8 * gridWidth,
+      height: 2 * this.option.margin + 9 * gridWidth,
     };
   }
 
@@ -122,7 +145,17 @@ export default class ChineseChessBoard {
     this.draw();
   }
 
-  draw() {
+  setGridWidth(gridWidth: number) {
+    if (!this.canvas) {
+      throw new Error('canvas未初始化，请先执行 initCanvas() 方法！');
+    }
+    this.initData();
+    this.canvas.width = this.width;
+    this.canvas.height = this.height;
+    this.draw();
+  }
+
+  private draw() {
     if (!this.canvas || !this.context) {
       return;
     }
@@ -136,6 +169,10 @@ export default class ChineseChessBoard {
     });
     this.corners.forEach((item) => {
       item.draw(this.context, this.option.lineColor, 1);
+    });
+
+    this.texts.forEach((item) => {
+      item.fill(this.context, this.option.font, this.option.fontStyle);
     });
 
     if (this.outerRect) {

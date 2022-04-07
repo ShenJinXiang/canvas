@@ -4,7 +4,7 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { onMounted, ref, Ref } from 'vue';
+import { onMounted, ref, Ref, watch } from 'vue';
 import ChineseChessBoardVue from '.';
 
 const props = defineProps({
@@ -15,6 +15,13 @@ const props = defineProps({
 });
 const canvasRef: Ref = ref();
 const canvas = new ChineseChessBoardVue(props.gridWidth);
+
+watch(
+  () => props.gridWidth,
+  (newVal: number) => {
+    canvas.setGridWidth(newVal);
+  }
+);
 onMounted(() => {
   canvas.initCanvas(canvasRef.value);
 });

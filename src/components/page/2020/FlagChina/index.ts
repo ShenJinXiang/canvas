@@ -29,7 +29,7 @@ export default class FlagChina {
     this.initData();
   }
 
-  initData() {
+  private initData() {
     this.height = (this.width * 2) / 3;
     const gridWidth = this.width / 30;
     this.stars = [
