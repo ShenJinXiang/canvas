@@ -1,4 +1,3 @@
-
 interface Iconfig {
   title: string,
   baseUrl: string,
