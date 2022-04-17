@@ -1,3 +1,5 @@
+import { StrokeOption } from "@/lib/DrawOption";
+
 export default class Corner {
   ox: number;
   oy: number;
@@ -12,12 +14,12 @@ export default class Corner {
     this.lineLength = lineLength;
   }
 
-  draw(context: CanvasRenderingContext2D | null, style: string = '#000', lineWidth: number = 1) {
+  stroke(context: CanvasRenderingContext2D | null, { strokeStyle = '#000', lineWidth = 1 }: StrokeOption) {
     if (!context) {
       return;
     }
     context.save();
-    context.strokeStyle = style;
+    context.strokeStyle = strokeStyle;
     context.lineWidth = lineWidth;
     context.translate(this.ox, this.oy);
     this.quadrants.forEach((item) => {

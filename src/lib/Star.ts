@@ -1,3 +1,5 @@
+import { FillOption, StrokeOption } from "./DrawOption";
+
 export default class Star {
   ox: number;
   oy: number;
@@ -24,25 +26,25 @@ export default class Star {
     ctx.closePath();
   }
 
-  stroke(context: CanvasRenderingContext2D | null, lineWidth: number, style: string) {
+  stroke(context: CanvasRenderingContext2D | null, { lineWidth = 1, strokeStyle = '#000' }: StrokeOption) {
     if (!context) {
       return;
     }
     context.save();
     this.path(context);
     context.lineWidth = lineWidth;
-    context.strokeStyle = style;
+    context.strokeStyle = strokeStyle;
     context.stroke();
     context.restore();
   }
 
-  fill(ctx: CanvasRenderingContext2D | null, style: string) {
+  fill(ctx: CanvasRenderingContext2D | null, { fillStyle = '#000' }: FillOption) {
     if (!ctx) {
       return;
     }
     ctx.save();
     this.path(ctx);
-    ctx.fillStyle = style;
+    ctx.fillStyle = fillStyle;
     ctx.fill();
     ctx.restore();
   }

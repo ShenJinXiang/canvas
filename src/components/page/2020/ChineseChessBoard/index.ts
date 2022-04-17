@@ -1,4 +1,5 @@
 import Line from '@/lib/Line';
+import Rect from '@/lib/Rect';
 import Corner from './Corner';
 import Text from './Text';
 
@@ -12,13 +13,6 @@ interface IOption {
   outerWidth: number,
   font: string,
   fontStyle: string,
-}
-
-interface IRect {
-  oringX: number,
-  oringY: number,
-  width: number,
-  height: number,
 }
 
 export default class ChineseChessBoard {
@@ -43,7 +37,7 @@ export default class ChineseChessBoard {
   private lines: Line[] = [];
   private corners: Corner[] = [];
   private texts: Text[] = [];
-  private outerRect: IRect | null = null;
+  private outerRect: Rect | null = null;
   constructor(gridWidth: number) {
     this.gridWidth = gridWidth;
     this.initData();
@@ -126,12 +120,7 @@ export default class ChineseChessBoard {
       new Text('界', 5 * gridWidth, 4.5 * gridWidth, Math.PI / 2),
     ];
 
-    this.outerRect = {
-      oringX: -this.option.margin,
-      oringY: -this.option.margin,
-      width: 2 * this.option.margin + 8 * gridWidth,
-      height: 2 * this.option.margin + 9 * gridWidth,
-    };
+    this.outerRect = new Rect(-this.option.margin, -this.option.margin, 2 * this.option.margin + 8 * gridWidth, 2 * this.option.margin + 9 * gridWidth);
   }
 
   initCanvas(canvas: HTMLCanvasElement) {
@@ -165,10 +154,10 @@ export default class ChineseChessBoard {
     this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
     this.context.translate(this.ox, this.oy);
     this.lines.forEach((item) => {
-      item.draw(this.context, this.option.lineColor, 1);
+      item.stroke(this.context, { strokeStyle: this.option.lineColor, lineWidth: 1 });
     });
     this.corners.forEach((item) => {
-      item.draw(this.context, this.option.lineColor, 1);
+      item.stroke(this.context, { strokeStyle: this.option.lineColor, lineWidth: 1 });
     });
 
     this.texts.forEach((item) => {
@@ -176,15 +165,7 @@ export default class ChineseChessBoard {
     });
 
     if (this.outerRect) {
-      this.context.beginPath();
-      this.context.lineWidth = this.option.borderWidth;
-      this.context.strokeStyle = this.option.lineColor;
-      this.context.strokeRect(
-        this.outerRect.oringX,
-        this.outerRect.oringY,
-        this.outerRect.width,
-        this.outerRect.height
-      );
+      this.outerRect.stroke(this.context, { lineWidth: this.option.borderWidth, strokeStyle: this.option.lineColor });
     }
     this.context.restore();
   }

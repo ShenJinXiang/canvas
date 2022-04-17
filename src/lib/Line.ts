@@ -1,3 +1,5 @@
+import { StrokeOption } from "./DrawOption";
+
 export default class Line {
   sx: number;
   sy: number;
@@ -10,13 +12,13 @@ export default class Line {
     this.ey = ey;
   }
 
-  draw(context: CanvasRenderingContext2D | null, style: string, lineWidth: number) {
+  stroke(context: CanvasRenderingContext2D | null, { strokeStyle = '#000', lineWidth = 1 }: StrokeOption) {
     if (!context) {
       return;
     }
     context.save();
     context.lineWidth = lineWidth || 1;
-    context.strokeStyle = style;
+    context.strokeStyle = strokeStyle;
     context.beginPath();
     context.moveTo(this.sx, this.sy);
     context.lineTo(this.ex, this.ey);

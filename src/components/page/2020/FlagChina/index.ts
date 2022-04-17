@@ -74,11 +74,11 @@ export default class FlagChina {
     this.context.fillStyle = this.config.flagColor;
     this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
     this.stars.forEach((item) => {
-      item.fill(this.context, this.config.starColor);
+      item.fill(this.context, { fillStyle: this.config.starColor });
     });
     if (this.showLines) {
       this.lines.forEach((item) => {
-        item.draw(this.context, this.config.lineColor, 1);
+        item.stroke(this.context, { strokeStyle: this.config.lineColor, lineWidth: 1 });
       });
     }
   }
