@@ -1,3 +1,7 @@
+.w100 { width: 100%; }
+.inline-block { display: inline-block; }
+.fl-r { float: right; }
+.fl-l { float: left; }
 .center {text-align: center;}
 body {margin: 0px; padding: 0px;}
 .common_border {border: 1px solid #f1f1f1;}
@@ -6,7 +10,7 @@ body {margin: 0px; padding: 0px;}
   .title-con {
     border-bottom: 1px solid #eaecef;
     h1 {font-size: 2em; font-weight: 600; display: inline-block; width: 50%;}
-    a {display: inline-block; float: right; line-height: 88px;}
+    a {float: right; line-height: 88px;}
   }
 }
 
@@ -20,3 +24,12 @@ a {
   &:hover {color: #000;}
 }
 canvas {display: block; margin: 0px auto;}
+canvas.border {border: 1px solid #ccc;}
+
+.el-select,
+.el-input-number,
+.el-date-editor.el-input,
+.el-range-editor.el-date-editor--daterange,
+.el-range-editor.el-date-editor--datetimerange {
+  .w100();
+}

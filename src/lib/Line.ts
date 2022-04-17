@@ -12,17 +12,19 @@ export default class Line {
     this.ey = ey;
   }
 
-  stroke(context: CanvasRenderingContext2D | null, { strokeStyle = '#000', lineWidth = 1 }: StrokeOption) {
+  stroke(context: CanvasRenderingContext2D | null, { strokeStyle = '#000', lineWidth = 1, lineDash = null }: StrokeOption) {
     if (!context) {
       return;
     }
     context.save();
     context.lineWidth = lineWidth || 1;
     context.strokeStyle = strokeStyle;
+    if (lineDash) {
+      context.setLineDash(lineDash);
+    }
     context.beginPath();
     context.moveTo(this.sx, this.sy);
     context.lineTo(this.ex, this.ey);
-    context.closePath();
     context.stroke();
     context.restore();
   }

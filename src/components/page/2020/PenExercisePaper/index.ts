@@ -1,10 +1,72 @@
+import { StrokeOption } from "@/lib/DrawOption";
 import Line from "@/lib/Line";
 import { Point } from "@/lib/Point";
 import Rect from "@/lib/Rect";
 
+enum GridStyle {
+  MI = 'mi',
+  TIAN = 'tian',
+
+}
+const valueOf = (gridStyle: string): GridStyle => {
+  if (GridStyle.TIAN === gridStyle) {
+    return GridStyle.TIAN;
+  }
+  return GridStyle.MI;
+}
 interface IOption {
   lineStyle: string;
+  gridStyle: GridStyle;
 }
+
+class Grid {
+  protected sx: number;
+  protected sy: number;
+  protected width: number;
+  protected height: number;
+  protected lines: Line[] = [];
+  constructor(sx: number, sy: number, width: number, height: number) {
+    this.sx = sx;
+    this.sy = sy;
+    this.width = width;
+    this.height = height;
+    this.init();
+  }
+  init() { }
+  stroke(context: CanvasRenderingContext2D | null, { lineWidth = 1, strokeStyle = '#000', lineDash = [2, 2] }: StrokeOption) {
+    if (!context) {
+      return;
+    }
+    this.lines.forEach((item) => {
+      item.stroke(context, { lineWidth, strokeStyle, lineDash });
+    });
+  }
+}
+
+class MiGrid extends Grid {
+  constructor(sx: number, sy: number, width: number, height: number) {
+    super(sx, sy, width, height);
+  }
+
+  init() {
+    this.lines.push(new Line(this.sx, this.sy, this.sx + this.width, this.sy + this.height));
+    this.lines.push(new Line(this.sx, this.sy + this.height, this.sx + this.width, this.sy));
+    this.lines.push(new Line(this.sx, this.sy + this.height * 0.5, this.sx + this.width, this.sy + this.height * 0.5));
+    this.lines.push(new Line(this.sx + this.width * 0.5, this.sy, this.sx + this.width * 0.5, this.sy + this.height));
+
+  }
+}
+class TianGrid extends Grid {
+  constructor(sx: number, sy: number, width: number, height: number) {
+    super(sx, sy, width, height);
+  }
+
+  init() {
+    this.lines.push(new Line(this.sx, this.sy + this.height * 0.5, this.sx + this.width, this.sy + this.height * 0.5));
+    this.lines.push(new Line(this.sx + this.width * 0.5, this.sy, this.sx + this.width * 0.5, this.sy + this.height));
+  }
+}
+
 
 export default class PenExercisePaper {
   private canvas: HTMLCanvasElement | null = null;
@@ -17,14 +79,16 @@ export default class PenExercisePaper {
   private col: number;
   private origin: Point = { x: 0, y: 0 };
   private gridLines: Line[] = [];
+  private grids: Grid[] = [];
   private rect: Rect | null = null;
 
-  constructor(gridWidth: number, row: number, col: number) {
+  constructor(gridWidth: number, row: number, col: number, lineStyle: string, gridStyle: string) {
     this.gridWidth = gridWidth;
     this.row = row;
     this.col = col;
     this.option = {
-      lineStyle: '#f00'
+      lineStyle: lineStyle,
+      gridStyle: valueOf(gridStyle)
     };
     this.init()
   }
@@ -45,6 +109,21 @@ export default class PenExercisePaper {
         col * this.gridWidth, 0, col * this.gridWidth, this.row * this.gridWidth
       ));
     }
+    this.grids = [];
+    for (let row = 0; row < this.row; row += 1) {
+      for (let col = 0; col < this.col; col += 1) {
+        if (this.option.gridStyle === GridStyle.MI) {
+          this.grids.push(new MiGrid(
+            col * this.gridWidth, row * this.gridWidth, this.gridWidth, this.gridWidth
+          ));
+        }
+        if (this.option.gridStyle === GridStyle.TIAN) {
+          this.grids.push(new TianGrid(
+            col * this.gridWidth, row * this.gridWidth, this.gridWidth, this.gridWidth
+          ));
+        }
+      }
+    }
   }
 
   initCanvas(canvas: HTMLCanvasElement) {
@@ -64,13 +143,46 @@ export default class PenExercisePaper {
     this.context.save();
     this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
     this.context.translate(this.origin.x, this.origin.y);
-    if (this.rect) {
-      this.rect.stroke(this.context, { lineWidth: 2, strokeStyle: this.option.lineStyle });
-    }
     this.gridLines.forEach((item) => {
       item.stroke(this.context, { strokeStyle: this.option.lineStyle, lineWidth: 1 });
     });
 
+    this.grids.forEach((item) => {
+      item.stroke(this.context, { strokeStyle: this.option.lineStyle, lineWidth: 0.5, lineDash: [2, 5] });
+    });
+    if (this.rect) {
+      this.rect.stroke(this.context, { lineWidth: 2, strokeStyle: this.option.lineStyle });
+    }
     this.context.restore();
   }
+  refresh() {
+    this.init();
+    if (!this.canvas || !this.context) {
+      return;
+    }
+    this.canvas.width = this.width;
+    this.canvas.height = this.height;
+    this.draw();
+  }
+  setGridWidth(gridWidth: number) {
+    this.gridWidth = gridWidth;
+    this.refresh();
+  }
+  setLineStyle(lineStyle: string) {
+    this.option.lineStyle = lineStyle;
+    this.draw();
+  }
+  setGridStyle(gridStyle: string) {
+    this.option.gridStyle = valueOf(gridStyle);
+    this.refresh();
+  }
+  setRow(row: number) {
+    this.row = row;
+    this.refresh();
+  }
+  setCol(col: number) {
+    this.col = col;
+    this.refresh();
+  }
+
 }
