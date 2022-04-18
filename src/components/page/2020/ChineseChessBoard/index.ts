@@ -1,7 +1,7 @@
 import Line from '@/lib/Line';
 import Rect from '@/lib/Rect';
+import Text from '../../../../lib/Text';
 import Corner from './Corner';
-import Text from './Text';
 
 interface IOption {
   background: string,
@@ -161,7 +161,7 @@ export default class ChineseChessBoard {
     });
 
     this.texts.forEach((item) => {
-      item.fill(this.context, this.option.font, this.option.fontStyle);
+      item.fill(this.context, { fillStyle: this.option.fontStyle, font: this.option.font });
     });
 
     if (this.outerRect) {

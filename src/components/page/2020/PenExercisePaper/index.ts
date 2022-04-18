@@ -2,6 +2,7 @@ import { StrokeOption } from "@/lib/DrawOption";
 import Line from "@/lib/Line";
 import { Point } from "@/lib/Point";
 import Rect from "@/lib/Rect";
+import Text from "@/lib/Text";
 
 enum GridStyle {
   MI = 'mi',
@@ -80,6 +81,10 @@ export default class PenExercisePaper {
   private origin: Point = { x: 0, y: 0 };
   private gridLines: Line[] = [];
   private grids: Grid[] = [];
+  private titleTexts: Text[] = [];
+  private nameText: Text | null = null;
+  private dateText: Text | null = null;
+  private bottomText: Text | null = null;
   private rect: Rect | null = null;
 
   constructor(gridWidth: number, row: number, col: number, lineStyle: string, gridStyle: string) {
@@ -124,6 +129,15 @@ export default class PenExercisePaper {
         }
       }
     }
+    this.titleTexts = [];
+    this.titleTexts.push(new Text('硬', this.width * 0.5 - 1.6 * this.gridWidth, this.gridWidth));
+    this.titleTexts.push(new Text('笔', this.width * 0.5 - 0.8 * this.gridWidth, this.gridWidth));
+    this.titleTexts.push(new Text('书', this.width * 0.5 - 0 * this.gridWidth, this.gridWidth));
+    this.titleTexts.push(new Text('法', this.width * 0.5 + 0.8 * this.gridWidth, this.gridWidth));
+    this.titleTexts.push(new Text('纸', this.width * 0.5 + 1.6 * this.gridWidth, this.gridWidth));
+    this.nameText = new Text('姓名____________', 0.75 * this.gridWidth, 1.75 * this.gridWidth);
+    this.dateText = new Text('________年____月____日', this.width - 0.75 * this.gridWidth, 1.75 * this.gridWidth);
+    this.bottomText = new Text('硬笔书法纸', 0.85 * this.gridWidth, this.height - 0.75 * this.gridWidth);
   }
 
   initCanvas(canvas: HTMLCanvasElement) {
@@ -154,6 +168,19 @@ export default class PenExercisePaper {
       this.rect.stroke(this.context, { lineWidth: 2, strokeStyle: this.option.lineStyle });
     }
     this.context.restore();
+
+    this.titleTexts.forEach((item) => {
+      item.fill(this.context, { font: `bold ${this.gridWidth / 2}px auto`, fillStyle: this.option.lineStyle });
+    });
+    if (this.nameText) {
+      this.nameText.fill(this.context, { font: `${this.gridWidth / 4}px cursive`, fillStyle: this.option.lineStyle, textAlign: 'left' });
+    }
+    if (this.dateText) {
+      this.dateText.fill(this.context, { font: `${this.gridWidth / 4}px cursive`, fillStyle: this.option.lineStyle, textAlign: 'right' });
+    }
+    if (this.bottomText) {
+      this.bottomText.fill(this.context, { font: `${this.gridWidth / 4}px cursive`, fillStyle: this.option.lineStyle, textAlign: 'left' });
+    }
   }
   refresh() {
     this.init();

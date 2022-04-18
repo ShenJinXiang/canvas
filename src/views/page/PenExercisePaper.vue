@@ -10,10 +10,10 @@
     <el-drawer v-model="showContro" title="设置" :direction="direction">
       <el-form :module="controForm" label-width="120px">
         <el-form-item label="列" prop="col">
-          <el-input-number v-model="controForm.col" :min="1" :max="20" />
+          <el-input-number v-model="controForm.col" :min="8" :max="20" />
         </el-form-item>
         <el-form-item label="行" prop="row">
-          <el-input-number v-model="controForm.row" :min="1" :max="24" />
+          <el-input-number v-model="controForm.row" :min="8" :max="24" />
         </el-form-item>
         <el-form-item label="字格样式" prop="gridStyle">
           <el-select v-model="controForm.gridStyle">
