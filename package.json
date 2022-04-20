@@ -3,8 +3,8 @@
   "version": "1.1.0",
   "description": "canvas Canvas_demo",
   "scripts": {
-    "dev": "vite",
-    "build prod": "vite build",
+    "dev": "vite --mode=development",
+    "build prod": "vite build -mode=production",
     "build": "vue-tsc --noEmit && vite build",
     "preview": "vite preview"
   },
