@@ -4,8 +4,7 @@
   "description": "canvas Canvas_demo",
   "scripts": {
     "dev": "vite --mode=development",
-    "build prod": "vite build -mode=production",
-    "build": "vue-tsc --noEmit && vite build",
+    "build": "vite build --mode=production",
     "preview": "vite preview"
   },
   "repository": {
