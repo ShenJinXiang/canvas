@@ -17,4 +17,10 @@ export default [
     name: 'PenExercisePaper',
     component: () => import('@/views/page/PenExercisePaper.vue'),
   },
+  {
+    title: '旋转八卦图',
+    path: 'EightDiagrams',
+    name: 'EightDiagrams',
+    component: () => import('@/views/page/EightDiagrams.vue'),
+  },
 ];
