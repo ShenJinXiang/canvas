@@ -5,9 +5,13 @@
 </template>
 <script lang="ts" setup>
 import { onMounted, ref, Ref } from 'vue';
-
+import EightDiagrams from '.';
 const canvasRef: Ref = ref();
+const width = window.innerWidth;
+const height = window.innerHeight;
+const radius = Math.min(width, height) * 0.8;
+const canvas = new EightDiagrams(width, height, radius);
 onMounted(() => {
-  init()
+  canvas.initCanvas(canvasRef.value);
 });
 </script>
