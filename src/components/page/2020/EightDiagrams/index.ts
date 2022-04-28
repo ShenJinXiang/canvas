@@ -1,3 +1,4 @@
+import CanvasAnimatAble from "@/lib/CanvasAnimatAble";
 
 interface OuterOption {
   rotate?: number,
@@ -60,7 +61,7 @@ class DiagramsOuter {
     context.restore();
   }
 }
-export default class EightDiagrams {
+export default class EightDiagrams extends CanvasAnimatAble {
   canvas: HTMLCanvasElement | null = null;
   context: CanvasRenderingContext2D | null = null;
   width: number = 0;
@@ -69,9 +70,16 @@ export default class EightDiagrams {
   backgroundColor: string = '#777';
   yangColor: string = '#fff';
   yinColor: string = '#000';
-
   private originX: number = 0;
   private originY: number = 0;
+  private readonly innerBaseStep: number = Math.PI / 3600;
+  private readonly outerBaseStep: number = -Math.PI / 3600;
+  private innerSpeed: number = 10;
+  private outerSpeed: number = 2;
+  private innerStep: number = this.innerBaseStep * this.innerSpeed;
+  private outerStep: number = this.outerBaseStep * this.outerSpeed;
+  private innerRotate: number = 0;
+  private outerRotate: number = 0;
   private outer: number = 0;
   private innerRadius: number = 0;
   private innerPRadius: number = 0;
@@ -82,6 +90,7 @@ export default class EightDiagrams {
   private outers: DiagramsOuter[] = [];
 
   constructor(width: number, height: number, radius: number) {
+    super();
     this.width = width;
     this.height = height;
     this.radius = radius;
@@ -108,7 +117,8 @@ export default class EightDiagrams {
       new DiagramsOuter(this.outerRadius, '乾', 1, [1, 1, 1]),
       new DiagramsOuter(this.outerRadius, '巽', 1, [0, 1, 1]),
     ]
-
+    this.innerStep = this.innerBaseStep * this.innerSpeed;
+    this.outerStep = this.outerBaseStep * this.outerSpeed;
   }
 
   initCanvas(canvas: HTMLCanvasElement): EightDiagrams {
@@ -116,8 +126,18 @@ export default class EightDiagrams {
     this.canvas.width = this.width;
     this.canvas.height = this.height;
     this.context = this.canvas.getContext('2d');
-    this.draw();
     return this;
+  }
+
+  // run(): void {
+  //   this.update();
+  //   this.draw();
+  //   requestAnimationFrame(this.run.bind(this));
+  // }
+
+  update(): void {
+    this.innerRotate += this.innerStep;
+    this.outerRotate += this.outerStep;
   }
 
   draw(): EightDiagrams {
@@ -148,6 +168,7 @@ export default class EightDiagrams {
       return;
     }
     this.context.save();
+    this.context.rotate(this.innerRotate);
 
     this.context.beginPath();
     this.context.fillStyle = this.yangColor;
@@ -181,6 +202,7 @@ export default class EightDiagrams {
       return;
     }
     this.context.save();
+    this.context.rotate(this.outerRotate);
     this.outers.forEach((item, index) => {
       const rotate = index * Math.PI / 4;
       item.draw(this.context, {
