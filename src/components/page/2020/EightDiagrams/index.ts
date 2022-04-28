@@ -1,4 +1,65 @@
 
+interface OuterOption {
+  rotate?: number,
+  rectWidth?: number,
+  rectHeight?: number,
+  yangColor?: string,
+  yinColor?: string,
+  textSize?: number,
+  textAlign?: CanvasTextAlign,
+  textBaseline?: CanvasTextBaseline
+}
+class DiagramsOuter {
+  private radius: number;
+  private txt: string;
+  private type: number;
+  private bits: number[];
+  constructor(radius: number, txt: string, type: number, bits: number[]) {
+    this.radius = radius;
+    this.txt = txt;
+    this.type = type;
+    this.bits = bits;
+  }
+
+  draw(context: CanvasRenderingContext2D | null, {
+    rotate = 0, rectWidth = 40, rectHeight = 10, yangColor = '#fff', yinColor = '#000', textSize = 16, textAlign = 'center', textBaseline = 'middle'
+  }: OuterOption): void {
+    if (!context) {
+      return;
+    }
+    context.save();
+    context.rotate(rotate);
+    context.translate(this.radius, 0)
+    this.bits.forEach((item, index) => {
+      const x = 2 * index * rectHeight;
+      if (item === 1) {
+        context.beginPath();
+        context.fillStyle = yangColor;
+        context.fillRect(x, -rectWidth / 2, rectHeight, rectWidth);
+      } else {
+        context.beginPath();
+        context.fillStyle = yinColor;
+        context.fillRect(x, -rectWidth / 2, rectHeight, 0.4 * rectWidth);
+
+        context.beginPath();
+        context.fillStyle = yinColor;
+        context.fillRect(x, 0.1 * rectWidth, rectHeight, 0.4 * rectWidth);
+      }
+    });
+
+    context.save();
+    context.rotate(-Math.PI / 2);
+    context.beginPath();
+    context.fillStyle = this.type == 1 ? yangColor : yinColor;
+    context.font = `${textSize}px cursive`;
+    context.textAlign = textAlign
+    context.textBaseline = textBaseline
+    context.fillText(this.txt, 0, 6 * rectHeight);
+    context.restore();
+
+    context.restore();
+  }
+}
 export default class EightDiagrams {
   canvas: HTMLCanvasElement | null = null;
   context: CanvasRenderingContext2D | null = null;
@@ -18,6 +79,7 @@ export default class EightDiagrams {
   private rectHeight: number = 0;
   private outerRadius: number = 0;
   private outerTextSize: number = 0;
+  private outers: DiagramsOuter[] = [];
 
   constructor(width: number, height: number, radius: number) {
     this.width = width;
@@ -36,25 +98,39 @@ export default class EightDiagrams {
     this.rectHeight = this.outer * 0.25 / 15;
     this.outerRadius = this.outer * 0.3;
     this.outerTextSize = this.outer * 0.05;
+    this.outers = [
+      new DiagramsOuter(this.outerRadius, '坎', 1, [0, 1, 0]),
+      new DiagramsOuter(this.outerRadius, '艮', 0, [0, 0, 1]),
+      new DiagramsOuter(this.outerRadius, '坤', 0, [0, 0, 0]),
+      new DiagramsOuter(this.outerRadius, '震', 0, [1, 0, 0]),
+      new DiagramsOuter(this.outerRadius, '离', 0, [1, 0, 1]),
+      new DiagramsOuter(this.outerRadius, '兑', 1, [1, 1, 0]),
+      new DiagramsOuter(this.outerRadius, '乾', 1, [1, 1, 1]),
+      new DiagramsOuter(this.outerRadius, '巽', 1, [0, 1, 1]),
+    ]
+
   }
 
-  initCanvas(canvas: HTMLCanvasElement) {
+  initCanvas(canvas: HTMLCanvasElement): EightDiagrams {
     this.canvas = canvas;
     this.canvas.width = this.width;
     this.canvas.height = this.height;
     this.context = this.canvas.getContext('2d');
     this.draw();
+    return this;
   }
 
-  draw(): void {
+  draw(): EightDiagrams {
     if (!this.canvas || !this.context) {
-      return;
+      return this;
     }
     this.clear();
     this.context.save();
     this.context.translate(this.originX, this.originY);
     this.drawInner();
+    this.drawOuter();
     this.context.restore();
+    return this;
   }
 
   private clear(): void {
@@ -96,6 +172,28 @@ export default class EightDiagrams {
     this.context.fillStyle = this.yinColor;
     this.context.arc(this.innerRadius / 2, 0, this.innerPRadius, 0, 2 * Math.PI, false);
     this.context.fill();
+
+    this.context.restore();
+  }
+
+  private drawOuter(): void {
+    if (!this.context || !this.canvas) {
+      return;
+    }
+    this.context.save();
+    this.outers.forEach((item, index) => {
+      const rotate = index * Math.PI / 4;
+      item.draw(this.context, {
+        rotate,
+        rectWidth: this.rectWidth,
+        rectHeight: this.rectHeight,
+        yangColor: this.yangColor,
+        yinColor: this.yinColor,
+        textSize: this.outerTextSize,
+        textAlign: 'center',
+        textBaseline: 'top',
+      })
+    });
 
     this.context.restore();
   }
