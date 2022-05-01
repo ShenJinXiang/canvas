@@ -1,4 +1,4 @@
-import CanvasAnimatAble from "@/lib/CanvasAnimatAble";
+import Animate from "@/lib/Animate";
 
 interface OuterOption {
   rotate?: number,
@@ -61,7 +61,7 @@ class DiagramsOuter {
     context.restore();
   }
 }
-export default class EightDiagrams extends CanvasAnimatAble {
+export default class EightDiagrams extends Animate {
   canvas: HTMLCanvasElement | null = null;
   context: CanvasRenderingContext2D | null = null;
   width: number = 0;

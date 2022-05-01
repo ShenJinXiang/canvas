@@ -1,4 +1,4 @@
-export default class CanvasAnimatAble {
+export default class Animate {
   run(): void {
     this.update();
     this.draw();
