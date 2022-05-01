@@ -129,12 +129,6 @@ export default class EightDiagrams extends Animate {
     return this;
   }
 
-  // run(): void {
-  //   this.update();
-  //   this.draw();
-  //   requestAnimationFrame(this.run.bind(this));
-  // }
-
   update(): void {
     this.innerRotate += this.innerStep;
     this.outerRotate += this.outerStep;
@@ -218,6 +212,45 @@ export default class EightDiagrams extends Animate {
     });
 
     this.context.restore();
+  }
+
+  setBackgroundColor(backgroundColor: string): EightDiagrams {
+    this.backgroundColor = backgroundColor;
+    return this;
+  }
+
+  setYangColor(yangColor: string): EightDiagrams {
+    this.yangColor = yangColor;
+    return this;
+  }
+
+  setYinColor(yinColor: string): EightDiagrams {
+    this.yinColor = yinColor;
+    return this;
+  }
+
+  setWidth(width: number): EightDiagrams {
+    this.width = width;
+    this.initData();
+    return this;
+  }
+
+  setHeight(height: number): EightDiagrams {
+    this.height = height;
+    this.initData();
+    return this;
+  }
+
+  setInnerSpeed(innerSpeed: number): EightDiagrams {
+    this.innerSpeed = innerSpeed;
+    this.innerStep = this.innerBaseStep * this.innerSpeed;
+    return this;
+  }
+
+  setOuterSpeed(outerSpeed: number): EightDiagrams {
+    this.outerSpeed = outerSpeed;
+    this.outerStep = this.outerBaseStep * this.outerSpeed;
+    return this;
   }
 
 }
