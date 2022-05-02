@@ -4,7 +4,7 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { onMounted, ref, Ref } from 'vue';
+import { onMounted, ref, Ref, watch } from 'vue';
 import EightDiagrams from '.';
 const props = defineProps({
   yangColor: {
@@ -40,4 +40,34 @@ const canvas = new EightDiagrams(width, height, radius);
 onMounted(() => {
   canvas.initCanvas(canvasRef.value).run();
 });
+watch(
+  () => props.backgroundColor,
+  (newVal) => {
+    canvas.setBackgroundColor(newVal);
+  }
+);
+watch(
+  () => props.yangColor,
+  (newVal) => {
+    canvas.setYangColor(newVal);
+  }
+);
+watch(
+  () => props.yinColor,
+  (newVal) => {
+    canvas.setYinColor(newVal);
+  }
+);
+watch(
+  () => props.innerSpeed,
+  (newVal) => {
+    canvas.setInnerSpeed(newVal);
+  }
+);
+watch(
+  () => props.outerSpeed,
+  (newVal) => {
+    canvas.setOuterSpeed(newVal);
+  }
+);
 </script>

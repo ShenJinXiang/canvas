@@ -33,7 +33,7 @@
           <el-slider
             v-model="controForm.innerSpeed"
             :min="0"
-            :max="100"
+            :max="200"
             :step="1"
           />
         </el-form-item>
@@ -56,9 +56,9 @@ import { reactive, ref } from 'vue';
 const showContro = ref(false);
 const direction = ref("rtl");
 const controForm = reactive({
-  yangColor: '',
-  yinColor: '',
-  backgroundColor: '',
+  yangColor: '#fff',
+  yinColor: '#000',
+  backgroundColor: '#777',
   innerSpeed: 10,
   outerSpeed: 2,
 });
