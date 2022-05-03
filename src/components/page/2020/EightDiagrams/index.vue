@@ -7,6 +7,14 @@
 import { onMounted, ref, Ref, watch } from 'vue';
 import EightDiagrams from '.';
 const props = defineProps({
+  width: {
+    type: Number,
+    required: true
+  },
+  height: {
+    type: Number,
+    required: true
+  },
   yangColor: {
     type: String,
     default: '#fff'
@@ -33,13 +41,22 @@ const props = defineProps({
   }
 });
 const canvasRef: Ref = ref();
-const width = window.innerWidth;
-const height = window.innerHeight - 40;
-const radius = Math.min(width, height) * 0.8;
-const canvas = new EightDiagrams(width, height, radius);
+const canvas = new EightDiagrams(props.width, props.height);
 onMounted(() => {
   canvas.initCanvas(canvasRef.value).run();
 });
+watch(
+  () => props.width,
+  (newVal) => {
+    canvas.setSize(newVal, props.height);
+  }
+);
+watch(
+  () => props.height,
+  (newVal) => {
+    canvas.setSize(props.width, newVal);
+  }
+);
 watch(
   () => props.backgroundColor,
   (newVal) => {

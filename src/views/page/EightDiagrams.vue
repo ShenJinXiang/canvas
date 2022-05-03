@@ -2,6 +2,8 @@
   <div>
     <div class="eight-diagrams-box" @click="showContro = true">
       <eight-diagrams 
+        :width="controForm.width"
+        :height="controForm.height"
         :background-color="controForm.backgroundColor"
         :yang-color="controForm.yangColor"
         :yin-color="controForm.yinColor" 
@@ -27,6 +29,22 @@
           <el-color-picker
             v-model="controForm.yinColor"
             show-alpha
+          />
+        </el-form-item>
+        <el-form-item label="宽度" prop="width">
+          <el-slider
+            v-model="controForm.width"
+            :min="600"
+            :max="maxWidth"
+            :step="1"
+          />
+        </el-form-item>
+        <el-form-item label="高度" prop="height">
+          <el-slider
+            v-model="controForm.height"
+            :min="300"
+            :max="maxHeight"
+            :step="1"
           />
         </el-form-item>
         <el-form-item label="内部转速" prop="innerSpeed">
@@ -55,7 +73,11 @@ import { reactive, ref } from 'vue';
 
 const showContro = ref(false);
 const direction = ref("rtl");
+const maxWidth = window.innerWidth;
+const maxHeight = window.innerHeight - 40;
 const controForm = reactive({
+  width: maxWidth,
+  height: maxHeight,
   yangColor: '#fff',
   yinColor: '#000',
   backgroundColor: '#777',

@@ -1,5 +1,4 @@
 import Animate from "@/lib/Animate";
-
 interface OuterOption {
   rotate?: number,
   rectWidth?: number,
@@ -89,11 +88,11 @@ export default class EightDiagrams extends Animate {
   private outerTextSize: number = 0;
   private outers: DiagramsOuter[] = [];
 
-  constructor(width: number, height: number, radius: number) {
+  constructor(width: number, height: number) {
     super();
     this.width = width;
     this.height = height;
-    this.radius = radius;
+    this.radius = Math.min(this.width, this.height) * 0.8;
     this.initData();
   }
 
@@ -229,18 +228,17 @@ export default class EightDiagrams extends Animate {
     return this;
   }
 
-  setWidth(width: number): EightDiagrams {
+  setSize(width: number, height: number): EightDiagrams {
     this.width = width;
-    this.initData();
-    return this;
-  }
-
-  setHeight(height: number): EightDiagrams {
     this.height = height;
+    this.radius = Math.min(this.width, this.height) * 0.8;
+    if (this.canvas) {
+      this.canvas.width = this.width;
+      this.canvas.height = this.height;
+    }
     this.initData();
     return this;
   }
-
   setInnerSpeed(innerSpeed: number): EightDiagrams {
     this.innerSpeed = innerSpeed;
     this.innerStep = this.innerBaseStep * this.innerSpeed;
