@@ -121,6 +121,9 @@ export default class EightDiagrams extends Animate {
   }
 
   initCanvas(canvas: HTMLCanvasElement): EightDiagrams {
+    if (!canvas) {
+      throw new Error('初始化canvas错误：对象为空！');
+    }
     this.canvas = canvas;
     this.canvas.width = this.width;
     this.canvas.height = this.height;

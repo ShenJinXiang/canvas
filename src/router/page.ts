@@ -23,4 +23,10 @@ export default [
     name: 'EightDiagrams',
     component: () => import('@/views/page/EightDiagrams.vue'),
   },
+  {
+    title: '围棋',
+    path: 'ChineseGo',
+    name: 'ChineseGo',
+    component: () => import('@/views/page/ChineseGo.vue'),
+  },
 ];
