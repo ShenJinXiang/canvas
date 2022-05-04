@@ -1,3 +1,5 @@
+import Line from '@/lib/Line';
+import { Point } from '@/lib/Point';
 interface Margin {
   top: number;
   right: number;
@@ -11,6 +13,19 @@ interface IOption {
   blackColor: string;
   whiteColor: string;
 }
+enum PieceType {
+  'BLACK', 'WHITE', 'NONE'
+}
+class GoPoint implements Point {
+  x: number;
+  y: number;
+  type: PieceType;
+  constructor(x: number, y: number) {
+    this.x = x;
+    this.y = y;
+    this.type = PieceType.NONE;
+  }
+}
 export default class ChineseGo {
   canvas: HTMLCanvasElement | null = null;
   context: CanvasRenderingContext2D | null = null;
@@ -19,8 +34,12 @@ export default class ChineseGo {
   height: number;
   row: number;
   col: number;
-  rows: number[] = [];
-  cols: number[] = [];
+  private rows: number[] = [];
+  private cols: number[] = [];
+  private origin: Point = { x: 0, y: 0 };
+  private lines: Line[] = [];
+  private pints: GoPoint[][] = [];
+
   private option: IOption = {
     lineColor: '#444',
     backgroundColor: '#fdf5db',
@@ -32,18 +51,36 @@ export default class ChineseGo {
     this.row = 19;
     this.col = 19;
     this.gridWidth = gridWidth;
-    this.width = this.gridWidth * (this.col + 1);
-    this.height = this.gridWidth * (this.row + 1);
+    this.option.margin = { top: this.gridWidth, right: this.gridWidth, left: this.gridWidth, bottom: this.gridWidth };
+    this.width = this.gridWidth * (this.col - 1) + this.option.margin.left + this.option.margin.right;
+    this.height = this.gridWidth * (this.row - 1) + this.option.margin.top + this.option.margin.bottom;
+    this.origin = {
+      x: this.option.margin.left,
+      y: this.option.margin.top,
+    };
+    this.initData();
   }
   initData(): ChineseGo {
     this.cols = [];
+    this.lines = [];
     for (let c = 0; c < this.col; c++) {
-      this.cols.push();
+      this.cols.push(c * this.gridWidth);
+      this.lines.push(new Line(c * this.gridWidth, 0, c * this.gridWidth, (this.row - 1) * this.gridWidth));
     }
     this.rows = [];
     for (let r = 0; r < this.row; r++) {
-
+      this.rows.push(r * this.gridWidth);
+      this.lines.push(new Line(0, r * this.gridWidth, (this.col - 1) * this.gridWidth, r * this.gridWidth));
     }
+    this.pints = [];
+    this.cols.forEach((col) => {
+      const colPoints: GoPoint[] = [];
+      this.rows.forEach((row) => {
+        colPoints.push(new GoPoint(col, row));
+      });
+      this.pints.push(colPoints);
+    });
+    console.log(this);
     return this;
   }
   initCanvas(canvas: HTMLCanvasElement): ChineseGo {
@@ -51,7 +88,32 @@ export default class ChineseGo {
       throw new Error('初始化canvas错误：对象为空！');
     }
     this.canvas = canvas;
+    this.canvas.width = this.width;
+    this.canvas.height = this.height;
     this.context = this.canvas.getContext('2d');
+    return this;
+  }
+
+  draw(): ChineseGo {
+    this.clear();
+    if (!this.canvas || !this.context) {
+      return this;
+    }
+    this.context.save();
+    this.context.translate(this.origin.x, this.origin.y);
+    this.lines.forEach((item) => item.stroke(this.context, { strokeStyle: this.option.lineColor }));
+    this.context.restore();
+    return this;
+  }
+  private clear(): ChineseGo {
+    if (!this.canvas || !this.context) {
+      return this;
+    }
+    this.context.save();
+    this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    this.context.fillStyle = this.option.backgroundColor;
+    this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
+    this.context.restore();
     return this;
   }
 }
