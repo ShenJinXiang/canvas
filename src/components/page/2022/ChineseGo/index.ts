@@ -1,3 +1,4 @@
+import { FillOption } from '@/lib/DrawOption';
 import Line from '@/lib/Line';
 import { Point } from '@/lib/Point';
 interface Margin {
@@ -19,11 +20,34 @@ enum PieceType {
 class GoPoint implements Point {
   x: number;
   y: number;
+  radius: number;
   type: PieceType;
-  constructor(x: number, y: number) {
+  constructor(x: number, y: number, radius: number) {
     this.x = x;
     this.y = y;
+    this.radius = radius;
     this.type = PieceType.NONE;
+  }
+}
+class GoStar implements Point {
+  x: number;
+  y: number;
+  radius: number;
+  constructor(x: number, y: number, radius: number) {
+    this.x = x;
+    this.y = y;
+    this.radius = radius;
+  }
+  draw(context: CanvasRenderingContext2D | null, { fillStyle = '#000' }: FillOption) {
+    if (!context) {
+      return;
+    }
+    context.save();
+    context.fillStyle = fillStyle;
+    context.beginPath();
+    context.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
+    context.fill();
+    context.restore();
   }
 }
 export default class ChineseGo {
@@ -34,15 +58,19 @@ export default class ChineseGo {
   height: number;
   row: number;
   col: number;
+  private pieceRadius: number = 0;
+  private goStarRadius: number = 0;
   private rows: number[] = [];
   private cols: number[] = [];
   private origin: Point = { x: 0, y: 0 };
   private lines: Line[] = [];
   private pints: GoPoint[][] = [];
+  private goStars: GoStar[] = [];
 
   private option: IOption = {
     lineColor: '#444',
-    backgroundColor: '#fdf5db',
+    // backgroundColor: '#fdf5db',
+    backgroundColor: 'rgb(219, 199, 113)',
     margin: { top: 0, right: 0, bottom: 0, left: 0 },
     blackColor: '#000',
     whiteColor: '#fff'
@@ -51,6 +79,8 @@ export default class ChineseGo {
     this.row = 19;
     this.col = 19;
     this.gridWidth = gridWidth;
+    this.pieceRadius = this.gridWidth * 0.3;
+    this.goStarRadius = this.gridWidth * 0.1;
     this.option.margin = { top: this.gridWidth, right: this.gridWidth, left: this.gridWidth, bottom: this.gridWidth };
     this.width = this.gridWidth * (this.col - 1) + this.option.margin.left + this.option.margin.right;
     this.height = this.gridWidth * (this.row - 1) + this.option.margin.top + this.option.margin.bottom;
@@ -76,10 +106,17 @@ export default class ChineseGo {
     this.cols.forEach((col) => {
       const colPoints: GoPoint[] = [];
       this.rows.forEach((row) => {
-        colPoints.push(new GoPoint(col, row));
+        colPoints.push(new GoPoint(col, row, this.pieceRadius));
       });
       this.pints.push(colPoints);
     });
+    this.goStars = [
+      new GoStar(9 * this.gridWidth, 9 * this.gridWidth, this.goStarRadius),
+      new GoStar(3 * this.gridWidth, 3 * this.gridWidth, this.goStarRadius),
+      new GoStar(3 * this.gridWidth, 15 * this.gridWidth, this.goStarRadius),
+      new GoStar(15 * this.gridWidth, 3 * this.gridWidth, this.goStarRadius),
+      new GoStar(15 * this.gridWidth, 15 * this.gridWidth, this.goStarRadius),
+    ];
     console.log(this);
     return this;
   }
@@ -102,6 +139,7 @@ export default class ChineseGo {
     this.context.save();
     this.context.translate(this.origin.x, this.origin.y);
     this.lines.forEach((item) => item.stroke(this.context, { strokeStyle: this.option.lineColor }));
+    this.goStars.forEach((item) => item.draw(this.context, { fillStyle: this.option.lineColor }));
     this.context.restore();
     return this;
   }

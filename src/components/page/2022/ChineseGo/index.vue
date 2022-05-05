@@ -8,7 +8,7 @@ import { onMounted, ref, Ref } from 'vue';
 import ChineseGo from '.';
 
 const canvasRef: Ref = ref();
-const chineseGo = new ChineseGo(50);
+const chineseGo = new ChineseGo(45);
 onMounted(() => {
   chineseGo.initCanvas(canvasRef.value).draw();
 });
