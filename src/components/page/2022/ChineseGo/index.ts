@@ -64,7 +64,7 @@ export default class ChineseGo {
   private cols: number[] = [];
   private origin: Point = { x: 0, y: 0 };
   private lines: Line[] = [];
-  private pints: GoPoint[][] = [];
+  private points: GoPoint[][] = [];
   private goStars: GoStar[] = [];
 
   private option: IOption = {
@@ -102,13 +102,13 @@ export default class ChineseGo {
       this.rows.push(r * this.gridWidth);
       this.lines.push(new Line(0, r * this.gridWidth, (this.col - 1) * this.gridWidth, r * this.gridWidth));
     }
-    this.pints = [];
+    this.points = [];
     this.cols.forEach((col) => {
       const colPoints: GoPoint[] = [];
       this.rows.forEach((row) => {
         colPoints.push(new GoPoint(col, row, this.pieceRadius));
       });
-      this.pints.push(colPoints);
+      this.points.push(colPoints);
     });
     this.goStars = [
       new GoStar(9 * this.gridWidth, 9 * this.gridWidth, this.goStarRadius),
@@ -153,5 +153,51 @@ export default class ChineseGo {
     this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
     this.context.restore();
     return this;
+  }
+  mouseClick(event: MouseEvent): void {
+    const p = this.eventToCanvasPoint(event);
+  }
+  mouseMove(event: MouseEvent): void {
+    if (!this.canvas) {
+      return;
+    }
+    const goPoint = this.eventToGoPoint(event);
+    if (goPoint && goPoint.type === PieceType.NONE) {
+      this.canvas.style.cursor = 'pointer';
+    } else {
+      this.canvas.style.cursor = 'default';
+    }
+  }
+
+  private eventToGoPoint(event: MouseEvent): GoPoint | undefined {
+    if (!this.canvas) {
+      return;
+    }
+    const p = this.eventToCanvasPoint(event);
+    if (!p) {
+      return;
+    }
+    const row = this.rows.findIndex((item) => {
+      return item + this.pieceRadius >= p.y && item - this.pieceRadius <= p.y;
+    });
+    const col = this.cols.findIndex((item) => {
+      return item + this.pieceRadius >= p.x && item - this.pieceRadius <= p.x;
+    });
+    if (row >= 0 && col >= 0) {
+      // this.canvas.style.cursor = 'pointer';
+      return this.points[col][row];
+    }
+    return;
+  }
+
+  private eventToCanvasPoint(event: MouseEvent): Point | undefined {
+    if (!this.canvas) {
+      return;
+    }
+    let box = this.canvas.getBoundingClientRect();
+    return {
+      x: event.clientX - box.left - this.option.margin.left,
+      y: event.clientY - box.top - this.option.margin.top,
+    };
   }
 }
