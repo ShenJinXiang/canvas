@@ -17,6 +17,10 @@ interface IOption {
 enum PieceType {
   'BLACK', 'WHITE', 'NONE'
 }
+interface PieceFillOption extends FillOption {
+  blackFillStyle: string;
+  whiteFillStyle: string;
+}
 class GoPoint implements Point {
   x: number;
   y: number;
@@ -27,6 +31,28 @@ class GoPoint implements Point {
     this.y = y;
     this.radius = radius;
     this.type = PieceType.NONE;
+  }
+  draw(context: CanvasRenderingContext2D | null, { blackFillStyle = '#000', whiteFillStyle = '#fff' }: PieceFillOption) {
+    if (!context) {
+      return;
+    }
+    context.save();
+    switch (this.type) {
+      case PieceType.BLACK:
+        context.fillStyle = blackFillStyle;
+        break;
+      case PieceType.WHITE:
+        context.fillStyle = whiteFillStyle;
+        break;
+      case PieceType.NONE:
+      default:
+        context.fillStyle = 'transparent';
+        break;
+    }
+    context.beginPath();
+    context.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
+    context.fill();
+    context.restore();
   }
 }
 class GoStar implements Point {
@@ -65,6 +91,7 @@ export default class ChineseGo {
   private origin: Point = { x: 0, y: 0 };
   private lines: Line[] = [];
   private points: GoPoint[][] = [];
+  private pointData: GoPoint[] = [];
   private goStars: GoStar[] = [];
 
   private option: IOption = {
@@ -103,6 +130,7 @@ export default class ChineseGo {
       this.lines.push(new Line(0, r * this.gridWidth, (this.col - 1) * this.gridWidth, r * this.gridWidth));
     }
     this.points = [];
+    this.pointData = [];
     this.cols.forEach((col) => {
       const colPoints: GoPoint[] = [];
       this.rows.forEach((row) => {
@@ -140,6 +168,7 @@ export default class ChineseGo {
     this.context.translate(this.origin.x, this.origin.y);
     this.lines.forEach((item) => item.stroke(this.context, { strokeStyle: this.option.lineColor }));
     this.goStars.forEach((item) => item.draw(this.context, { fillStyle: this.option.lineColor }));
+    this.pointData.forEach((item) => item.draw(this.context, { whiteFillStyle: this.option.whiteColor, blackFillStyle: this.option.blackColor }));
     this.context.restore();
     return this;
   }
@@ -154,8 +183,28 @@ export default class ChineseGo {
     this.context.restore();
     return this;
   }
+  private reStart(): ChineseGo {
+    this.pointData = [];
+    this.points.forEach((row) => {
+      row.forEach((p) => p.type = PieceType.NONE);
+    });
+    return this;
+  }
   mouseClick(event: MouseEvent): void {
-    const p = this.eventToCanvasPoint(event);
+    if (!this.canvas) {
+      return;
+    }
+    const goPoint = this.eventToGoPoint(event);
+    if (goPoint && goPoint.type === PieceType.NONE) {
+      if (this.pointData.length % 2 === 0) {
+        goPoint.type = PieceType.BLACK;
+      } else {
+        goPoint.type = PieceType.WHITE;
+      }
+      this.pointData.push(goPoint);
+      console.log(this.pointData);
+      this.draw();
+    }
   }
   mouseMove(event: MouseEvent): void {
     if (!this.canvas) {
