@@ -4,32 +4,32 @@
       @click="canvasClick"
       @mousemove="canvasMouseMove"
     />
-  </div>
-  <div class="contro-con">
-    <el-row>
-      <el-switch
-        v-model="clickType"
-        @change="clickTypeChange"
-        active-color="#13ce66"
-        inactive-color="#ff4949"
-        :active-value="0"
-        :inactive-value="1"
-        active-text="下子"
-        inactive-text="提子"
-      />
-    </el-row>
-    <el-row v-if="clickType === 0">
-      <el-switch
-        v-model="downPieceType"
-        @change="pieceTypeChange"
-        active-color="#000"
-        inactive-color="#fff"
-        :active-value="0"
-        :inactive-value="1"
-        active-text="黑子"
-        inactive-text="白子"
-      />
-    </el-row>
+    <div class="contro-con">
+      <el-row>
+        <el-switch
+          v-model="clickType"
+          @change="clickTypeChange"
+          active-color="#13ce66"
+          inactive-color="#ff4949"
+          :active-value="0"
+          :inactive-value="1"
+          active-text="下子"
+          inactive-text="提子"
+        />
+      </el-row>
+      <el-row v-if="clickType === 0">
+        <el-switch
+          v-model="downPieceType"
+          @change="pieceTypeChange"
+          active-color="#000"
+          inactive-color="#fff"
+          :active-value="0"
+          :inactive-value="1"
+          active-text="黑子"
+          inactive-text="白子"
+        />
+      </el-row>
+    </div>
   </div>
 </template>
 <script lang="ts" setup>
@@ -52,6 +52,13 @@ const canvasMouseMove = (event: MouseEvent) => {
     chineseGo.mouseMove(event);
   }
 };
+const handlerClickType = () => {
+  console.log("----");
+  if(canvasRef.value) {
+    clickType.value = clickType.value === 0 ? 1 : 0;
+    chineseGo.setClickType(clickType.value);
+  }
+}
 const clickTypeChange = (val: number) => {
   if (canvasRef.value) {
     chineseGo.setClickType(val);
@@ -65,6 +72,11 @@ const pieceTypeChange = (val: number) => {
 onMounted(() => {
   chineseGo.initCanvas(canvasRef.value).run();
 });
+window.addEventListener('keypress', (event) => {
+  if (event.key === 'Enter') {
+    handlerClickType();
+  }
+}, false);
 </script>
 <style lang="less" scoped>
 .contro-con {
@@ -75,5 +87,6 @@ onMounted(() => {
   padding: 40px 20px;
   width: 260px;
   box-sizing: border-box;
+  background-color: #f8f8f8;
 }
 </style>
