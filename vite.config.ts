@@ -31,8 +31,8 @@ const project = ({ mode }) => {
       //   resolvers: [ElementPlusResolver()],
       // }),
     ],
-    // base: env.VITE_APP_BASE_URL || '/',
-    base: './',
+    base: env.VITE_APP_BASE_URL || './',
+    // base: './',
     resolve: {
       alias,
     },

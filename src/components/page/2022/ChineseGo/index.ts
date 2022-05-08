@@ -17,6 +17,9 @@ interface IOption {
 enum PieceType {
   'BLACK', 'WHITE', 'NONE'
 }
+enum ClickType {
+  'DOWN', 'UP'
+}
 interface PieceFillOption extends FillOption {
   blackFillStyle: string;
   whiteFillStyle: string;
@@ -36,6 +39,9 @@ class GoPoint implements Point {
     if (!context) {
       return;
     }
+    if (this.type === PieceType.NONE) {
+      return;
+    }
     context.save();
     switch (this.type) {
       case PieceType.BLACK:
@@ -44,7 +50,6 @@ class GoPoint implements Point {
       case PieceType.WHITE:
         context.fillStyle = whiteFillStyle;
         break;
-      case PieceType.NONE:
       default:
         context.fillStyle = 'transparent';
         break;
@@ -91,6 +96,7 @@ export default class ChineseGo {
   private points: GoPoint[][] = [];
   private pointData: GoPoint[] = [];
   private goStars: GoStar[] = [];
+  private clickType: ClickType = ClickType.DOWN;
 
   private option: IOption = {
     lineColor: '#444',
@@ -163,8 +169,15 @@ export default class ChineseGo {
     this.context.translate(this.origin.x, this.origin.y);
     this.lines.forEach((item) => item.stroke(this.context, { strokeStyle: this.option.lineColor }));
     this.goStars.forEach((item) => item.draw(this.context, { fillStyle: this.option.lineColor }));
-    this.pointData.forEach((item) => item.draw(this.context, { whiteFillStyle: this.option.whiteColor, blackFillStyle: this.option.blackColor }));
+    // this.pointData.forEach((item) => item.draw(this.context, { whiteFillStyle: this.option.whiteColor, blackFillStyle: this.option.blackColor }));
+    this.points.forEach((row) => {
+      row.forEach((p) => p.draw(this.context, { whiteFillStyle: this.option.whiteColor, blackFillStyle: this.option.blackColor }));
+    });
     this.context.restore();
+    return this;
+  }
+  setClickType(clickType: ClickType): ChineseGo {
+    this.clickType = clickType;
     return this;
   }
   private clear(): ChineseGo {
@@ -190,6 +203,16 @@ export default class ChineseGo {
       return;
     }
     const goPoint = this.eventToGoPoint(event);
+    if (goPoint) {
+      switch (this.clickType) {
+        case ClickType.DOWN:
+          console.log('down');
+          break;
+        case ClickType.UP:
+          console.log('up');
+          break;
+      }
+    }
     if (goPoint && goPoint.type === PieceType.NONE) {
       if (this.pointData.length % 2 === 0) {
         goPoint.type = PieceType.BLACK;
