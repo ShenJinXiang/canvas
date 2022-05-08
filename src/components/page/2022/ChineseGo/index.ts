@@ -1,3 +1,4 @@
+import Animate from "@/lib/Animate";
 import { FillOption } from '@/lib/DrawOption';
 import Line from '@/lib/Line';
 import { Point } from '@/lib/Point';
@@ -81,7 +82,7 @@ class GoStar implements Point {
     context.restore();
   }
 }
-export default class ChineseGo {
+export default class ChineseGo extends Animate {
   canvas: HTMLCanvasElement | null = null;
   context: CanvasRenderingContext2D | null = null;
   gridWidth: number;
@@ -97,6 +98,7 @@ export default class ChineseGo {
   private pointData: GoPoint[] = [];
   private goStars: GoStar[] = [];
   private clickType: ClickType = ClickType.DOWN;
+  private pieceType: PieceType = PieceType.BLACK;
 
   private option: IOption = {
     lineColor: '#444',
@@ -107,6 +109,7 @@ export default class ChineseGo {
     whiteColor: '#fff'
   };
   constructor(gridWidth: number) {
+    super();
     this.size = 21;
     this.gridWidth = gridWidth;
     this.pieceRadius = this.gridWidth * 0.3;
@@ -180,6 +183,10 @@ export default class ChineseGo {
     this.clickType = clickType;
     return this;
   }
+  setDownPieceType(pieceType: PieceType): ChineseGo {
+    this.pieceType = pieceType;
+    return this;
+  }
   private clear(): ChineseGo {
     if (!this.canvas || !this.context) {
       return this;
@@ -204,32 +211,34 @@ export default class ChineseGo {
     }
     const goPoint = this.eventToGoPoint(event);
     if (goPoint) {
-      switch (this.clickType) {
-        case ClickType.DOWN:
-          console.log('down');
-          break;
-        case ClickType.UP:
-          console.log('up');
-          break;
+      if (this.clickType === ClickType.DOWN && goPoint.type === PieceType.NONE) {
+        goPoint.type = this.pieceType;
+      }
+      if (this.clickType === ClickType.UP) {
+        goPoint.type = PieceType.NONE;
       }
     }
-    if (goPoint && goPoint.type === PieceType.NONE) {
-      if (this.pointData.length % 2 === 0) {
-        goPoint.type = PieceType.BLACK;
-      } else {
-        goPoint.type = PieceType.WHITE;
-      }
-      this.pointData.push(goPoint);
-      console.log(this.pointData);
-      this.draw();
-    }
+    // if (goPoint && goPoint.type === PieceType.NONE) {
+    //   if (this.pointData.length % 2 === 0) {
+    //     goPoint.type = PieceType.BLACK;
+    //   } else {
+    //     goPoint.type = PieceType.WHITE;
+    //   }
+    //   this.pointData.push(goPoint);
+    //   console.log(this.pointData);
+    //   this.draw();
+    // }
   }
   mouseMove(event: MouseEvent): void {
     if (!this.canvas) {
       return;
     }
     const goPoint = this.eventToGoPoint(event);
-    if (goPoint && goPoint.type === PieceType.NONE) {
+    if (
+      goPoint && (
+        this.clickType === ClickType.DOWN && goPoint.type === PieceType.NONE ||
+        this.clickType === ClickType.UP && goPoint.type !== PieceType.NONE
+      )) {
       this.canvas.style.cursor = 'pointer';
     } else {
       this.canvas.style.cursor = 'default';

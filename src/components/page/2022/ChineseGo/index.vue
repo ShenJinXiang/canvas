@@ -18,6 +18,18 @@
         inactive-text="提子"
       />
     </el-row>
+    <el-row v-if="clickType === 0">
+      <el-switch
+        v-model="downPieceType"
+        @change="pieceTypeChange"
+        active-color="#000"
+        inactive-color="#fff"
+        :active-value="0"
+        :inactive-value="1"
+        active-text="黑子"
+        inactive-text="白子"
+      />
+    </el-row>
   </div>
 </template>
 <script lang="ts" setup>
@@ -28,6 +40,7 @@ const canvasRef: Ref = ref();
 const chineseGo = new ChineseGo(45);
 
 const clickType = ref(0);
+const downPieceType = ref(0);
 
 const canvasClick = (event: MouseEvent) => {
   if (canvasRef.value) {
@@ -44,8 +57,13 @@ const clickTypeChange = (val: number) => {
     chineseGo.setClickType(val);
   }
 };
+const pieceTypeChange = (val: number) => {
+  if (canvasRef.value) {
+    chineseGo.setDownPieceType(val);
+  }
+};
 onMounted(() => {
-  chineseGo.initCanvas(canvasRef.value).draw();
+  chineseGo.initCanvas(canvasRef.value).run();
 });
 </script>
 <style lang="less" scoped>
