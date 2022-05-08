@@ -82,12 +82,10 @@ export default class ChineseGo {
   gridWidth: number;
   width: number;
   height: number;
-  row: number;
-  col: number;
+  size: number;
   private pieceRadius: number = 0;
   private goStarRadius: number = 0;
-  private rows: number[] = [];
-  private cols: number[] = [];
+  private segments: number[] = [];
   private origin: Point = { x: 0, y: 0 };
   private lines: Line[] = [];
   private points: GoPoint[][] = [];
@@ -103,14 +101,13 @@ export default class ChineseGo {
     whiteColor: '#fff'
   };
   constructor(gridWidth: number) {
-    this.row = 19;
-    this.col = 19;
+    this.size = 21;
     this.gridWidth = gridWidth;
     this.pieceRadius = this.gridWidth * 0.3;
     this.goStarRadius = this.gridWidth * 0.1;
     this.option.margin = { top: this.gridWidth, right: this.gridWidth, left: this.gridWidth, bottom: this.gridWidth };
-    this.width = this.gridWidth * (this.col - 1) + this.option.margin.left + this.option.margin.right;
-    this.height = this.gridWidth * (this.row - 1) + this.option.margin.top + this.option.margin.bottom;
+    this.width = this.gridWidth * (this.size - 1) + this.option.margin.left + this.option.margin.right;
+    this.height = this.gridWidth * (this.size - 1) + this.option.margin.top + this.option.margin.bottom;
     this.origin = {
       x: this.option.margin.left,
       y: this.option.margin.top,
@@ -118,33 +115,31 @@ export default class ChineseGo {
     this.initData();
   }
   initData(): ChineseGo {
-    this.cols = [];
+    this.segments = [];
     this.lines = [];
-    for (let c = 0; c < this.col; c++) {
-      this.cols.push(c * this.gridWidth);
-      this.lines.push(new Line(c * this.gridWidth, 0, c * this.gridWidth, (this.row - 1) * this.gridWidth));
-    }
-    this.rows = [];
-    for (let r = 0; r < this.row; r++) {
-      this.rows.push(r * this.gridWidth);
-      this.lines.push(new Line(0, r * this.gridWidth, (this.col - 1) * this.gridWidth, r * this.gridWidth));
+    for (let i = 0; i < this.size; i++) {
+      this.segments.push(i * this.gridWidth);
+      this.lines.push(new Line(i * this.gridWidth, 0, i * this.gridWidth, (this.size - 1) * this.gridWidth));
+      this.lines.push(new Line(0, i * this.gridWidth, (this.size - 1) * this.gridWidth, i * this.gridWidth));
     }
     this.points = [];
     this.pointData = [];
-    this.cols.forEach((col) => {
+    this.segments.forEach((col) => {
       const colPoints: GoPoint[] = [];
-      this.rows.forEach((row) => {
+      this.segments.forEach((row) => {
         colPoints.push(new GoPoint(col, row, this.pieceRadius));
       });
       this.points.push(colPoints);
     });
     this.goStars = [
-      new GoStar(9 * this.gridWidth, 9 * this.gridWidth, this.goStarRadius),
-      new GoStar(3 * this.gridWidth, 3 * this.gridWidth, this.goStarRadius),
-      new GoStar(3 * this.gridWidth, 15 * this.gridWidth, this.goStarRadius),
-      new GoStar(15 * this.gridWidth, 3 * this.gridWidth, this.goStarRadius),
-      new GoStar(15 * this.gridWidth, 15 * this.gridWidth, this.goStarRadius),
+      new GoStar(Math.floor(this.size / 2) * this.gridWidth, Math.floor(this.size / 2) * this.gridWidth, this.goStarRadius),
     ];
+    if (this.size >= 11) {
+      this.goStars.push(new GoStar(3 * this.gridWidth, 3 * this.gridWidth, this.goStarRadius));
+      this.goStars.push(new GoStar(3 * this.gridWidth, (this.size - 4) * this.gridWidth, this.goStarRadius));
+      this.goStars.push(new GoStar((this.size - 4) * this.gridWidth, 3 * this.gridWidth, this.goStarRadius));
+      this.goStars.push(new GoStar((this.size - 4) * this.gridWidth, (this.size - 4) * this.gridWidth, this.goStarRadius));
+    }
     console.log(this);
     return this;
   }
@@ -226,10 +221,10 @@ export default class ChineseGo {
     if (!p) {
       return;
     }
-    const row = this.rows.findIndex((item) => {
+    const row = this.segments.findIndex((item) => {
       return item + this.pieceRadius >= p.y && item - this.pieceRadius <= p.y;
     });
-    const col = this.cols.findIndex((item) => {
+    const col = this.segments.findIndex((item) => {
       return item + this.pieceRadius >= p.x && item - this.pieceRadius <= p.x;
     });
     if (row >= 0 && col >= 0) {
