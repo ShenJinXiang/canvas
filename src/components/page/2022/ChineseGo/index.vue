@@ -53,12 +53,17 @@ const canvasMouseMove = (event: MouseEvent) => {
   }
 };
 const handlerClickType = () => {
-  console.log("----");
   if(canvasRef.value) {
     clickType.value = clickType.value === 0 ? 1 : 0;
     chineseGo.setClickType(clickType.value);
   }
-}
+};
+const handlerPieceType = () => {
+  if (canvasRef.value) {
+    downPieceType.value = downPieceType.value === 0 ? 1 : 0;
+    chineseGo.setDownPieceType(downPieceType.value);
+  }
+};
 const clickTypeChange = (val: number) => {
   if (canvasRef.value) {
     chineseGo.setClickType(val);
@@ -75,6 +80,9 @@ onMounted(() => {
 window.addEventListener('keypress', (event) => {
   if (event.key === 'Enter') {
     handlerClickType();
+  }
+  if (event.key === '`') {
+    handlerPieceType();
   }
 }, false);
 </script>
