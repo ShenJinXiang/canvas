@@ -29,4 +29,10 @@ export default [
     name: 'ChineseGo',
     component: () => import('@/views/page/ChineseGo.vue'),
   },
+  {
+    title: '乱撞的小球',
+    path: 'RunnerBall',
+    name: 'RunnerBall',
+    component: () => import('@/views/page/RunnerBall.vue'),
+  }
 ];
