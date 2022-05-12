@@ -1,8 +1,22 @@
+interface IOption {
+  ballNumber: number;
+  maxRadius: number;
+  minRadius: number;
+  maxVelocity: number;
+  bufWidth: number;
+}
 export default class RunnerBall {
   canvas: HTMLCanvasElement | null = null;
   context: CanvasRenderingContext2D | null = null;
   width: number;
   height: number;
+  option: IOption = {
+    ballNumber: 80,
+    minRadius: 10,
+    maxRadius: 20,
+    maxVelocity: 2,
+    bufWidth: 10
+  };
 
   constructor(width: number, height: number) {
     this.width = width;
