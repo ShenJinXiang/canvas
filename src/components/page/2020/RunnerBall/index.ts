@@ -1,3 +1,4 @@
+import Animate from "@/lib/Animate";
 import { random } from "@/lib/Kit";
 
 interface IOption {
@@ -31,12 +32,34 @@ class Ball {
     context.translate(this.ox, this.oy);
     context.scale(this.radius, this.radius);
     context.fillStyle = this.fillStyle;
+    context.beginPath();
     context.arc(0, 0, 1, 0, 2 * Math.PI, false);
+    context.closePath();
     context.fill();
     context.restore();
   }
+  update(width: number, height: number) {
+    this.ox += this.xVelocity;
+    this.oy += this.yVelocity;
+    if (this.ox < this.radius) {
+      this.ox = this.radius;
+      this.xVelocity = -this.xVelocity;
+    }
+    if (this.ox > width - this.radius) {
+      this.ox = width - this.radius;
+      this.xVelocity = -this.xVelocity;
+    }
+    if (this.oy < this.radius) {
+      this.oy = this.radius;
+      this.yVelocity = -this.yVelocity;
+    }
+    if (this.oy > height) {
+      this.oy = height - this.radius;
+      this.yVelocity = -this.yVelocity;
+    }
+  }
 }
-export default class RunnerBall {
+export default class RunnerBall extends Animate {
   canvas: HTMLCanvasElement | null = null;
   context: CanvasRenderingContext2D | null = null;
   width: number;
@@ -52,17 +75,19 @@ export default class RunnerBall {
   };
 
   constructor(width: number, height: number) {
+    super();
     this.width = width;
     this.height = height;
+    this.initData();
   }
   initData(): RunnerBall {
     this.balls = [];
-    const { bufWidth, maxRadius, maxVelocity } = this.option;
+    const { bufWidth, minRadius, maxRadius, maxVelocity } = this.option;
     for (let i = 0; i < this.option.ballNumber; i++) {
       this.balls.push(new Ball(
         random(-bufWidth, this.width + bufWidth),
         random(-bufWidth, this.height + bufWidth),
-        random(maxRadius),
+        random(minRadius, maxRadius),
         random(maxVelocity),
         random(maxVelocity),
         `hsla(${random(255)}, 60%, 40%, 1)`
@@ -91,14 +116,30 @@ export default class RunnerBall {
     this.context.restore();
     return this;
   }
-  public draw(): RunnerBall {
+
+  update() {
+    this.balls.forEach((item) => item.update(this.width, this.height));
+  }
+  draw(): RunnerBall {
     if (!this.canvas || !this.context) {
       return this;
     }
     this.clear();
-    this.context.strokeStyle = 'red';
-    this.context.arc(200, 200, 100, 0, 2 * Math.PI, false);
+    this.context.save();
+    this.balls.forEach((item) => {
+      item.draw(this.context);
+    });
     this.context.stroke();
+    return this;
+  }
+
+  public setRect(width: number, height: number): RunnerBall {
+    this.width = width;
+    this.height = height;
+    if (this.canvas) {
+      this.canvas.width = this.width;
+      this.canvas.height = this.height;
+    }
     return this;
   }
 

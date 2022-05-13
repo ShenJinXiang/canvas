@@ -8,4 +8,8 @@ import RunnerBall from '@/components/page/2020/RunnerBall/index.vue';
 import { ref, Ref } from 'vue';
 const width: Ref<number> = ref(window.innerWidth);
 const height: Ref<number> = ref(window.innerHeight - 40);
+window.onresize = () => {
+  width.value = window.innerWidth;
+  height.value = window.innerHeight - 40;
+}
 </script>

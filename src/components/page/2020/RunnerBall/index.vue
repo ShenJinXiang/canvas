@@ -2,7 +2,7 @@
   <canvas ref="canvasRef" />
 </template>
 <script lang="ts" setup>
-import { onMounted, ref, Ref } from 'vue';
+import { onMounted, ref, Ref, watch } from 'vue';
 import RunnerBall from '.';
 
 const props = defineProps({
@@ -18,6 +18,18 @@ const props = defineProps({
 const canvasRef: Ref = ref();
 const canvas = new RunnerBall(props.width, props.height);
 onMounted(() => {
-  canvas.initCanvas(canvasRef.value).draw();
+  canvas.initCanvas(canvasRef.value).run();
 });
+watch(
+  () => props.width,
+  () => {
+    canvas.setRect(props.width, props.height);
+  }
+);
+watch(
+  () => props.height,
+  () => {
+    canvas.setRect(props.width, props.height);
+  }
+);
 </script>
