@@ -3,7 +3,6 @@ import { random } from "@/lib/Kit";
 
 interface IOption {
   background: string;
-  ballNumber: number;
   maxRadius: number;
   minRadius: number;
   maxVelocity: number;
@@ -64,36 +63,42 @@ export default class RunnerBall extends Animate {
   context: CanvasRenderingContext2D | null = null;
   width: number;
   height: number;
+  ballNumber: number;
   balls: Ball[] = [];
   option: IOption = {
     background: '#000',
-    ballNumber: 80,
     minRadius: 10,
     maxRadius: 20,
     maxVelocity: 2,
     bufWidth: 10
   };
 
-  constructor(width: number, height: number) {
+  constructor(width: number, height: number, ballNumber: number) {
     super();
     this.width = width;
     this.height = height;
+    this.ballNumber = ballNumber;
     this.initData();
   }
   initData(): RunnerBall {
     this.balls = [];
-    const { bufWidth, minRadius, maxRadius, maxVelocity } = this.option;
-    for (let i = 0; i < this.option.ballNumber; i++) {
-      this.balls.push(new Ball(
-        random(-bufWidth, this.width + bufWidth),
-        random(-bufWidth, this.height + bufWidth),
-        random(minRadius, maxRadius),
-        random(maxVelocity),
-        random(maxVelocity),
-        `hsla(${random(255)}, 60%, 40%, 1)`
-      ));
+    for (let i = 0; i < this.ballNumber; i++) {
+      this.balls.push(this.randomBall());
     }
     return this;
+  }
+
+  randomBall(): Ball {
+    const { bufWidth, minRadius, maxRadius, maxVelocity } = this.option;
+    return new Ball(
+      random(-bufWidth, this.width + bufWidth),
+      random(-bufWidth, this.height + bufWidth),
+      random(minRadius, maxRadius),
+      random(maxVelocity),
+      random(maxVelocity),
+      `hsla(${random(255)}, 60%, 40%, 1)`
+    )
+
   }
   initCanvas(canvas: HTMLCanvasElement): RunnerBall {
     if (!canvas) {
@@ -140,6 +145,20 @@ export default class RunnerBall extends Animate {
       this.canvas.width = this.width;
       this.canvas.height = this.height;
     }
+    return this;
+  }
+
+  public setBallNumber(ballNumber: number): RunnerBall {
+    console.log('this ballNumber:', this.ballNumber, "ball number: ", ballNumber);
+    if (this.ballNumber > ballNumber) {
+      this.balls.splice(ballNumber);
+    } else {
+      for (let i = this.ballNumber; i < ballNumber; i++) {
+        this.balls.push(this.randomBall());
+      }
+    }
+    this.ballNumber = this.balls.length;
+    console.log('after', this.balls.length, 'this ballNumber:', this.ballNumber, "ball number: ", ballNumber);
     return this;
   }
 

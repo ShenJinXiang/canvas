@@ -14,9 +14,13 @@ const props = defineProps({
     type: Number,
     required: true,
   },
+  ballNumber: {
+    type: Number,
+    default: 80
+  }
 });
 const canvasRef: Ref = ref();
-const canvas = new RunnerBall(props.width, props.height);
+const canvas = new RunnerBall(props.width, props.height, props.ballNumber);
 onMounted(() => {
   canvas.initCanvas(canvasRef.value).run();
 });
@@ -30,6 +34,12 @@ watch(
   () => props.height,
   () => {
     canvas.setRect(props.width, props.height);
+  }
+);
+watch(
+  () => props.ballNumber,
+  (newVal) => {
+    canvas.setBallNumber(newVal);
   }
 );
 </script>
