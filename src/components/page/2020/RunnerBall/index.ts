@@ -52,7 +52,7 @@ class Ball {
       this.oy = this.radius;
       this.yVelocity = -this.yVelocity;
     }
-    if (this.oy > height) {
+    if (this.oy > height - this.radius) {
       this.oy = height - this.radius;
       this.yVelocity = -this.yVelocity;
     }
