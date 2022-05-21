@@ -1,5 +1,5 @@
 import Animate from "@/lib/Animate";
-import { random } from "@/lib/Kit";
+import { random, randomColor } from "@/lib/Kit";
 
 interface IOption {
   background: string;
@@ -96,7 +96,7 @@ export default class RunnerBall extends Animate {
       random(minRadius, maxRadius),
       random(maxVelocity),
       random(maxVelocity),
-      `hsla(${random(255)}, 60%, 40%, 1)`
+      randomColor()
     )
 
   }

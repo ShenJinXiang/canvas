@@ -1,3 +1,4 @@
+
 export const random = (...nums: number[]) => {
   if (nums.length == 0) {
     return Math.random();
@@ -15,4 +16,16 @@ export const randomInt = (...nums: number[]) => {
 }
 export const randomOne = () => {
   return random(-1, 1) >= 0 ? 1 : -1;
+};
+
+export const color = (hue: number, saturation: string, lightness: string, alpha: number) => {
+  return `hsla(${hue}, ${saturation}, ${lightness}, ${alpha})`;
+};
+
+export const hueColor = (hue: number) => {
+  return color(hue % 360, '75%', '60%', 1);
+}
+
+export const randomColor = () => {
+  return color(randomInt(360), `${random(50, 90)}%`, `${random(50, 90)}%`, 1);
 }
