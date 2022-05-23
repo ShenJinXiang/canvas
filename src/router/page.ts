@@ -34,5 +34,11 @@ export default [
     path: 'RunnerBall',
     name: 'RunnerBall',
     component: () => import('@/views/page/RunnerBall.vue'),
+  },
+  {
+    title: '彩色微粒',
+    path: 'ColorParticle',
+    name: 'ColorParticle',
+    component: () => import('@/views/page/ColorParticle.vue'),
   }
 ];
