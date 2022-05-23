@@ -1,11 +1,12 @@
 import Animate from "@/lib/Animate";
-import { random, randomColor } from "@/lib/Kit";
+import { random, randomColor, randomOne } from "@/lib/Kit";
 
 interface IOption {
   background: string;
   maxRadius: number;
   minRadius: number;
   maxVelocity: number;
+  minVelocity: number;
   bufWidth: number;
 }
 class Ball {
@@ -70,6 +71,7 @@ export default class RunnerBall extends Animate {
     minRadius: 10,
     maxRadius: 20,
     maxVelocity: 2,
+    minVelocity: 0.5,
     bufWidth: 10
   };
 
@@ -89,13 +91,13 @@ export default class RunnerBall extends Animate {
   }
 
   randomBall(): Ball {
-    const { bufWidth, minRadius, maxRadius, maxVelocity } = this.option;
+    const { bufWidth, minRadius, maxRadius, minVelocity, maxVelocity } = this.option;
     return new Ball(
       random(-bufWidth, this.width + bufWidth),
       random(-bufWidth, this.height + bufWidth),
       random(minRadius, maxRadius),
-      random(maxVelocity),
-      random(maxVelocity),
+      randomOne() * random(minVelocity, maxVelocity),
+      randomOne() * random(minVelocity, maxVelocity),
       randomColor()
     )
 
