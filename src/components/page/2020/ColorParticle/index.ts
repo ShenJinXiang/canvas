@@ -1,3 +1,10 @@
+interface IOption {
+  background: string,
+  radius: number,
+  connectDistance: 80,
+  minVelocity: 0.5,
+  maxVelocity: 1.5
+}
 export default class ColorParticle {
   canvas: HTMLCanvasElement | null = null;
   context: CanvasRenderingContext2D | null = null;
