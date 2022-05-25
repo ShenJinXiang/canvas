@@ -69,6 +69,11 @@ class Ball extends Particle {
   draw(context: CanvasRenderingContext2D | null) {
     super.draw(context, { fillStyle: this.fillStyle });
   }
+
+  update(width: number, height: number): Ball {
+    super.update(0, 0, width, height);
+    return this;
+  }
 }
 export default class RunnerBall extends Animate {
   canvas: HTMLCanvasElement | null = null;

@@ -27,23 +27,23 @@ export default class Particle {
     context.fill();
     context.restore();
   }
-  update(width: number, height: number): Particle {
+  update(minX: number, minY: number, maxX: number, maxY: number): Particle {
     this.ox += this.xVelocity;
     this.oy += this.yVelocity;
-    if (this.ox < this.radius) {
-      this.ox = this.radius;
+    if (this.ox - this.radius < minX) {
+      this.ox = this.radius + minX;
       this.xVelocity = -this.xVelocity;
     }
-    if (this.ox > width - this.radius) {
-      this.ox = width - this.radius;
+    if (this.ox + this.radius > maxX) {
+      this.ox = maxX - this.radius;
       this.xVelocity = -this.xVelocity;
     }
-    if (this.oy < this.radius) {
-      this.oy = this.radius;
+    if (this.oy - this.radius < minY) {
+      this.oy = this.radius + minY;
       this.yVelocity = -this.yVelocity;
     }
-    if (this.oy > height - this.radius) {
-      this.oy = height - this.radius;
+    if (this.oy + this.radius > maxY) {
+      this.oy = maxY - this.radius;
       this.yVelocity = -this.yVelocity;
     }
     return this;
