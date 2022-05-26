@@ -1,20 +1,36 @@
+import Particle from "@/lib/Particle";
+
 interface IOption {
   background: string,
   radius: number,
-  connectDistance: 80,
-  minVelocity: 0.5,
-  maxVelocity: 1.5
+  connectDistance: number,
+  minVelocity: number,
+  maxVelocity: number
 }
 export default class ColorParticle {
   canvas: HTMLCanvasElement | null = null;
   context: CanvasRenderingContext2D | null = null;
   width: number;
   height: number;
-  constructor(width: number, height: number) {
+  private particleNum: number;
+  private option: IOption = {
+    background: '#000',
+    radius: 3,
+    connectDistance: 80,
+    minVelocity: 0.5,
+    maxVelocity: 1.5
+  };
+  private particles: Particle[] = [];
+  constructor(width: number, height: number, particleNum: number) {
     this.width = width;
     this.height = height;
+    this.particleNum = particleNum;
   }
   private initData(): ColorParticle {
+    this.particles = [];
+    for (let i = 0; i < this.particleNum; i++) {
+      this.particles.push();
+    }
     return this;
   }
   public initCanvas(canvas: HTMLCanvasElement): ColorParticle {
@@ -33,7 +49,7 @@ export default class ColorParticle {
     }
     this.context.save();
     this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    this.context.fillStyle = '#000';
+    this.context.fillStyle = this.option.background;
     this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
     this.context.restore();
     return this;
