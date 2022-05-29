@@ -1,6 +1,6 @@
 import { FillOption } from "./DrawOption";
 
-export default class Particle {
+export default class Circle {
   ox: number;
   oy: number;
   radius: number;
@@ -27,7 +27,7 @@ export default class Particle {
     context.fill();
     context.restore();
   }
-  update(minX: number, minY: number, maxX: number, maxY: number): Particle {
+  update(minX: number, minY: number, maxX: number, maxY: number): Circle {
     this.ox += this.xVelocity;
     this.oy += this.yVelocity;
     if (this.ox - this.radius < minX) {

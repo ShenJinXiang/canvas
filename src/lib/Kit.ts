@@ -1,4 +1,4 @@
-
+import Point from '@/lib/Point';
 export const random = (...nums: number[]) => {
   if (nums.length == 0) {
     return Math.random();
@@ -28,4 +28,8 @@ export const hueColor = (hue: number) => {
 
 export const randomColor = () => {
   return color(randomInt(360), `${random(50, 90)}%`, `${random(50, 90)}%`, 1);
+}
+
+export const distance = (sPoint: Point, ePoint: Point) => {
+  return Math.sqrt(Math.pow(sPoint.x - ePoint.x, 2) + Math.pow(sPoint.y - ePoint.y, 2));
 }

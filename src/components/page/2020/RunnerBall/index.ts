@@ -1,6 +1,6 @@
 import Animate from "@/lib/Animate";
+import Circle from "@/lib/Circle";
 import { random, randomColor, randomOne } from "@/lib/Kit";
-import Particle from "@/lib/Particle";
 
 interface IOption {
   background: string;
@@ -60,7 +60,7 @@ interface IOption {
 //     }
 //   }
 // }
-class Ball extends Particle {
+class Ball extends Circle {
   fillStyle: string;
   constructor(ox: number, oy: number, radius: number, xVelocity: number, yVelocity: number, fillStyle: string) {
     super(ox, oy, radius, xVelocity, yVelocity);
