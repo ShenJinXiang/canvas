@@ -134,6 +134,19 @@ export default class ColorParticle extends Animate {
       }
     }
   }
-
+  public setRect(width: number, height: number): ColorParticle {
+    this.width = width;
+    this.height = height;
+    if (this.canvas) {
+      this.canvas.width = this.width;
+      this.canvas.height = this.height;
+    }
+    return this;
+  }
+  public setParticleNumber(particleNumber: number): ColorParticle {
+    this.particleNum = particleNumber;
+    this.initData();
+    return this;
+  }
 }
 
