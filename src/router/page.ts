@@ -40,5 +40,11 @@ export default [
     path: 'ColorParticle',
     name: 'ColorParticle',
     component: () => import('@/views/page/ColorParticle.vue'),
+  },
+  {
+    title: '散漫的小球',
+    path: 'DesultoryBall',
+    name: 'DesultoryBall',
+    component: () => import('@/views/page/DesultoryBall.vue'),
   }
 ];
