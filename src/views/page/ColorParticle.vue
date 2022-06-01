@@ -32,6 +32,6 @@ const maxHeight = window.innerHeight - 40;
 const controForm = reactive({
   width: maxWidth,
   height: maxHeight,
-  particleNumber: 80
+  particleNumber: 120
 });
 </script>

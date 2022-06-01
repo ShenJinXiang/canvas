@@ -5,9 +5,9 @@
 import { onMounted, ref, Ref } from 'vue';
 import DesultoryBall from '.';
 const canvasRef: Ref = ref();
-const canvas = new DesultoryBall(window.innerWidth, window.innerHeight - 40);
+const canvas = new DesultoryBall(window.innerWidth, window.innerHeight - 40, 70);
 
 onMounted(() => {
-  canvas.initCanvas(canvasRef.value).draw();
+  canvas.initCanvas(canvasRef.value).run();
 });
 </script>

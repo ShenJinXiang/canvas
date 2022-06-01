@@ -46,7 +46,7 @@ export default class ColorParticle extends Animate {
   private option: IOption = {
     background: '#000',
     radius: 3,
-    connectDistance: 90,
+    connectDistance: 120,
     minVelocity: 0.5,
     maxVelocity: 1.5
   };
