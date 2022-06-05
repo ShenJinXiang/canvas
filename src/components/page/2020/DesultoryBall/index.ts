@@ -1,7 +1,8 @@
 import Animate from "@/lib/Animate";
 import Circle from "@/lib/Circle";
 import { FillOption } from "@/lib/DrawOption";
-import { random, randomOne } from "@/lib/Kit";
+import { distance, random, randomOne } from "@/lib/Kit";
+import Line from "@/lib/Line";
 
 interface IOption {
   background: string;
@@ -43,6 +44,7 @@ export default class DesultoryBall extends Animate {
     connectDistance: 200
   };
   private balls: Ball[] = [];
+  private lines: Line[] = [];
 
   constructor(width: number, height: number, ballNumber: number) {
     super();
@@ -56,6 +58,7 @@ export default class DesultoryBall extends Animate {
     for (let i = 0; i < this.ballNumber; i++) {
       this.balls.push(this.randomBall());
     }
+    this.refreshLines();
     return this;
   }
   randomBall(): Ball {
@@ -78,6 +81,25 @@ export default class DesultoryBall extends Animate {
     this.context = this.canvas.getContext('2d');
     return this;
   }
+  refreshLines(): void {
+    this.lines = [];
+    for (let i = 0; i < this.balls.length - 1; i++) {
+      for (let j = i + 1; j < this.balls.length; j++) {
+        const p1 = this.balls[i];
+        const p2 = this.balls[j];
+        const dis = distance({ x: p1.ox, y: p1.oy }, { x: p2.ox, y: p2.oy });
+        if (dis <= this.option.connectDistance) {
+          const alpha = 1 - (dis / this.option.connectDistance);
+          this.lines.push(new Line(
+            p1.ox,
+            p1.oy,
+            p2.ox,
+            p2.oy
+          ));
+        }
+      }
+    }
+  }
   private clear(): DesultoryBall {
     if (!this.canvas || !this.context) {
       return this;
@@ -96,10 +118,12 @@ export default class DesultoryBall extends Animate {
     this.clear();
     this.context.save();
     this.balls.forEach((ball) => ball.draw(this.context, { fillStyle: this.option.ballColor }));
+    this.lines.forEach((line) => line.stroke(this.context, { strokeStyle: this.option.lineColor }));
     this.context.restore();
     return this;
   }
   update() {
     this.balls.forEach((item) => item.update(this.width, this.height));
+    this.refreshLines();
   }
 }
