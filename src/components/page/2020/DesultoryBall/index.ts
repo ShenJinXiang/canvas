@@ -126,4 +126,18 @@ export default class DesultoryBall extends Animate {
     this.balls.forEach((item) => item.update(this.width, this.height));
     this.refreshLines();
   }
+  public setRect(width: number, height: number): DesultoryBall {
+    this.width = width;
+    this.height = height;
+    if (this.canvas) {
+      this.canvas.width = this.width;
+      this.canvas.height = this.height;
+    }
+    return this;
+  }
+  public setBallNumber(ballNumber: number): DesultoryBall {
+    this.ballNumber = ballNumber;
+    this.initData();
+    return this;
+  }
 }
