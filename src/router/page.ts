@@ -46,5 +46,11 @@ export default [
     path: 'DesultoryBall',
     name: 'DesultoryBall',
     component: () => import('@/views/page/DesultoryBall.vue'),
+  },
+  {
+    title: '随机射线',
+    path: 'RandomRadial',
+    name: 'RandomRadial',
+    component: () => import('@/views/page/RandomRadial.vue'),
   }
 ];
