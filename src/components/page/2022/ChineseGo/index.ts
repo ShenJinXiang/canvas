@@ -110,7 +110,7 @@ export default class ChineseGo extends Animate {
   };
   constructor(gridWidth: number) {
     super();
-    this.size = 15;
+    this.size = 13;
     this.gridWidth = gridWidth;
     this.pieceRadius = this.gridWidth * 0.3;
     this.goStarRadius = this.gridWidth * 0.1;
