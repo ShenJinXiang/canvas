@@ -52,5 +52,11 @@ export default [
     path: 'RandomRadial',
     name: 'RandomRadial',
     component: () => import('@/views/page/RandomRadial.vue'),
+  },
+  {
+    title: '字母变换',
+    path: 'LetterTransform',
+    name: 'LetterTransform',
+    component: () => import('@/views/page/LetterTransform.vue'),
   }
 ];

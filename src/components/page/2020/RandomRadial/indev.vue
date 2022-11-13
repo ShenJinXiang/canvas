@@ -4,14 +4,46 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { onMounted, ref, Ref } from 'vue';
+import { onMounted, ref, Ref, watch } from 'vue';
 import RandomRadial from '.';
 
+const props = defineProps({
+  width: {
+    type: Number,
+    required: true
+  },
+  height: {
+    type: Number,
+    required: true
+  },
+  lineNumber: {
+    type: Number,
+    default: 5
+  }
+})
 const canvasRef: Ref = ref();
-const canvas = new RandomRadial(window.innerWidth, window.innerHeight - 40, 5);
+const canvas = new RandomRadial(props.width, props.height, props.lineNumber);
 onMounted(() => {
-  canvas.initCanvas(canvasRef.value).draw();
+  canvas.initCanvas(canvasRef.value).run();
 });
+watch(
+  () => props.width,
+  () => {
+    canvas.setRect(props.width, props.height);
+  }
+);
+watch(
+  () => props.height,
+  () => {
+    canvas.setRect(props.width, props.height);
+  }
+);
+watch(
+  () => props.lineNumber,
+  (newVal) => {
+    canvas.setLineNumber(newVal);
+  }
+);
 </script>
 <style scoped>
 canvas {
