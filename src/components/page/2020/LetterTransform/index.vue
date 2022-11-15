@@ -4,8 +4,12 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { ref, Ref } from 'vue';
-
+import { onMounted, ref, Ref } from 'vue';
+import LetterTransform from '.';
 
 const canvasRef: Ref = ref()
+const canvas = new LetterTransform(window.innerWidth, window.innerHeight);
+onMounted(() => {
+  canvas.initCanvas(canvasRef.value).run();
+});
 </script>

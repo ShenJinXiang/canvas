@@ -6,7 +6,6 @@
 <script lang="ts" setup>
 import { onMounted, ref, Ref, watch } from 'vue';
 import RandomRadial from '.';
-
 const props = defineProps({
   width: {
     type: Number,
