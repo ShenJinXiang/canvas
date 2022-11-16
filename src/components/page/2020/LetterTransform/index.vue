@@ -10,6 +10,7 @@ import LetterTransform from '.';
 const canvasRef: Ref = ref()
 const canvas = new LetterTransform(window.innerWidth, window.innerHeight);
 onMounted(() => {
-  canvas.initCanvas(canvasRef.value).run();
+  // canvas.initCanvas(canvasRef.value).run();
+  canvas.initCanvas(canvasRef.value).draw();
 });
 </script>

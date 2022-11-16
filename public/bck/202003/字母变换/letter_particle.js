@@ -1,12 +1,12 @@
-(function() {
+(function () {
     let letterParticle = {
-        Particle: function(x, y) {
+        Particle: function (x, y) {
             this.x = x;
             this.y = y;
             this.fillStyle = '#fff';
             this.w = 3.5;
             this.h = 3.5;
-            this.draw = function(ctx) {
+            this.draw = function (ctx) {
                 ctx.save();
                 ctx.translate(this.x, this.y);
                 ctx.fillStyle = this.fillStyle;
@@ -14,12 +14,12 @@
                 ctx.restore();
             }
         },
-        init: function() {
+        init: function () {
             letterParticle.canvas = document.getElementById('canvas');
             letterParticle.canvas.width = window.innerWidth;
             letterParticle.canvas.height = window.innerHeight;
             letterParticle.context = letterParticle.canvas.getContext('2d');
-            letterParticle.tempCanvas = document.createElement('canvas');
+            lettericlParte.tempCanvas = document.createElement('canvas');
             letterParticle.tempCanvas.width = window.innerWidth;
             letterParticle.tempCanvas.height = window.innerHeight;
             letterParticle.tempContext = letterParticle.tempCanvas.getContext('2d');
@@ -32,12 +32,12 @@
             letterParticle.createParticles();
             letterParticle.animate();
             letterParticle.createParticlePostions();
-            setInterval(function() {
+            setInterval(function () {
                 letterParticle.changeLetter();
                 letterParticle.createParticlePostions();
             }, 1200);
 
-            $(window).resize(function() {
+            $(window).resize(function () {
                 letterParticle.canvas.width = window.innerWidth;
                 letterParticle.canvas.height = window.innerHeight;
                 letterParticle.tempCanvas.width = window.innerWidth;
@@ -45,13 +45,13 @@
             });
 
         },
-        changeLetter: function() {
+        changeLetter: function () {
             letterParticle.currentPos++;
             if (letterParticle.currentPos >= letterParticle.letters.length) {
                 letterParticle.currentPos = 0;
             }
         },
-        createParticlePostions: function() {
+        createParticlePostions: function () {
             letterParticle.tempContext.clearRect(0, 0, letterParticle.tempCanvas.width, letterParticle.tempCanvas.height);
             letterParticle.tempContext.textAlign = 'center';
             letterParticle.tempContext.textBaseline = 'middle';
@@ -61,22 +61,22 @@
             let imgData = letterParticle.tempContext.getImageData(0, 0, letterParticle.tempCanvas.width, letterParticle.tempCanvas.height);
             let buffer32 = new Uint32Array(imgData.data.buffer);
             letterParticle.particlePositions = [];
-            
+
             for (let y = 0; y < letterParticle.tempCanvas.height; y += 6) {
                 for (let x = 0; x < letterParticle.tempCanvas.width; x += 6) {
                     if (buffer32[y * letterParticle.tempCanvas.width + x]) {
-                        letterParticle.particlePositions.push({x: x, y: y});
+                        letterParticle.particlePositions.push({ x: x, y: y });
                     }
                 }
             }
         },
-        createParticles: function() {
+        createParticles: function () {
             for (let i = 0; i < 1000; i++) {
                 let p = new letterParticle.Particle(letterParticle.canvas.width / 2 - 200 + Math.random() * 400, letterParticle.canvas.height / 2 - 200 + Math.random() * 400);
                 letterParticle.particles.push(p);
             }
         },
-        animate: function() {
+        animate: function () {
             requestAnimationFrame(letterParticle.animate);
             letterParticle.context.clearRect(0, 0, letterParticle.canvas.width, letterParticle.canvas.height);
             letterParticle.context.fillStyle = 'rgba(10, 10, 10, .8)';
