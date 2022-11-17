@@ -85,6 +85,7 @@ export default class LetterTransform extends Animate {
         }
       }
     }
+    console.log(this.particlePositions.length);
     return this;
   }
 
