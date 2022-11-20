@@ -4,7 +4,7 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { onMounted, ref, Ref } from 'vue';
+import { onMounted, ref, Ref, watch } from 'vue';
 import LetterTransform from '.';
 
 const props = defineProps({
@@ -21,8 +21,20 @@ const canvasRef: Ref = ref()
 const canvas = new LetterTransform(props.width, props.height);
 onMounted(() => {
   canvas.initCanvas(canvasRef.value).run();
-  // canvas.initCanvas(canvasRef.value).draw();
 });
+
+watch(
+  () => props.width,
+  () => {
+    canvas.setRect(props.width, props.height);
+  }
+);
+watch(
+  () => props.height,
+  () => {
+    canvas.setRect(props.width, props.height);
+  }
+);
 
 
 </script>

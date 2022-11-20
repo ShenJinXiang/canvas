@@ -55,7 +55,7 @@ export default class LetterTransform extends Animate {
     this.width = width;
     this.height = height;
     this.currentPosition = 0;
-    this.refreshRate = 120;
+    this.refreshRate = 100;
     this.cunrrentRate = 0;
     this.letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890'.split('');
     this.letterSize = 0;
@@ -168,11 +168,18 @@ export default class LetterTransform extends Animate {
     return this;
   }
 
-  private clearContext(context: CanvasRenderingContext2D): void {
-    if (!context) {
-      return;
+  setRect(width: number, height: number): LetterTransform {
+    this.width = width;
+    this.height = height;
+    if (this.canvas) {
+      this.canvas.width = this.width;
+      this.canvas.height = this.height;
     }
-    context.clearRect(0, 0, context.canvas.width, context.canvas.height);
+    if (this.shadeCanvas) {
+      this.shadeCanvas.width = this.width;
+      this.shadeCanvas.height = this.height;
+    }
+    this.initData();
+    return this;
   }
-
 }

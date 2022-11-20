@@ -19,7 +19,7 @@
             letterParticle.canvas.width = window.innerWidth;
             letterParticle.canvas.height = window.innerHeight;
             letterParticle.context = letterParticle.canvas.getContext('2d');
-            lettericlParte.tempCanvas = document.createElement('canvas');
+            letterParticle.tempCanvas = document.createElement('canvas');
             letterParticle.tempCanvas.width = window.innerWidth;
             letterParticle.tempCanvas.height = window.innerHeight;
             letterParticle.tempContext = letterParticle.tempCanvas.getContext('2d');
