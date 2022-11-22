@@ -58,5 +58,11 @@ export default [
     path: 'LetterTransform',
     name: 'LetterTransform',
     component: () => import('@/views/page/LetterTransform.vue'),
+  },
+  {
+    title: '颜色转盘',
+    path: 'ColorTurntable',
+    name: 'ColorTurntable',
+    component: () => import('@/views/page/animation/ColorTurntable.vue'),
   }
 ];
