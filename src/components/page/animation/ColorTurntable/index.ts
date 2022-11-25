@@ -20,11 +20,17 @@ class ColorItem {
     this.fillStyle = fillStyle;
   }
 
-  draw(context: CanvasRenderingContext2D | null) {
+  draw(context: CanvasRenderingContext2D | null, hasShadow: boolean = false) {
     if (!context) {
       return;
     }
     context.save();
+    if (hasShadow) {
+      context.shadowColor = 'rgba(0, 0, 0, 0.2)'
+      context.shadowOffsetX = 0;
+      context.shadowOffsetY = 0;
+      context.shadowBlur = this.oRadius * 0.4;
+    }
     context.beginPath();
     context.arc(0, 0, this.iRadius, this.sAngle, this.eAngle, false);
     context.lineTo(Math.cos(this.eAngle) * this.oRadius, Math.sin(this.eAngle) * this.oRadius);
@@ -42,7 +48,7 @@ export default class ColorTurntable extends Animate {
   height: number;
   option: IOption = {
     backgroundColor: '#f1f1f1',
-    colorNums: 4,
+    colorNums: 3,
     outer: 0.4,
     inner: 0.25
   };
@@ -53,8 +59,9 @@ export default class ColorTurntable extends Animate {
   angleStep: number = Math.PI / 180;
   innerAngle: number = 0;
   outerAngle: number = 0;
-  innerAngleSpeed: number = Math.PI / 60;
-  outerAngleSpeed: number = -Math.PI / 180;
+  angleSpeed: number = Math.PI / 360;
+  innerAngleSpeeds: number = 0;
+  outerAngleSpeeds: number = 0;
   constructor(width: number, height: number) {
     super();
     this.width = width;
@@ -62,7 +69,7 @@ export default class ColorTurntable extends Animate {
     this.initData();
   }
 
-  private initData(): ColorTurntable {
+  private initData(): this {
     const rectWidth = Math.min(this.width, this.height);
     this.innerRadius = rectWidth * this.option.inner;
     this.outerRadius = rectWidth * this.option.outer;
@@ -74,12 +81,11 @@ export default class ColorTurntable extends Animate {
       this.outerItems.push(new ColorItem(angleStep * i, angleStep * (i + 1), this.innerRadius, this.outerRadius, `hsla(${colorStep * i}, 100%, 50%, 1)`));
       this.innerItems.push(new ColorItem(angleStep * i, angleStep * (i + 1), 0, this.innerRadius, `hsla(${colorStep * i}, 100%, 50%, 1)`));
     }
-    // this.innerItems.push(new ColorItem(0, Math.PI / 6, 0, this.innerRadius, 'red'));
 
     return this;
   }
 
-  initCanvas(canvas: HTMLCanvasElement): ColorTurntable {
+  initCanvas(canvas: HTMLCanvasElement): this {
     this.canvas = canvas;
     this.canvas.width = this.width;
     this.canvas.height = this.height;
@@ -88,8 +94,8 @@ export default class ColorTurntable extends Animate {
   }
 
   update(): void {
-    this.outerAngle += this.outerAngleSpeed;
-    this.innerAngle += this.innerAngleSpeed;
+    this.outerAngle -= this.outerAngleSpeeds * this.angleSpeed;
+    this.innerAngle += this.innerAngleSpeeds * this.angleSpeed;
   }
 
   draw(): void {
@@ -119,11 +125,10 @@ export default class ColorTurntable extends Animate {
     }
     this.context.save();
     this.context.rotate(this.innerAngle);
-    this.innerItems.forEach((item) => item.draw(this.context));
+    this.innerItems.forEach((item) => item.draw(this.context, true));
     this.context.restore();
   }
-
-  private clear(): ColorTurntable {
+  private clear(): this {
     if (!this.canvas || !this.context) {
       return this;
     }
