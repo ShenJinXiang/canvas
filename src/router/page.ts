@@ -64,5 +64,11 @@ export default [
     path: 'ColorTurntable',
     name: 'ColorTurntable',
     component: () => import('@/views/page/animation/ColorTurntable.vue'),
+  },
+  {
+    title: '象棋',
+    path: 'ChineseChess',
+    name: 'ChineseChess',
+    component: () => import('@/views/page/game/ChineseChess.vue'),
   }
 ];
