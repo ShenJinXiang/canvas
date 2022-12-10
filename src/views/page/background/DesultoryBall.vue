@@ -22,7 +22,7 @@
   </div>
 </template>
 <script lang="ts" setup>
-import DesultoryBall from '@/components/page/2020/DesultoryBall/index.vue';
+import DesultoryBall from '@/components/page/background/DesultoryBall/index.vue';
 import { reactive, ref } from 'vue';
 
 const showContro = ref(false);

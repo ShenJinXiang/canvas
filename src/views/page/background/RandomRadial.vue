@@ -1,11 +1,11 @@
 <template>
   <div>
-    <color-particle 
+    <random-radial
       :width="controForm.width"
       :height="controForm.height"
-      :particle-number="controForm.particleNumber"
+      :line-number="controForm.lineNumber"
       @click="showContro = true"
-    />
+    ></random-radial>
     <el-drawer v-model="showContro" title="设置" :direction="direction">
       <el-form :module="controForm" label-width="120px">
         <el-form-item label="宽" prop="width">
@@ -14,15 +14,15 @@
         <el-form-item label="高" prop="height">
           <el-slider v-model="controForm.height" :min="maxHeight / 2" :max="maxHeight" />
         </el-form-item>
-        <el-form-item label="小球数量" prop="particleNumber">
-          <el-input-number v-model="controForm.particleNumber" :min="20" :max="200" />
+        <el-form-item label="射线数量" prop="lineNumber">
+          <el-input-number v-model="controForm.lineNumber" :min="1" :max="20" />
         </el-form-item>
       </el-form>
     </el-drawer>
   </div>
 </template>
 <script lang="ts" setup>
-import ColorParticle from '@/components/page/2020/ColorParticle/index.vue';
+import RandomRadial from '@/components/page/background/RandomRadial/indev.vue';
 import { reactive, ref } from 'vue';
 
 const showContro = ref(false);
@@ -32,6 +32,6 @@ const maxHeight = window.innerHeight - 40;
 const controForm = reactive({
   width: maxWidth,
   height: maxHeight,
-  particleNumber: 120
+  lineNumber: 5
 });
 </script>
