@@ -67,8 +67,14 @@ export default [
   },
   {
     title: '象棋',
-    path: 'ChineseChess',
+    path: 'game/ChineseChess',
     name: 'ChineseChess',
     component: () => import('@/views/page/game/ChineseChess.vue'),
-  }
+  },
+  {
+    title: '星空背景',
+    path: 'background/Starry',
+    name: 'Starry',
+    component: () => import('@/views/page/background/Starry.vue'),
+  },
 ];

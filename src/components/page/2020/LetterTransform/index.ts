@@ -35,7 +35,7 @@ export default class LetterTransform extends Animate {
   height: number;
   option: IOption = {
     backgroundColor: '#303133',
-    letterColor: '#67C23A',
+    letterColor: 'red',
     particleSize: 3.5
   };
   letterSize: number;
@@ -57,7 +57,7 @@ export default class LetterTransform extends Animate {
     this.currentPosition = 0;
     this.refreshRate = 100;
     this.cunrrentRate = 0;
-    this.letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890'.split('');
+    this.letters = '申浩勋王娟我爱你ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890'.split('');
     this.letterSize = 0;
     this.particlePositions = [];
     this.particles = [];
@@ -67,7 +67,7 @@ export default class LetterTransform extends Animate {
 
   private initData() {
     this.letterSize = Math.min(this.width, this.height) * 0.6;
-    const particlesLength = Math.round(this.letterSize / this.particleOuterSize) * Math.round(this.letterSize * 0.5 / this.particleOuterSize);
+    const particlesLength = Math.round(this.letterSize / this.particleOuterSize) * Math.round(this.letterSize * 0.8 / this.particleOuterSize);
     for (let i = 0; i < particlesLength; i++) {
       this.particles.push(new Particle(
         random(this.width * 0.4, this.width * 0.6),
@@ -129,7 +129,7 @@ export default class LetterTransform extends Animate {
     this.shadeContext.textAlign = 'center';
     this.shadeContext.textBaseline = 'middle';
     this.shadeContext.fillStyle = 'red';
-    this.shadeContext.font = `italic bold ${this.letterSize}px Noto Serif`;
+    this.shadeContext.font = `bold ${this.letterSize}px Noto Serif`;
     this.shadeContext.fillText(this.letters[this.currentPosition], this.shadeCanvas.width / 2, this.shadeCanvas.height / 2);
     let imgData = this.shadeContext.getImageData(0, 0, this.shadeCanvas.width, this.shadeCanvas.height);
     let buffer32 = new Uint32Array(imgData.data.buffer);
