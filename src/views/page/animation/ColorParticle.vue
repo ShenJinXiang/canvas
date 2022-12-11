@@ -22,7 +22,7 @@
   </div>
 </template>
 <script lang="ts" setup>
-import ColorParticle from '@/components/page/background/ColorParticle/index.vue';
+import ColorParticle from '@/components/page/animation/ColorParticle/index.vue';
 import { reactive, ref } from 'vue';
 
 const showContro = ref(false);

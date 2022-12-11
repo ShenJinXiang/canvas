@@ -4,5 +4,5 @@
   </div>
 </template>
 <script lang="ts" setup>
-import ChineseChessBoard from '@/components/page/2020/ChineseChessBoard/index.vue';
+import ChineseChessBoard from '@/components/page/stillness/ChineseChessBoard/index.vue';
 </script>

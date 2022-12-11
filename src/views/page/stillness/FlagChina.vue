@@ -15,7 +15,7 @@
   </div>
 </template>
 <script lang="ts" setup>
-import FlagChina from "@/components/page/2020/FlagChina/index.vue";
+import FlagChina from "@/components/page/stillness/FlagChina/index.vue";
 import { ref, Ref } from "vue";
 
 const showContro = ref(false);

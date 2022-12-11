@@ -68,7 +68,7 @@
   </div>
 </template>
 <script lang="ts" setup>
-import EightDiagrams from '@/components/page/2020/EightDiagrams/index.vue';
+import EightDiagrams from '@/components/page/animation/EightDiagrams/index.vue';
 import { reactive, ref } from 'vue';
 
 const showContro = ref(false);

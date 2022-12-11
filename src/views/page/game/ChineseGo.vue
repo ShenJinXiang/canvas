@@ -4,5 +4,5 @@
   </div>
 </template>
 <script lang="ts" setup>
-import ChineseGo from '@/components/page/2022/ChineseGo/index.vue';
+import ChineseGo from '@/components/page/game/ChineseGo/index.vue';
 </script>

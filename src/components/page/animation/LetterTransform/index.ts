@@ -35,7 +35,7 @@ export default class LetterTransform extends Animate {
   height: number;
   option: IOption = {
     backgroundColor: '#303133',
-    letterColor: 'red',
+    letterColor: '#67C23A',
     particleSize: 3.5
   };
   letterSize: number;
@@ -57,7 +57,7 @@ export default class LetterTransform extends Animate {
     this.currentPosition = 0;
     this.refreshRate = 100;
     this.cunrrentRate = 0;
-    this.letters = '申浩勋王娟我爱你ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890'.split('');
+    this.letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyz1234567890'.split('');
     this.letterSize = 0;
     this.particlePositions = [];
     this.particles = [];
@@ -129,7 +129,7 @@ export default class LetterTransform extends Animate {
     this.shadeContext.textAlign = 'center';
     this.shadeContext.textBaseline = 'middle';
     this.shadeContext.fillStyle = 'red';
-    this.shadeContext.font = `bold ${this.letterSize}px Noto Serif`;
+    this.shadeContext.font = `italic bold ${this.letterSize}px Noto Serif`;
     this.shadeContext.fillText(this.letters[this.currentPosition], this.shadeCanvas.width / 2, this.shadeCanvas.height / 2);
     let imgData = this.shadeContext.getImageData(0, 0, this.shadeCanvas.width, this.shadeCanvas.height);
     let buffer32 = new Uint32Array(imgData.data.buffer);

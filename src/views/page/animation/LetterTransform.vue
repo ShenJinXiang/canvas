@@ -4,7 +4,7 @@
   </div>
 </template>
 <script lang="ts" setup>
-import LetterTransform from '@/components/page/2020/LetterTransform/index.vue';
+import LetterTransform from '@/components/page/animation/LetterTransform/index.vue';
 import { useWindowSize } from '@vueuse/core';
 
 const { width, height } = useWindowSize();

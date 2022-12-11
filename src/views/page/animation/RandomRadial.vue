@@ -22,7 +22,7 @@
   </div>
 </template>
 <script lang="ts" setup>
-import RandomRadial from '@/components/page/background/RandomRadial/indev.vue';
+import RandomRadial from '@/components/page/animation/RandomRadial/indev.vue';
 import { reactive, ref } from 'vue';
 
 const showContro = ref(false);

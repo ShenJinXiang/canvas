@@ -33,7 +33,7 @@
   </div>
 </template>
 <script lang="ts" setup>
-import PenExercisePaper from "@/components/page/2020/PenExercisePaper/index.vue";
+import PenExercisePaper from "@/components/page/stillness/PenExercisePaper/index.vue";
 import { reactive, ref } from "vue";
 
 const showContro = ref(false);
