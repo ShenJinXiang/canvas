@@ -77,4 +77,10 @@ export default [
     name: 'Starry',
     component: () => import('@/views/page/animation/Starry.vue'),
   },
+  {
+    title: '七巧板动画',
+    path: 'animation/SevenPiecePuzzleAnimation',
+    name: 'SevenPiecePuzzleAnimation',
+    component: () => import('@/views/page/animation/SevenPiecePuzzleAnimation.vue'),
+  },
 ];
