@@ -1,5 +1,13 @@
 import Animate from "@/lib/Animate";
 
+const { PI } = Math.PI;
+const _90_DEG = PI / 2;
+const _135_DEG = 3 * PI / 4;
+const _180_DEG = PI;
+const _225_DEG = 5 * PI / 4;
+const _270_DEG = 3 * PI / 2;
+const SQRT_2 = Math.sqrt(2);
+const SQRT_2_HALF = Math.sqrt(2) / 2;
 interface PiecePosition {
   show?: boolean;
   sx: number;
@@ -162,8 +170,8 @@ export default class SevenPiecePuzzleAnimation extends Animate {
     this.pieces[7].draw(this.context, { sx: -this.size / Math.sqrt(2), sy: 3 * this.size / Math.sqrt(2), rotate: 0 });
     this.context.restore();
 
-    this.pieces[6].draw(this.context, { sx: 200, sy: 200, rotate: 0 });
-    this.pieces[7].draw(this.context, { sx: 400, sy: 200, rotate: 0 });
+    // this.pieces[6].draw(this.context, { sx: 200, sy: 200, rotate: 0 });
+    // this.pieces[7].draw(this.context, { sx: 400, sy: 200, rotate: 0 });
     // this.pieces[0].draw(this.context, { sx: 50, sy: 50, rotate: 0 });
     // this.pieces[1].draw(this.context, { sx: 300, sy: 50, rotate: 0 });
     // this.pieces[2].draw(this.context, { sx: 550, sy: 50, rotate: 0 });
