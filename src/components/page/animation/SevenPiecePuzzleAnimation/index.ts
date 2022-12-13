@@ -61,12 +61,11 @@ class Parallelogram1 extends Piece {
     super(size, fillStyle);
   }
   createPath(context: CanvasRenderingContext2D) {
-    context.transform(Math.sqrt(2), Math.PI / 4, 0, 1, 0, 0);
     context.beginPath();
-    context.moveTo(0, -this.size);
+    context.moveTo(-this.size / Math.sqrt(2), -this.size / Math.sqrt(2));
     context.lineTo(0, 0);
-    context.lineTo(this.size, 0);
-    context.lineTo(this.size, -this.size);
+    context.lineTo(this.size * Math.sqrt(2), 0);
+    context.lineTo(this.size / Math.sqrt(2), -this.size / Math.sqrt(2));
     context.closePath();
   }
 }
@@ -75,12 +74,11 @@ class Parallelogram2 extends Piece {
     super(size, fillStyle);
   }
   createPath(context: CanvasRenderingContext2D) {
-    context.transform(Math.sqrt(2), -Math.PI / 4, 0, 1, 0, 0);
     context.beginPath();
-    context.moveTo(0, -this.size);
+    context.moveTo(-this.size / Math.sqrt(2), this.size / Math.sqrt(2));
     context.lineTo(0, 0);
-    context.lineTo(this.size, 0);
-    context.lineTo(this.size, -this.size);
+    context.lineTo(this.size * Math.sqrt(2), 0);
+    context.lineTo(this.size / Math.sqrt(2), this.size / Math.sqrt(2));
     context.closePath();
   }
 }
@@ -97,15 +95,28 @@ export default class SevenPiecePuzzleAnimation extends Animate {
   context: CanvasRenderingContext2D | null = null;
   width: number;
   height: number;
+  size: number;
+  pieces: Piece[] = [];
   // 粒子数量
   constructor(width: number, height: number) {
     super();
     this.width = width;
     this.height = height;
+    this.size = 100;
     this.initData();
   }
 
   private initData(): this {
+    this.pieces = [
+      new Triangle(this.size * 2, 'hsla(50, 75%, 60%, 1)'),
+      new Triangle(this.size * 2, 'hsla(270, 75%, 60%, 1)'),
+      new Triangle(this.size, 'hsla(230, 75%, 60%, 1)'),
+      new Triangle(this.size, 'hsla(120, 75%, 60%, 1)'),
+      new Triangle(this.size * Math.sqrt(2), 'hsla(40, 75%, 60%, 1)'),
+      new Square(this.size, 'hsla(190, 75%, 60%, 1)'),
+      new Parallelogram1(this.size, 'hsla(0, 75%, 60%, 1)'),
+      new Parallelogram2(this.size, 'hsla(0, 75%, 60%, 1)'),
+    ];
     return this;
   }
   public initCanvas(canvas: HTMLCanvasElement): this {
@@ -139,14 +150,31 @@ export default class SevenPiecePuzzleAnimation extends Animate {
       return this;
     }
     this.clear();
-    const t1 = new Triangle(100, 'hsla(0, 75%, 60%, 1)');
-    t1.draw(this.context, { sx: 100, sy: 100, rotate: Math.PI / 2 });
-    const s1 = new Square(100, 'hsla(80, 75%, 60%, 1)');
-    s1.draw(this.context, { sx: 400, sy: 100, rotate: Math.PI / 2 });
-    const p1 = new Parallelogram1(100, 'hsla(180, 75%, 60%, 1)');
-    p1.draw(this.context, { sx: 100, sy: 400, rotate: 0 });
-    const p2 = new Parallelogram2(100, 'hsla(270, 75%, 60%, 1)');
-    p2.draw(this.context, { sx: 300, sy: 400, rotate: 0 });
+    this.context.save();
+    this.context.translate(this.width / 2, this.height * 0.8);
+    this.context.scale(1, -1);
+    this.pieces[0].draw(this.context, { sx: 0, sy: this.size * Math.sqrt(2), rotate: Math.PI * 0.75 });
+    this.pieces[1].draw(this.context, { sx: 0, sy: this.size * Math.sqrt(2), rotate: -Math.PI * 0.75 });
+    this.pieces[2].draw(this.context, { sx: this.size / Math.sqrt(2), sy: this.size / Math.sqrt(2), rotate: -Math.PI / 4 });
+    this.pieces[3].draw(this.context, { sx: 0, sy: this.size * Math.sqrt(2), rotate: Math.PI / 4 });
+    this.pieces[4].draw(this.context, { sx: this.size * Math.sqrt(2), sy: 2 * this.size * Math.sqrt(2), rotate: Math.PI });
+    this.pieces[5].draw(this.context, { sx: 0, sy: this.size * Math.sqrt(2), rotate: -Math.PI / 4 });
+    this.pieces[7].draw(this.context, { sx: -this.size / Math.sqrt(2), sy: 3 * this.size / Math.sqrt(2), rotate: 0 });
+    this.context.restore();
+
+    this.pieces[6].draw(this.context, { sx: 200, sy: 200, rotate: 0 });
+    this.pieces[7].draw(this.context, { sx: 400, sy: 200, rotate: 0 });
+    // this.pieces[0].draw(this.context, { sx: 50, sy: 50, rotate: 0 });
+    // this.pieces[1].draw(this.context, { sx: 300, sy: 50, rotate: 0 });
+    // this.pieces[2].draw(this.context, { sx: 550, sy: 50, rotate: 0 });
+    // this.pieces[3].draw(this.context, { sx: 700, sy: 50, rotate: 0 });
+    // this.pieces[4].draw(this.context, { sx: 50, sy: 300, rotate: 0 });
+    // this.pieces[5].draw(this.context, { sx: 300, sy: 300, rotate: 0 });
+    // this.pieces[6].draw(this.context, { sx: 550, sy: 300, rotate: 0 });
+    // this.pieces[7].draw(this.context, { sx: 700, sy: 300, rotate: 0 });
+
+    // this.pieces[6].draw(this.context, { sx: 550, sy: 300, rotate: Math.PI / 2 });
+    // this.pieces[7].draw(this.context, { sx: 700, sy: 300, rotate: Math.PI / 2 });
   }
 
 }
