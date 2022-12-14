@@ -53,7 +53,7 @@ class Piece {
     context.fill();
 
     context.strokeStyle = '#fff';
-    context.lineWidth = 4;
+    context.lineWidth = 3;
     // context.lineJoin = 'bevel';
     context.lineJoin = 'round';
     this.createPath(context);
@@ -152,21 +152,23 @@ export default class SevenPiecePuzzleAnimation extends Animate {
   private initCombinations(): this {
     this.combinations = [
       new Combination('Default', 'default practice', [{ sx: 0, sy: SQRT_2, rotate: PI_3_4 }, { sx: 0, sy: SQRT_2, rotate: -PI_3_4 }, { sx: SQRT_2_HALF, sy: SQRT_2_HALF, rotate: -PI_4 }, { sx: 0, sy: SQRT_2, rotate: PI_4 }, { sx: SQRT_2, sy: 2 * SQRT_2, rotate: PI }, { sx: 0, sy: SQRT_2, rotate: -PI_4 }, { sx: SQRT_2_HALF, sy: 3 * SQRT_2_HALF, rotate: 0, hide: true }, { sx: -SQRT_2_HALF, sy: 3 * SQRT_2_HALF, rotate: 0 }]),
-      new Combination('Ship', 'Transport ship practice', [{ sx: 0, sy: SQRT_2, rotate: -PI_3_4 }, { sx: -SQRT_2, sy: 0, rotate: PI_4 }, { sx: 3 * SQRT_2_HALF, sy: SQRT_2_HALF, rotate: PI_4 }, { sx: SQRT_2_HALF, sy: SQRT_2_HALF, rotate: PI_4 }, { sx: SQRT_2, sy: SQRT_2 + 1, rotate: -PI_3_4 }, { sx: SQRT_2_HALF, sy: SQRT_2_HALF, rotate: -PI_4 }, { sx: -SQRT_2, sy: 2 * SQRT_2, rotate: PI_2, hide: true }, { sx: -SQRT_2_HALF, sy: 3 * SQRT_2_HALF, rotate: PI_2 }]),
       new Combination('1', 'Number 1 practice', [{ sx: 0, sy: 2 * SQRT_2, rotate: -PI_4 }, { sx: SQRT_2, sy: SQRT_2, rotate: PI_3_4 }, { sx: -SQRT_2_HALF, sy: 5 * SQRT_2_HALF, rotate: -PI_4 }, { sx: SQRT_2, sy: 3 * SQRT_2, rotate: PI_3_4 }, { sx: SQRT_2, sy: 0, rotate: PI_2 }, { sx: 0, sy: 2 * SQRT_2, rotate: PI_3_4 }, { sx: SQRT_2_HALF, sy: 5 * SQRT_2_HALF, rotate: PI_2, hide: true }, { sx: SQRT_2_HALF, sy: 5 * SQRT_2_HALF, rotate: PI_2 }]),
+      new Combination('2', 'Number 2 practice', [{ sx: 0, sy: 0, rotate: PI_2 }, { sx: SQRT_2, sy: 1.5 + SQRT_2, rotate: PI_3_4 }, { sx: -1, sy: 0.5 + 2 * SQRT_2, rotate: PI_2 }, { sx: 0, sy: 0, rotate: 0 }, { sx: 1, sy: 0, rotate: PI_4 }, { sx: 0, sy: 0.5 + 2 * SQRT_2, rotate: PI_2 }, { sx: 0, sy: 0.5 + 2 * SQRT_2, rotate: 0, hide: true }, { sx: -SQRT_2, sy: 0.5 + 3 * SQRT_2_HALF, rotate: 0 }]),
+      new Combination('3', 'Number 3 practice', [{ sx: 0.5 + SQRT_2, sy: SQRT_2, rotate: PI_3_4 }, { sx: 1.5 - SQRT_2, sy: 3 * SQRT_2 + 1, rotate: PI_5_4 }, { sx: 0.5, sy: 2 * SQRT_2, rotate: PI }, { sx: -1.5, sy: 2, rotate: -PI_2 }, { sx: -1.5, sy: 1, rotate: -PI_4 }, { sx: -0.5, sy: 0, rotate: 0 }, { sx: 0.5, sy: 2 * SQRT_2, rotate: 0, hide: true }, { sx: 0.5, sy: 2 * SQRT_2, rotate: PI_4 }]),
+      new Combination('Ship', 'Transport ship practice', [{ sx: 0, sy: SQRT_2, rotate: -PI_3_4 }, { sx: -SQRT_2, sy: 0, rotate: PI_4 }, { sx: 3 * SQRT_2_HALF, sy: SQRT_2_HALF, rotate: PI_4 }, { sx: SQRT_2_HALF, sy: SQRT_2_HALF, rotate: PI_4 }, { sx: SQRT_2, sy: SQRT_2 + 1, rotate: -PI_3_4 }, { sx: SQRT_2_HALF, sy: SQRT_2_HALF, rotate: -PI_4 }, { sx: -SQRT_2, sy: 2 * SQRT_2, rotate: PI_2, hide: true }, { sx: -SQRT_2_HALF, sy: 3 * SQRT_2_HALF, rotate: PI_2 }]),
       new Combination('Rabbit', 'Animal Rabbit practice', [{ sx: -SQRT_2, sy: 2, rotate: -PI_2 }, { sx: 2 - SQRT_2, sy: 2, rotate: PI_2 }, { sx: 2 - SQRT_2 + SQRT_2_HALF, sy: 2, rotate: PI_3_4 }, { sx: SQRT_2_HALF, sy: SQRT_2_HALF, rotate: PI_3_4 }, { sx: 0, sy: 0, rotate: PI_2 }, { sx: 2 - SQRT_2, sy: 3.75, rotate: 0 }, { sx: 2 - SQRT_2, sy: 4.75, rotate: PI, hide: true }, { sx: 2 - 2 * SQRT_2, sy: 4.75, rotate: 0 }])
     ];
     return this;
   }
   private initData(): this {
     this.pieces = [
-      new Triangle(this.size * 2, 'hsla(50, 75%, 60%, 1)'), // 黄色大三角
-      new Triangle(this.size * 2, 'hsla(270, 75%, 60%, 1)'), // 紫色大三角
-      new Triangle(this.size, 'hsla(230, 75%, 60%, 1)'), // 蓝色小三角
-      new Triangle(this.size, 'hsla(120, 75%, 60%, 1)'), // 绿色小三角
-      new Triangle(this.size * SQRT_2, 'hsla(30, 75%, 60%, 1)'), // 橙色中三角
-      new Square(this.size, 'hsla(190, 75%, 60%, 1)'), // 正方形
-      new Parallelogram1(this.size, 'hsla(0, 75%, 60%, 1)'), // 平行四边形1
+      new Triangle(this.size * 2, 'hsla(50, 75%, 60%, 1)'), // 黄色大三角 直角边: 2 斜边: 2 * SQRT_2  斜边高: SQRT_2
+      new Triangle(this.size * 2, 'hsla(270, 75%, 60%, 1)'), // 紫色大三角 直角边: 2 斜边: 2 * SQRT_2  斜边高: SQRT_2
+      new Triangle(this.size, 'hsla(230, 75%, 60%, 1)'), // 蓝色小三角 直角边: 1 斜边: SQRT_2  斜边高: SQRT_2_HALF
+      new Triangle(this.size, 'hsla(120, 75%, 60%, 1)'), // 绿色小三角 直角边: 1 斜边: SQRT_2  斜边高: SQRT_2_HALF
+      new Triangle(this.size * SQRT_2, 'hsla(30, 75%, 60%, 1)'), // 橙色中三角  直角边: SQRT_2 斜边: 2  斜边高: 1
+      new Square(this.size, 'hsla(190, 75%, 60%, 1)'), // 正方形 边长 1 对角线: SQRT_2
+      new Parallelogram1(this.size, 'hsla(0, 75%, 60%, 1)'), // 平行四边形1  短边 1 长边 SQRT_2 短高 SQRT_2_HALF 长高 1
       new Parallelogram2(this.size, 'hsla(0, 75%, 60%, 1)'), // 平行四边形2
     ];
     return this;
