@@ -16,19 +16,34 @@ interface PiecePosition {
   rotate: number;
 }
 class Piece {
+  sx: number;
+  sy: number;
+  rotate: number;
+  hide: boolean;
   size: number;
   fillStyle: string;
-  constructor(size: number, fillStyle: string) {
+  constructor(size: number, fillStyle: string, sx: number = 0, sy: number = 0, rotate: number = 0, hide: boolean = false) {
     this.size = size;
     this.fillStyle = fillStyle;
+    this.sx = sx;
+    this.sy = sy;
+    this.rotate = rotate;
+    this.hide = hide;
   }
-  draw(context: CanvasRenderingContext2D | null, { sx, sy, rotate, hide }: PiecePosition) {
-    if (!context || hide) {
+  position({ sx, sy, rotate, hide = false }: PiecePosition): this {
+    this.sx = sx;
+    this.sy = sy;
+    this.rotate = rotate;
+    this.hide = hide;
+    return this;
+  }
+  draw(context: CanvasRenderingContext2D | null) {
+    if (!context || this.hide) {
       return;
     }
     context.save();
-    context.translate(sx, sy);
-    context.rotate(rotate);
+    context.translate(this.sx, this.sy);
+    context.rotate(this.rotate);
     context.fillStyle = this.fillStyle;
     context.shadowColor = 'rgba(0, 0, 0, 0.3)'
     context.shadowOffsetX = 0;
@@ -38,7 +53,7 @@ class Piece {
     context.fill();
 
     context.strokeStyle = '#fff';
-    context.lineWidth = 2;
+    context.lineWidth = 4;
     // context.lineJoin = 'bevel';
     context.lineJoin = 'round';
     this.createPath(context);
@@ -100,8 +115,12 @@ class Parallelogram2 extends Piece {
 }
 
 class Combination {
+  text: string;
+  description: string;
   posis: PiecePosition[];
-  constructor(positions: PiecePosition[]) {
+  constructor(text: string, description: string, positions: PiecePosition[]) {
+    this.text = text;
+    this.description = description;
     this.posis = positions;
   }
 }
@@ -112,22 +131,30 @@ export default class SevenPiecePuzzleAnimation extends Animate {
   width: number;
   height: number;
   size: number;
+  currentCombinationIndex: number;
+  currentRate: number;
+  refreshRate: number;
   pieces: Piece[] = [];
-  combinations: PiecePosition[][] = [];
+  combinations: Combination[] = [];
   // 粒子数量
   constructor(width: number, height: number) {
     super();
     this.width = width;
     this.height = height;
-    this.size = 100;
+    this.size = 80;
+    this.currentCombinationIndex = 0;
+    this.currentRate = 0;
+    this.refreshRate = 110;
     this.initCombinations();
     this.initData();
   }
 
   private initCombinations(): this {
     this.combinations = [
-      [{ sx: 0, sy: SQRT_2, rotate: PI_3_4 }, { sx: 0, sy: SQRT_2, rotate: -PI_3_4 }, { sx: SQRT_2_HALF, sy: SQRT_2_HALF, rotate: -PI_4 }, { sx: 0, sy: SQRT_2, rotate: PI_4 }, { sx: SQRT_2, sy: 2 * SQRT_2, rotate: PI }, { sx: 0, sy: SQRT_2, rotate: -PI_4 }, { sx: SQRT_2_HALF, sy: 3 * SQRT_2_HALF, rotate: 0, hide: true }, { sx: -SQRT_2_HALF, sy: 3 * SQRT_2_HALF, rotate: 0 }],
-      [{ sx: 0, sy: SQRT_2, rotate: -PI_3_4 }, { sx: -SQRT_2, sy: 0, rotate: PI_4 }, { sx: 3 * SQRT_2_HALF, sy: SQRT_2_HALF, rotate: PI_4 }, { sx: SQRT_2_HALF, sy: SQRT_2_HALF, rotate: PI_4 }, { sx: SQRT_2, sy: SQRT_2 + 1, rotate: -PI_3_4 }, { sx: SQRT_2_HALF, sy: SQRT_2_HALF, rotate: -PI_4 }, { sx: -SQRT_2, sy: 2 * SQRT_2, rotate: PI_2, hide: true }, { sx: -SQRT_2_HALF, sy: 3 * SQRT_2_HALF, rotate: PI_2 }]
+      new Combination('Default', 'default practice', [{ sx: 0, sy: SQRT_2, rotate: PI_3_4 }, { sx: 0, sy: SQRT_2, rotate: -PI_3_4 }, { sx: SQRT_2_HALF, sy: SQRT_2_HALF, rotate: -PI_4 }, { sx: 0, sy: SQRT_2, rotate: PI_4 }, { sx: SQRT_2, sy: 2 * SQRT_2, rotate: PI }, { sx: 0, sy: SQRT_2, rotate: -PI_4 }, { sx: SQRT_2_HALF, sy: 3 * SQRT_2_HALF, rotate: 0, hide: true }, { sx: -SQRT_2_HALF, sy: 3 * SQRT_2_HALF, rotate: 0 }]),
+      new Combination('Ship', 'Transport ship practice', [{ sx: 0, sy: SQRT_2, rotate: -PI_3_4 }, { sx: -SQRT_2, sy: 0, rotate: PI_4 }, { sx: 3 * SQRT_2_HALF, sy: SQRT_2_HALF, rotate: PI_4 }, { sx: SQRT_2_HALF, sy: SQRT_2_HALF, rotate: PI_4 }, { sx: SQRT_2, sy: SQRT_2 + 1, rotate: -PI_3_4 }, { sx: SQRT_2_HALF, sy: SQRT_2_HALF, rotate: -PI_4 }, { sx: -SQRT_2, sy: 2 * SQRT_2, rotate: PI_2, hide: true }, { sx: -SQRT_2_HALF, sy: 3 * SQRT_2_HALF, rotate: PI_2 }]),
+      new Combination('1', 'Number 1 practice', [{ sx: 0, sy: 2 * SQRT_2, rotate: -PI_4 }, { sx: SQRT_2, sy: SQRT_2, rotate: PI_3_4 }, { sx: -SQRT_2_HALF, sy: 5 * SQRT_2_HALF, rotate: -PI_4 }, { sx: SQRT_2, sy: 3 * SQRT_2, rotate: PI_3_4 }, { sx: SQRT_2, sy: 0, rotate: PI_2 }, { sx: 0, sy: 2 * SQRT_2, rotate: PI_3_4 }, { sx: SQRT_2_HALF, sy: 5 * SQRT_2_HALF, rotate: PI_2, hide: true }, { sx: SQRT_2_HALF, sy: 5 * SQRT_2_HALF, rotate: PI_2 }]),
+      new Combination('Rabbit', 'Animal Rabbit practice', [{ sx: -SQRT_2, sy: 2, rotate: -PI_2 }, { sx: 2 - SQRT_2, sy: 2, rotate: PI_2 }, { sx: 2 - SQRT_2 + SQRT_2_HALF, sy: 2, rotate: PI_3_4 }, { sx: SQRT_2_HALF, sy: SQRT_2_HALF, rotate: PI_3_4 }, { sx: 0, sy: 0, rotate: PI_2 }, { sx: 2 - SQRT_2, sy: 3.75, rotate: 0 }, { sx: 2 - SQRT_2, sy: 4.75, rotate: PI, hide: true }, { sx: 2 - 2 * SQRT_2, sy: 4.75, rotate: 0 }])
     ];
     return this;
   }
@@ -168,6 +195,35 @@ export default class SevenPiecePuzzleAnimation extends Animate {
   }
 
   update() {
+    this.currentRate++;
+    if (this.currentRate >= this.refreshRate) {
+      this.currentCombinationIndex++;
+      if (this.currentCombinationIndex >= this.combinations.length) {
+        this.currentCombinationIndex = 0;
+      }
+      this.currentRate = 0;
+    }
+    this.pieces.forEach((piece, index) => {
+      const combination = this.combinations[this.currentCombinationIndex];
+      if (combination.posis.length > index) {
+        const posi = combination.posis[index];
+        piece.sx += (posi.sx * this.size - piece.sx) * 0.25;
+        piece.sy += (posi.sy * this.size - piece.sy) * 0.25;
+        piece.rotate += (posi.rotate - piece.rotate) * 0.25;
+        piece.hide = posi.hide || false;
+      } else {
+        piece.hide = true;
+      }
+    });
+
+    // this.pieces.forEach((piece, index) => {
+    //   const combination = this.combinations[0];
+    //   const posi = combination.posis[index];
+    //   piece.sx = posi.sx * this.size;
+    //   piece.sy = posi.sy * this.size;
+    //   piece.rotate = posi.rotate;
+    //   piece.hide = posi.hide || false;
+    // });
   }
 
   draw() {
@@ -179,9 +235,10 @@ export default class SevenPiecePuzzleAnimation extends Animate {
     this.context.translate(this.width / 2, this.height * 0.8);
     this.context.scale(1, -1);
 
-    this.combinations[1].forEach((pos, index) => {
-      this.pieces[index].draw(this.context, { sx: pos.sx * this.size, sy: pos.sy * this.size, rotate: pos.rotate, hide: pos.hide });
-    })
+    // this.combinations[3].posis.forEach((pos, index) => {
+    //   this.pieces[index].position({ sx: pos.sx * this.size, sy: pos.sy * this.size, rotate: pos.rotate, hide: pos.hide }).draw(this.context);
+    // })
+    this.pieces.forEach((item) => item.draw(this.context));
     this.context.restore();
   }
 
