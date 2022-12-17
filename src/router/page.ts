@@ -83,4 +83,10 @@ export default [
     name: 'SevenPiecePuzzleAnimation',
     component: () => import('@/views/page/animation/SevenPiecePuzzleAnimation.vue'),
   },
+  {
+    title: '激光特效',
+    path: 'animation/LaserEffect',
+    name: 'LaserEffect',
+    component: () => import('@/views/page/animation/LaserEffect.vue'),
+  },
 ];
