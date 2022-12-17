@@ -1,4 +1,8 @@
 <template>
-  <div>激光特效</div>
+  <div>
+    <Laser-effect></Laser-effect>
+  </div>
 </template>
-<script lang="ts" setup></script>
+<script lang="ts" setup>
+import LaserEffect from '@/components/page/animation/LaserEffect/index.vue';
+</script>
