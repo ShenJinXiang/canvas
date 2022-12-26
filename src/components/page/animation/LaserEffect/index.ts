@@ -41,12 +41,13 @@ export default class LaserEffect extends Animate {
     maxV: 3,
     minV: 1
   };
-  lasterNum: number = 240;
+  lasterNum: number;
   lasters: Laster[] = [];
-  constructor(width: number, height: number) {
+  constructor(width: number, height: number, lasterNum: number) {
     super();
     this.width = width;
     this.height = height;
+    this.lasterNum = lasterNum;
     this.initData();
   }
   initData(): this {
@@ -93,6 +94,22 @@ export default class LaserEffect extends Animate {
     }
     this.clear();
     this.lasters.forEach((item) => item.draw(this.context, 1 - (this.height - item.y) / this.height * 0.8));
+  }
+
+  public setRect(width: number, height: number): this {
+    this.width = width;
+    this.height = height;
+    if (this.canvas) {
+      this.canvas.width = this.width;
+      this.canvas.height = this.height;
+    }
+    this.initData();
+    return this;
+  }
+  public setLasterNumber(lasterNumber: number): this {
+    this.lasterNum = lasterNumber;
+    this.initData();
+    return this;
   }
 
 }
