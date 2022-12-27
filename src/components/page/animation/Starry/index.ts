@@ -138,4 +138,15 @@ export default class Starry extends Animate {
     this.particles.forEach((item) => item.draw(this.context, this.option.particleColor));
   }
 
+  public setRect(width: number, height: number): this {
+    this.width = width;
+    this.height = height;
+    if (this.canvas) {
+      this.canvas.width = this.width;
+      this.canvas.height = this.height;
+    }
+    this.initData();
+    return this;
+  }
+
 }
