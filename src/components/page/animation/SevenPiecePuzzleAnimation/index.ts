@@ -192,6 +192,7 @@ export default class SevenPiecePuzzleAnimation extends Animate {
       new Combination('C', 'Letter C practice', [{ sx: -SQRT_2, sy: 1, rotate: 0 }, { sx: -SQRT_2, sy: 3, rotate: -PI_4 }, { sx: 1 + SQRT_2_HALF, sy: 3 + SQRT_2_HALF, rotate: PI_3_4 }, { sx: 1, sy: 0, rotate: PI_2 }, { sx: 0, sy: 0, rotate: PI_4 }, { sx: 0, sy: 3 + SQRT_2, rotate: -PI_2 }, { sx: 1, sy: SQRT_2, rotate: -PI_2, hide: true }, { sx: 1, sy: SQRT_2, rotate: -PI_2 }]),
       new Combination('D', 'Letter D practice', [{ sx: SQRT_2 - 1, sy: 2, rotate: PI_3_4 }, { sx: 0, sy: SQRT_2, rotate: -PI_3_4 }, { sx: SQRT_2, sy: SQRT_2, rotate: -PI_4 }, { sx: SQRT_2, sy: 2 + SQRT_2, rotate: PI }, { sx: 1 + SQRT_2, sy: 1 + SQRT_2, rotate: PI_3_4 }, { sx: SQRT_2, sy: SQRT_2, rotate: -PI_3_4 }, { sx: SQRT_2 - 1, sy: 2 + SQRT_2, rotate: PI, hide: true }, { sx: SQRT_2 - 1, sy: 2 + SQRT_2, rotate: PI }]),
       new Combination('E', 'Letter E practice', [{ sx: -2, sy: 0, rotate: 0 }, { sx: -2, sy: 4, rotate: -PI_2 }, { sx: SQRT_2_HALF, sy: SQRT_2_HALF, rotate: -PI_4 }, { sx: 1, sy: 4, rotate: PI }, { sx: -2, sy: 2, rotate: -PI_4 }, { sx: -1 + 0.1, sy: 2, rotate: -PI_4 }, { sx: 0, sy: 0, rotate: 0, hide: true }, { sx: 0, sy: 0, rotate: 0 }]),
+      new Combination('F', 'Letter F practice', [{ sx: -1.5, sy: 0, rotate: 0 }, { sx: -0.5, sy: 4, rotate: PI_4 }, { sx: SQRT_2 - 0.5, sy: 4 + SQRT_2, rotate: PI_5_4 }, { sx: -1.5, sy: 4, rotate: 0 }, { sx: -0.5, sy: 2, rotate: PI_4 }, { sx: -1.5, sy: 3, rotate: 0 }, { sx: -1.5, sy: 2, rotate: -PI_4, hide: true }, { sx: -1.5, sy: 2, rotate: -PI_4 }]),
       new Combination('1', 'Number 1 practice', [{ sx: 0, sy: 2 * SQRT_2, rotate: -PI_4 }, { sx: SQRT_2, sy: SQRT_2, rotate: PI_3_4 }, { sx: -SQRT_2_HALF, sy: 5 * SQRT_2_HALF, rotate: -PI_4 }, { sx: SQRT_2, sy: 3 * SQRT_2, rotate: PI_3_4 }, { sx: SQRT_2, sy: 0, rotate: PI_2 }, { sx: 0, sy: 2 * SQRT_2, rotate: PI_3_4 }, { sx: SQRT_2_HALF, sy: 5 * SQRT_2_HALF, rotate: PI_2, hide: true }, { sx: SQRT_2_HALF, sy: 5 * SQRT_2_HALF, rotate: PI_2 }]),
       new Combination('2', 'Number 2 practice', [{ sx: 0, sy: 0, rotate: PI_2 }, { sx: SQRT_2, sy: 1.5 + SQRT_2, rotate: PI_3_4 }, { sx: -1, sy: 0.5 + 2 * SQRT_2, rotate: PI_2 }, { sx: 0, sy: 0, rotate: 0 }, { sx: 1, sy: 0, rotate: PI_4 }, { sx: 0, sy: 0.5 + 2 * SQRT_2, rotate: PI_2 }, { sx: -SQRT_2, sy: 0.5 + 3 * SQRT_2_HALF, rotate: 0, hide: true }, { sx: -SQRT_2, sy: 0.5 + 3 * SQRT_2_HALF, rotate: 0 }]),
       new Combination('3', 'Number 3 practice', [{ sx: 0.5 + SQRT_2, sy: SQRT_2, rotate: PI_3_4 }, { sx: 1.5 - SQRT_2, sy: 3 * SQRT_2 + 1, rotate: PI_5_4 }, { sx: 0.5, sy: 2 * SQRT_2, rotate: PI }, { sx: -1.5, sy: 2, rotate: -PI_2 }, { sx: -1.5, sy: 1, rotate: -PI_4 }, { sx: -0.5, sy: 0, rotate: 0 }, { sx: 0.5, sy: 2 * SQRT_2, rotate: 0, hide: true }, { sx: 0.5, sy: 2 * SQRT_2, rotate: PI_4 }]),
@@ -277,7 +278,7 @@ export default class SevenPiecePuzzleAnimation extends Animate {
     this.context.translate(this.ox, this.oy);
     this.context.scale(1, -1);
 
-    // this.combinations[5].posis.forEach((pos, index) => {
+    // this.combinations[6].posis.forEach((pos, index) => {
     //   this.pieces[index].position({ sx: pos.sx * this.size, sy: pos.sy * this.size, rotate: pos.rotate, hide: pos.hide }).draw(this.context);
     // })
     this.pieces.forEach((item) => item.draw(this.context));
