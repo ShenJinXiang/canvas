@@ -89,4 +89,10 @@ export default [
     name: 'LaserEffect',
     component: () => import('@/views/page/animation/LaserEffect.vue'),
   },
+  {
+    title: '华容道',
+    path: 'game/HuaRongRoad',
+    name: 'HuaRongRoad',
+    component: () => import('@/views/page/game/HuaRongRoad.vue'),
+  },
 ];
