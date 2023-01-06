@@ -95,4 +95,10 @@ export default [
     name: 'HuaRongRoad',
     component: () => import('@/views/page/game/HuaRongRoad.vue'),
   },
+  {
+    title: '几何颗粒动画',
+    path: 'animation/GeometricParticle',
+    name: 'GeometricParticle',
+    component: () => import('@/views/page/animation/GeometricParticle.vue'),
+  },
 ];
