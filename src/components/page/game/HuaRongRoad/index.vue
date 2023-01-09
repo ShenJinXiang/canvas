@@ -7,7 +7,7 @@
 import { Ref, onMounted, ref } from 'vue';
 import { HuaRongRoad } from '.';
 
-const width = 400;
+const width = 150;
 const canvasRef: Ref = ref();
 const canvas = new HuaRongRoad(width);
 onMounted(() => {
