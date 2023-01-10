@@ -11,6 +11,7 @@ class Element {
   rowIndex: number = 1;
   cols: number;
   rows: number;
+  current: boolean = false;
   shadow: boolean = false;
   constructor(id: number, type: number, name: string, cols: number, rows: number, colIndex: number, rowIndex: number) {
     this.id = id;
@@ -32,16 +33,16 @@ class Element {
     }
     context.save();
     context.translate(this.colIndex * side, this.rowIndex * side);
-    context.fillStyle = '#fafafa';
+    context.fillStyle = this.current ? '#337ecc' : '#fafafa';
     if (this.shadow) {
-      context.shadowColor = 'rgba(0, 0, 0, 0.1)';
+      context.shadowColor = 'rgba(0, 0, 0, 0.2)';
       context.shadowOffsetX = 0;
       context.shadowOffsetY = 0;
       context.shadowBlur = side * 0.1;
     }
     context.fillRect(0, 0, this.cols * side, this.rows * side);
     context.lineWidth = 1;
-    context.strokeStyle = '#333';
+    context.strokeStyle = this.current ? '#fff' : '#333';
     context.strokeRect(2, 2, this.cols * side - 4, this.rows * side - 4);
     context.lineWidth = 2;
     context.strokeStyle = '#fff';
@@ -52,10 +53,10 @@ class Element {
     context.textAlign = 'center';
     context.textBaseline = 'middle';
     context.font = `${side * 0.3}px 楷体`;
-    // context.fillStyle = '#999';
-    // context.fillText(this.name, this.cols * side * 0.5, this.rows * side * 0.5);
     context.fillStyle = '#999';
-    context.strokeText(this.name, this.cols * side * 0.5, this.rows * side * 0.5);
+    context.fillText(this.name, this.cols * side * 0.5, this.rows * side * 0.5);
+    // context.strokeStyle = this.current ? '#fff' : '#999';
+    // context.strokeText(this.name, this.cols * side * 0.5, this.rows * side * 0.5);
     context.restore();
   }
 }
@@ -128,17 +129,15 @@ export class HuaRongRoad extends Animate {
   }
 
   public click(x: number, y: number): this {
-    // const postion = this.positionByPoint(x, y);
-    // console.log(postion);
     const ele = this.elementByPoint(x, y);
+    this.elements.forEach((item) => item.current = !!ele && ele.id === item.id);
     console.log(ele);
-    if (ele) {
-      ele.shadow = true;
-    }
     return this;
   }
 
   public move(x: number, y: number): this {
+    const ele = this.elementByPoint(x, y);
+    this.elements.forEach((item) => item.shadow = !!ele && ele.id === item.id);
     return this;
   }
 
