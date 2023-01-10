@@ -58,6 +58,7 @@ export class HuaRongRoad {
     backgroundColor: '#fff'
   };
   elements: Element[] = [];
+  positions: number[][] = [];
   side: number;
   constructor(side: number) {
     this.side = side;
@@ -65,7 +66,16 @@ export class HuaRongRoad {
     this.height = this.side * 6;
     this.initData();
   }
-
+  initCanvas(canvas: HTMLCanvasElement): this {
+    if (!canvas) {
+      throw new Error('初始化canvas错误：对象为空！');
+    }
+    this.canvas = canvas;
+    this.canvas.width = this.width;
+    this.canvas.height = this.height;
+    this.context = this.canvas.getContext('2d');
+    return this;
+  }
   private initData() {
     this.elements = [
       new Element(0, '曹操', 'hsla(0, 75%, 70%, 1)', 2, 2, 1, 0),
@@ -79,16 +89,20 @@ export class HuaRongRoad {
       new Element(1, '卒', 'hsla(360, 75%, 70%, 1)', 1, 1, 2, 3),
       new Element(1, '卒', 'hsla(360, 75%, 70%, 1)', 1, 1, 3, 4),
     ];
+    this.refreshData();
+    console.log(this.positions);
   }
-  initCanvas(canvas: HTMLCanvasElement): this {
-    if (!canvas) {
-      throw new Error('初始化canvas错误：对象为空！');
-    }
-    this.canvas = canvas;
-    this.canvas.width = this.width;
-    this.canvas.height = this.height;
-    this.context = this.canvas.getContext('2d');
-    return this;
+  private refreshData() {
+    this.positions = [
+      [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]
+    ];
+    this.elements.forEach((item) => {
+      for (let r = item.rowIndex; r < item.rowIndex + item.rows; r++) {
+        for (let c = item.colIndex; c < item.colIndex + item.cols; c++) {
+          this.positions[r][c] = 1
+        }
+      }
+    });
   }
   draw() {
     if (!this.context) {
@@ -100,6 +114,26 @@ export class HuaRongRoad {
     this.context.translate(0.5 * this.side, 0.5 * this.side);
     this.elements.forEach((item) => item.draw(this.context, this.side));
     this.context.restore();
+  }
+
+  public click(x: number, y: number): this {
+    const postion = this.positionByPoint(x, y);
+    console.log(postion);
+    return this;
+  }
+
+  public move(x: number, y: number): this {
+    return this;
+  }
+
+  private positionByPoint(x: number, y: number) {
+    const sideHalf = 0.5 * this.side;
+    if (x < sideHalf || x > this.width - sideHalf || y < sideHalf || y > this.height - sideHalf) {
+      return null;
+    }
+    const cIndex = Math.floor((x - sideHalf) / this.side);
+    const rIndex = Math.floor((y - sideHalf) / this.side);
+    return { cIndex, rIndex };
   }
 
   private clear(): this {
