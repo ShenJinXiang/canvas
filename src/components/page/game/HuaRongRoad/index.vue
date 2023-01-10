@@ -12,7 +12,7 @@ const width = 100;
 const canvasRef: Ref = ref();
 const canvas = new HuaRongRoad(width);
 onMounted(() => {
-  canvas.initCanvas(canvasRef.value).draw();
+  canvas.initCanvas(canvasRef.value).run();
 });
 
 const { elementX: canvasPointX, elementY: canvasPointY } = useMouseInElement(canvasRef);
