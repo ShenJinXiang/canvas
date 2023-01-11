@@ -33,7 +33,7 @@ class Element {
     }
     context.save();
     context.translate(this.colIndex * side, this.rowIndex * side);
-    context.fillStyle = this.current ? '#337ecc' : '#fafafa';
+    context.fillStyle = '#fafafa';
     if (this.shadow) {
       context.shadowColor = 'rgba(0, 0, 0, 0.2)';
       context.shadowOffsetX = 0;
@@ -42,7 +42,7 @@ class Element {
     }
     context.fillRect(0, 0, this.cols * side, this.rows * side);
     context.lineWidth = 1;
-    context.strokeStyle = this.current ? '#fff' : '#333';
+    context.strokeStyle = this.current ? '#000' : '#666';
     context.strokeRect(2, 2, this.cols * side - 4, this.rows * side - 4);
     context.lineWidth = 2;
     context.strokeStyle = '#fff';
@@ -53,10 +53,8 @@ class Element {
     context.textAlign = 'center';
     context.textBaseline = 'middle';
     context.font = `${side * 0.3}px 楷体`;
-    context.fillStyle = '#999';
+    context.fillStyle = this.current ? '#000' : '#999';
     context.fillText(this.name, this.cols * side * 0.5, this.rows * side * 0.5);
-    // context.strokeStyle = this.current ? '#fff' : '#999';
-    // context.strokeText(this.name, this.cols * side * 0.5, this.rows * side * 0.5);
     context.restore();
   }
 }
@@ -65,6 +63,8 @@ export class HuaRongRoad extends Animate {
   context: CanvasRenderingContext2D | null = null;
   width: number;
   height: number;
+  colLength: number = 4;
+  rowLength: number = 5;
   private option: IOption = {
     backgroundColor: '#fff'
   };
@@ -74,8 +74,8 @@ export class HuaRongRoad extends Animate {
   constructor(side: number) {
     super();
     this.side = side;
-    this.width = this.side * 5;
-    this.height = this.side * 6;
+    this.width = this.side * (this.colLength + 1);
+    this.height = this.side * (this.rowLength + 1);
     this.initData();
   }
   initCanvas(canvas: HTMLCanvasElement): this {
@@ -105,9 +105,14 @@ export class HuaRongRoad extends Animate {
     console.log(this.positions);
   }
   private refreshData() {
-    this.positions = [
-      [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]
-    ];
+    this.positions = [];
+    for (let row = 0; row < this.rowLength; row++) {
+      const arr = [];
+      for (let col = 0; col < this.colLength; col++) {
+        arr.push(0);
+      }
+      this.positions.push(arr);
+    }
     this.elements.forEach((item) => {
       for (let r = item.rowIndex; r < item.rowIndex + item.rows; r++) {
         for (let c = item.colIndex; c < item.colIndex + item.cols; c++) {
@@ -132,6 +137,14 @@ export class HuaRongRoad extends Animate {
     const ele = this.elementByPoint(x, y);
     this.elements.forEach((item) => item.current = !!ele && ele.id === item.id);
     console.log(ele);
+    if (ele) {
+      const nexts = this.nextPosition(ele);
+      console.log(nexts);
+      if (nexts && nexts.length === 1) {
+        ele.position(nexts[0].colIndex, nexts[0].rowIndex);
+        this.refreshData();
+      }
+    }
     return this;
   }
 
@@ -161,6 +174,32 @@ export class HuaRongRoad extends Animate {
     const cIndex = Math.floor((x - sideHalf) / this.side);
     const rIndex = Math.floor((y - sideHalf) / this.side);
     return { cIndex, rIndex };
+  }
+
+  private nextPosition(element: Element) {
+    const arr = [
+      { colIndex: element.colIndex, rowIndex: element.rowIndex - element.rows },
+      { colIndex: element.colIndex + element.cols, rowIndex: element.rowIndex },
+      { colIndex: element.colIndex, rowIndex: element.rowIndex + element.rows },
+      { colIndex: element.colIndex - element.cols, rowIndex: element.rowIndex }
+    ]
+    const nexts = arr.filter((item) => {
+      if (item.colIndex < 0 || item.rowIndex < 0) {
+        return false;
+      }
+      if (item.colIndex + element.cols > this.colLength || item.rowIndex + element.rows > this.rowLength) {
+        return false;
+      }
+      for (let row = item.rowIndex; row < item.rowIndex + element.rows; row++) {
+        for (let col = item.colIndex; col < item.colIndex + element.cols; col++) {
+          if (this.positions[row][col] !== 0) {
+            return false;
+          }
+        }
+      }
+      return true;
+    });
+    return nexts;
   }
 
   private clear(): this {
