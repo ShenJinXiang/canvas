@@ -1,5 +1,13 @@
 import Animate from "@/lib/Animate";
 
+interface oprateStatus {
+  ele?: Element;
+  nexts?: Position[];
+}
+interface Position {
+  colIndex: number;
+  rowIndex: number;
+}
 interface IOption {
   backgroundColor: string;
 }
@@ -70,6 +78,7 @@ export class HuaRongRoad extends Animate {
   };
   elements: Element[] = [];
   positions: number[][] = [];
+  last: oprateStatus = {};
   side: number;
   constructor(side: number) {
     super();
@@ -135,14 +144,34 @@ export class HuaRongRoad extends Animate {
 
   public click(x: number, y: number): this {
     const ele = this.elementByPoint(x, y);
-    this.elements.forEach((item) => item.current = !!ele && ele.id === item.id);
-    console.log(ele);
     if (ele) {
+      this.elements.forEach((item) => item.current = !!ele && ele.id === item.id);
       const nexts = this.nextPosition(ele);
-      console.log(nexts);
-      if (nexts && nexts.length === 1) {
-        ele.position(nexts[0].colIndex, nexts[0].rowIndex);
+      if (!nexts) {
+        this.last = {};
+        return this;
+      }
+      if (nexts.length !== 1) {
+        this.last = { ele, nexts };
+        return this;
+      }
+      ele.position(nexts[0].colIndex, nexts[0].rowIndex);
+      ele.current = false;
+      this.refreshData();
+      this.last = {};
+      return this;
+    }
+    if (this.last.nexts && this.last.nexts.length > 1) {
+      const postion = this.positionByPoint(x, y);
+      if (!postion) {
+        this.last = {};
+        return this;
+      }
+      if (this.last.ele && this.last.nexts.some((item) => item.colIndex === postion.colIndex && item.rowIndex === postion.rowIndex)) {
+        this.last.ele.position(postion.colIndex, postion.rowIndex);
+        this.last.ele.current = false;
         this.refreshData();
+        this.last = {};
       }
     }
     return this;
@@ -160,28 +189,28 @@ export class HuaRongRoad extends Animate {
       return;
     }
     const element = this.elements.find((item) =>
-      item.colIndex <= postion.cIndex && (item.colIndex + item.cols) > postion.cIndex &&
-      item.rowIndex <= postion.rIndex && (item.rowIndex + item.rows) > postion.rIndex
+      item.colIndex <= postion.colIndex && (item.colIndex + item.cols) > postion.colIndex &&
+      item.rowIndex <= postion.rowIndex && (item.rowIndex + item.rows) > postion.rowIndex
     );
     return element;
   }
 
-  private positionByPoint(x: number, y: number) {
+  private positionByPoint(x: number, y: number): Position | null {
     const sideHalf = 0.5 * this.side;
     if (x < sideHalf || x > this.width - sideHalf || y < sideHalf || y > this.height - sideHalf) {
       return null;
     }
-    const cIndex = Math.floor((x - sideHalf) / this.side);
-    const rIndex = Math.floor((y - sideHalf) / this.side);
-    return { cIndex, rIndex };
+    const colIndex = Math.floor((x - sideHalf) / this.side);
+    const rowIndex = Math.floor((y - sideHalf) / this.side);
+    return { colIndex, rowIndex };
   }
 
-  private nextPosition(element: Element) {
-    const arr = [
-      { colIndex: element.colIndex, rowIndex: element.rowIndex - element.rows },
-      { colIndex: element.colIndex + element.cols, rowIndex: element.rowIndex },
-      { colIndex: element.colIndex, rowIndex: element.rowIndex + element.rows },
-      { colIndex: element.colIndex - element.cols, rowIndex: element.rowIndex }
+  private nextPosition(element: Element): Position[] {
+    const arr: Position[] = [
+      { colIndex: element.colIndex, rowIndex: element.rowIndex - 1 },
+      { colIndex: element.colIndex + 1, rowIndex: element.rowIndex },
+      { colIndex: element.colIndex, rowIndex: element.rowIndex + 1 },
+      { colIndex: element.colIndex - 1, rowIndex: element.rowIndex }
     ]
     const nexts = arr.filter((item) => {
       if (item.colIndex < 0 || item.rowIndex < 0) {
@@ -192,9 +221,16 @@ export class HuaRongRoad extends Animate {
       }
       for (let row = item.rowIndex; row < item.rowIndex + element.rows; row++) {
         for (let col = item.colIndex; col < item.colIndex + element.cols; col++) {
-          if (this.positions[row][col] !== 0) {
-            return false;
+          // if (this.positions[row][col] !== 0) {
+          //   return false;
+          // }
+          if (this.positions[row][col] === 0) {
+            continue;
           }
+          if (row >= element.rowIndex && row < element.rowIndex + element.rows && col >= element.colIndex && col < element.colIndex + element.cols) {
+            continue;
+          }
+          return false;
         }
       }
       return true;
