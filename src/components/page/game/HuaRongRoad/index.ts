@@ -151,27 +151,42 @@ export class HuaRongRoad extends Animate {
         this.last = {};
         return this;
       }
+      // 可以移动至多个地方，标记信息到last里面
       if (nexts.length !== 1) {
         this.last = { ele, nexts };
         return this;
       }
+      // 可移动至一个地方，直接移动，刷新数据
       ele.position(nexts[0].colIndex, nexts[0].rowIndex);
       ele.current = false;
       this.refreshData();
       this.last = {};
       return this;
     }
-    if (this.last.nexts && this.last.nexts.length > 1) {
+    if (this.last.ele && this.last.nexts && this.last.nexts.length > 1) {
       const postion = this.positionByPoint(x, y);
       if (!postion) {
         this.last = {};
         return this;
       }
-      if (this.last.ele && this.last.nexts.some((item) => item.colIndex === postion.colIndex && item.rowIndex === postion.rowIndex)) {
-        this.last.ele.position(postion.colIndex, postion.rowIndex);
-        this.last.ele.current = false;
+      // 点击了空白区域
+      // if (this.last.ele && this.last.nexts.some((item) => item.colIndex === postion.colIndex && item.rowIndex === postion.rowIndex)) {
+      //   this.last.ele.position(postion.colIndex, postion.rowIndex);
+      //   this.last.ele.current = false;
+      //   this.refreshData();
+      //   this.last = {};
+      // }
+      const { ele } = this.last;
+      const next = this.last.nexts.find((item) =>
+        item.colIndex <= postion.colIndex && postion.colIndex < item.colIndex + ele.cols &&
+        item.rowIndex <= postion.rowIndex && postion.rowIndex < item.rowIndex + ele.rows
+      );
+      if (next) {
+        ele.position(next.colIndex, next.rowIndex);
+        ele.current = false;
         this.refreshData();
         this.last = {};
+
       }
     }
     return this;
