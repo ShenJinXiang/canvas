@@ -2,19 +2,26 @@
   <div>
     <canvas ref="canvasRef" @click="click" @mousemove="move"></canvas>
     <div class="contro-con" :style="controStyle">
-      <el-button @click="begin">开始</el-button>
+      <!-- <el-button @click="begin">开始</el-button>
       <el-button @click="end">结束</el-button>
       <span> 步数：{{ stepNumber }}</span>
       <div>
-      <span>时长： {{ playTime.hour }}小时{{ playTime.minute }}分{{ playTime.second }}秒 {{ playTime.millisecond }}</span>
-
-      </div>
+      <span>时长： {{ playTime.hour }}小时{{ playTime.minute }}分{{ playTime.second }}秒 {{ playTime.millisecond }}</span> -->
+      <!-- </div> -->
+      <el-row>
+        <el-button @click="begin">开始</el-button>
+        <el-button @click="end">结束</el-button>
+      </el-row>
+      <el-descriptions :column="2">
+        <el-descriptions-item label="时长" width="50%">{{ playTime.hour }}小时{{ playTime.minute }}分{{ playTime.second }}秒 {{ playTime.millisecond }}</el-descriptions-item>
+        <el-descriptions-item label="步数">{{ stepNumber }}</el-descriptions-item>
+      </el-descriptions>
     </div>
   </div>
 </template>
 <script lang="ts" setup>
 import { useMouseInElement, useTimestamp } from '@vueuse/core';
-import { computed, onMounted, reactive, Ref, ref } from 'vue';
+import { Ref, computed, onMounted, reactive, ref } from 'vue';
 import { HuaRongRoad } from '.';
 
 const timestamp = useTimestamp({ offset: 0 });
