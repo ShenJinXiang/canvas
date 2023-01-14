@@ -4,6 +4,10 @@ interface oprateStatus {
   ele?: Element;
   nexts?: Position[];
 }
+export interface IResult {
+  step: number;
+  complete: boolean
+};
 interface Position {
   colIndex: number;
   rowIndex: number;
@@ -142,40 +146,45 @@ export class HuaRongRoad extends Animate {
     this.context.restore();
   }
 
-  public click(x: number, y: number): this {
+  public click(x: number, y: number): IResult {
     const ele = this.elementByPoint(x, y);
     if (ele) {
       this.elements.forEach((item) => item.current = !!ele && ele.id === item.id);
       const nexts = this.nextPosition(ele);
       if (!nexts) {
         this.last = {};
-        return this;
+        return {
+          step: 0,
+          complete: this.isComplete()
+        };
       }
       // 可以移动至多个地方，标记信息到last里面
       if (nexts.length !== 1) {
         this.last = { ele, nexts };
-        return this;
+        return {
+          step: 0,
+          complete: this.isComplete()
+        };
       }
       // 可移动至一个地方，直接移动，刷新数据
       ele.position(nexts[0].colIndex, nexts[0].rowIndex);
       ele.current = false;
       this.refreshData();
       this.last = {};
-      return this;
+      return {
+        step: 1,
+        complete: this.isComplete()
+      };
     }
     if (this.last.ele && this.last.nexts && this.last.nexts.length > 1) {
       const postion = this.positionByPoint(x, y);
       if (!postion) {
         this.last = {};
-        return this;
+        return {
+          step: 0,
+          complete: this.isComplete()
+        };
       }
-      // 点击了空白区域
-      // if (this.last.ele && this.last.nexts.some((item) => item.colIndex === postion.colIndex && item.rowIndex === postion.rowIndex)) {
-      //   this.last.ele.position(postion.colIndex, postion.rowIndex);
-      //   this.last.ele.current = false;
-      //   this.refreshData();
-      //   this.last = {};
-      // }
       const { ele } = this.last;
       const next = this.last.nexts.find((item) =>
         item.colIndex <= postion.colIndex && postion.colIndex < item.colIndex + ele.cols &&
@@ -186,10 +195,19 @@ export class HuaRongRoad extends Animate {
         ele.current = false;
         this.refreshData();
         this.last = {};
-
+        return {
+          step: 1,
+          complete: this.isComplete()
+        };
       }
     }
-    return this;
+    return {
+      step: 0,
+      complete: this.isComplete()
+    };;
+  }
+  private isComplete(): boolean {
+    return this.elements[0].colIndex === 1 && this.elements[0].rowIndex === 3;
   }
 
   public move(x: number, y: number): this {
