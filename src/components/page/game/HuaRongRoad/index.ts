@@ -25,16 +25,14 @@ class Element {
   rows: number;
   current: boolean = false;
   shadow: boolean = false;
-  constructor(id: number, type: number, name: string, cols: number, rows: number, colIndex: number, rowIndex: number) {
+  constructor(id: number, type: number, name: string, cols: number, rows: number) {
     this.id = id;
     this.type = type;
     this.name = name;
     this.cols = cols;
     this.rows = rows;
-    this.colIndex = colIndex;
-    this.rowIndex = rowIndex;
   }
-  position(colIndex: number, rowIndex: number) {
+  position({ colIndex, rowIndex }: Position) {
     this.colIndex = colIndex;
     this.rowIndex = rowIndex;
   }
@@ -84,6 +82,7 @@ export class HuaRongRoad extends Animate {
   positions: number[][] = [];
   last: oprateStatus = {};
   side: number;
+
   constructor(side: number) {
     super();
     this.side = side;
@@ -103,18 +102,18 @@ export class HuaRongRoad extends Animate {
   }
   private initData() {
     this.elements = [
-      new Element(0, 0, '曹操', 2, 2, 1, 0),
-      new Element(1, 1, '关羽', 2, 1, 1, 2),
-      new Element(2, 1, '张飞', 1, 2, 0, 0),
-      new Element(3, 1, '赵云', 1, 2, 3, 0),
-      new Element(4, 1, '马超', 1, 2, 0, 2),
-      new Element(5, 1, '黄忠', 1, 2, 3, 2),
-      new Element(6, 1, '卒', 1, 1, 0, 4),
-      new Element(7, 1, '卒', 1, 1, 1, 3),
-      new Element(8, 1, '卒', 1, 1, 2, 3),
-      new Element(9, 1, '卒', 1, 1, 3, 4),
+      new Element(0, 0, '曹操', 2, 2),
+      new Element(1, 1, '关羽', 2, 1),
+      new Element(2, 1, '张飞', 1, 2),
+      new Element(3, 1, '赵云', 1, 2),
+      new Element(4, 1, '马超', 1, 2),
+      new Element(5, 1, '黄忠', 1, 2),
+      new Element(6, 1, '卒', 1, 1),
+      new Element(7, 1, '卒', 1, 1),
+      new Element(8, 1, '卒', 1, 1),
+      new Element(9, 1, '卒', 1, 1),
     ];
-    this.refreshData();
+    // this.setElementPosition(this.beginPositions[1]);
     console.log(this.positions);
   }
   private refreshData() {
@@ -133,6 +132,13 @@ export class HuaRongRoad extends Animate {
         }
       }
     });
+  }
+  public setElementPosition(positions: Position[]): this {
+    this.elements.forEach((item, index) => {
+      item.position(positions[index]);
+    });
+    this.refreshData();
+    return this;
   }
   draw() {
     if (!this.context) {
@@ -167,7 +173,7 @@ export class HuaRongRoad extends Animate {
         };
       }
       // 可移动至一个地方，直接移动，刷新数据
-      ele.position(nexts[0].colIndex, nexts[0].rowIndex);
+      ele.position({ colIndex: nexts[0].colIndex, rowIndex: nexts[0].rowIndex });
       ele.current = false;
       this.refreshData();
       this.last = {};
@@ -191,7 +197,7 @@ export class HuaRongRoad extends Animate {
         item.rowIndex <= postion.rowIndex && postion.rowIndex < item.rowIndex + ele.rows
       );
       if (next) {
-        ele.position(next.colIndex, next.rowIndex);
+        ele.position({ colIndex: next.colIndex, rowIndex: next.rowIndex });
         ele.current = false;
         this.refreshData();
         this.last = {};
