@@ -152,6 +152,14 @@ export class HuaRongRoad extends Animate {
     this.context.restore();
   }
 
+  public currentPositions(): Position[] {
+    const positions: Position[] = [];
+    this.elements.forEach((item) => {
+      positions.push({ colIndex: item.colIndex, rowIndex: item.rowIndex });
+    });
+    return positions;
+  };
+
   public click(x: number, y: number): IResult {
     const ele = this.elementByPoint(x, y);
     if (ele) {
