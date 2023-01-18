@@ -31,11 +31,12 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { useMouseInElement, useTimestamp } from '@vueuse/core';
+import { useMouseInElement, useTimestamp, useWindowSize } from '@vueuse/core';
 import { computed, onMounted, reactive, Ref, ref } from 'vue';
 import { HuaRongRoad, IResult } from '.';
 
 const timestamp = useTimestamp({ offset: 0 });
+const { width: windowWidth } = useWindowSize();
 // const beginTimestamp = ref(0);
 // const endTimestamp = ref(0);
 enum ChallengeStatus {
@@ -76,7 +77,7 @@ const contro = reactive({
 const side = ref(80);
 const canvasRef: Ref = ref();
 const controStyle = reactive({
-  width: `${side.value * 5}px`
+  width: `${(windowWidth.value - side.value * 8) / 2}px`
 });
 const canvas = new HuaRongRoad(side.value);
 onMounted(() => {
