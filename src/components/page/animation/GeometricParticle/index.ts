@@ -1,6 +1,38 @@
+
 interface IOption {
   backgroundColor: string;
 };
+
+class Particle {
+  x: number;
+  y: number;
+  tx: number;
+  ty: number;
+
+  constructor(x: number, y: number) {
+    this.x = x;
+    this.y = y;
+    this.tx = x;
+    this.ty = y;
+  }
+
+  update(t: number) {
+    this.x = this.tx + Math.sin((50 + this.x + (t / 10)) / 100) * 5;
+    this.y = this.ty + Math.sin((45 + this.x + (t / 10)) / 100) * 6;
+  }
+}
+class Circular extends Particle {
+
+  radius: number;
+  lineWidth: number;
+
+  constructor(x: number, y: number, sc: number) {
+    super(x, y);
+    this.radius = sc * 12;
+    this.lineWidth = sc * 5;
+  }
+
+}
 export default class GeometricParticle {
   canvas: HTMLCanvasElement | null = null;
   context: CanvasRenderingContext2D | null = null;
