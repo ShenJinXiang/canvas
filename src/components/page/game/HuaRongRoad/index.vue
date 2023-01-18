@@ -158,10 +158,26 @@ const addQuestion = () => {
 .contro-con {
   display: block;
   margin: 10px auto;
+  position: absolute;
+  right: 20px;
+  top: 20px;
 
   .contro-row {
     display: block;
     margin: 10px 0px;
+
+    .label {
+      display: inline-block;
+      padding-right: 20px;
+      font-family: 'Helvetica Neue', Helvetica, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', '微软雅黑', Arial, sans-serif;
+      color: #333;
+      font-size: 14px;
+    }
+    .text {
+      font-family: 'Helvetica Neue', Helvetica, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', '微软雅黑', Arial, sans-serif;
+      color: #666;
+      font-size: 14px;
+    }
   }
 }
 </style>
