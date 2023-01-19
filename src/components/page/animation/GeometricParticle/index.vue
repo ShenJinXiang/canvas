@@ -2,7 +2,7 @@
   <canvas ref="canvasRef"></canvas>
 </template>
 <script lang="ts" setup>
-import { ref, Ref, onMounted } from 'vue';
+import { onMounted, ref, Ref } from 'vue';
 import GeometricParticle from '.';
 
 const props = defineProps({
@@ -19,6 +19,6 @@ const canvasRef: Ref = ref();
 const canvas = new GeometricParticle(props.width, props.height);
 
 onMounted(() => {
-  canvas.initCanvas(canvasRef.value).draw();
+  canvas.initCanvas(canvasRef.value).run();
 });
 </script>
