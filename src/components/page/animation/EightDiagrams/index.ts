@@ -61,8 +61,6 @@ class DiagramsOuter {
   }
 }
 export default class EightDiagrams extends Animate {
-  canvas: HTMLCanvasElement | null = null;
-  context: CanvasRenderingContext2D | null = null;
   width: number = 0;
   height: number = 0;
   radius: number = 0;
@@ -140,23 +138,13 @@ export default class EightDiagrams extends Animate {
     if (!this.canvas || !this.context) {
       return this;
     }
-    this.clear();
+    this.clear(this.backgroundColor);
     this.context.save();
     this.context.translate(this.originX, this.originY);
     this.drawInner();
     this.drawOuter();
     this.context.restore();
     return this;
-  }
-
-  private clear(): void {
-    if (!this.context || !this.canvas) {
-      return;
-    }
-    this.context.save();
-    this.context.fillStyle = this.backgroundColor;
-    this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
-    this.context.restore();
   }
 
   private drawInner(): void {

@@ -38,8 +38,6 @@ class ParticleLine extends Line {
   }
 }
 export default class ColorParticle extends Animate {
-  canvas: HTMLCanvasElement | null = null;
-  context: CanvasRenderingContext2D | null = null;
   width: number;
   height: number;
   private particleNum: number;
@@ -87,23 +85,12 @@ export default class ColorParticle extends Animate {
       randomOne() * random(minVelocity, maxVelocity)
     )
   }
-  private clear(): ColorParticle {
-    if (!this.canvas || !this.context) {
-      return this;
-    }
-    this.context.save();
-    this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    this.context.fillStyle = this.option.background;
-    this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
-    this.context.restore();
-    return this;
-  }
 
   draw(): ColorParticle {
     if (!this.canvas || !this.context) {
       return this;
     }
-    this.clear();
+    this.clear(this.option.background);
     this.context.save();
     this.particles.forEach((particle) => particle.draw(this.context));
     this.lines.forEach((line) => line.stroke(this.context));

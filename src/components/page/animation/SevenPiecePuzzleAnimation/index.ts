@@ -144,8 +144,6 @@ class Combination {
 }
 
 export default class SevenPiecePuzzleAnimation extends Animate {
-  canvas: HTMLCanvasElement | null = null;
-  context: CanvasRenderingContext2D | null = null;
   width: number;
   height: number;
   size: number;
@@ -232,18 +230,6 @@ export default class SevenPiecePuzzleAnimation extends Animate {
     return this;
   }
 
-  private clear(): this {
-    if (!this.canvas || !this.context) {
-      return this;
-    }
-    this.context.save();
-    this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    this.context.fillStyle = '#fff';
-    this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
-    this.context.restore();
-    return this;
-  }
-
   update() {
     this.currentRate++;
     if (this.currentRate >= this.refreshRate) {
@@ -273,7 +259,7 @@ export default class SevenPiecePuzzleAnimation extends Animate {
     if (!this.canvas || !this.context) {
       return this;
     }
-    this.clear();
+    this.clear('#fff');
     this.context.save();
     this.context.translate(this.ox, this.oy);
     this.context.scale(1, -1);

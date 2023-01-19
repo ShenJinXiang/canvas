@@ -3,7 +3,7 @@
     <div class="main-container">
       <div class="title-con">
         <h1>CANVAS</h1>
-        <a target="_self" href="/bck/index.html">旧版</a>
+        <!-- <a target="_self" href="/bck/index.html">旧版</a> -->
       </div>
       <ul>
         <li v-for="(item, index) in pages" :key="index">

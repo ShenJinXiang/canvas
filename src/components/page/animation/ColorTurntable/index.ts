@@ -35,8 +35,6 @@ class ColorItem {
   }
 }
 export default class ColorTurntable extends Animate {
-  canvas: HTMLCanvasElement | null = null;
-  context: CanvasRenderingContext2D | null = null;
   width: number;
   height: number;
   option: IOption = {
@@ -98,7 +96,7 @@ export default class ColorTurntable extends Animate {
     if (!this.canvas || !this.context) {
       return;
     }
-    this.clear();
+    this.clear(this.option.backgroundColor);
     this.context.save();
     this.context.translate(this.width / 2, this.height / 2);
     this.drawOuter();
@@ -140,15 +138,6 @@ export default class ColorTurntable extends Animate {
     this.context.closePath();
     this.context.fill();
     this.context.restore();
-  }
-  private clear(): this {
-    if (!this.canvas || !this.context) {
-      return this;
-    }
-    this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    this.context.fillStyle = this.option.backgroundColor;
-    this.context.fillRect(0, 0, this.width, this.height);
-    return this;
   }
   public setRect(width: number, height: number): this {
     this.width = width;

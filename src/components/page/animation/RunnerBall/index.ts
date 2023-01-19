@@ -26,8 +26,6 @@ class Ball extends Circle {
   }
 }
 export default class RunnerBall extends Animate {
-  canvas: HTMLCanvasElement | null = null;
-  context: CanvasRenderingContext2D | null = null;
   width: number;
   height: number;
   ballNumber: number;
@@ -77,17 +75,6 @@ export default class RunnerBall extends Animate {
     this.context = this.canvas.getContext('2d');
     return this;
   }
-  private clear(): RunnerBall {
-    if (!this.canvas || !this.context) {
-      return this;
-    }
-    this.context.save();
-    this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    this.context.fillStyle = this.option.background;
-    this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
-    this.context.restore();
-    return this;
-  }
 
   update() {
     this.balls.forEach((item) => item.update(this.width, this.height));
@@ -96,7 +83,7 @@ export default class RunnerBall extends Animate {
     if (!this.canvas || !this.context) {
       return this;
     }
-    this.clear();
+    this.clear(this.option.background);
     this.context.save();
     this.balls.forEach((item) => {
       item.draw(this.context);

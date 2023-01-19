@@ -33,8 +33,6 @@ class Laster {
   }
 }
 export default class LaserEffect extends Animate {
-  canvas: HTMLCanvasElement | null = null;
-  context: CanvasRenderingContext2D | null = null;
   width: number;
   height: number;
   option: IOption = {
@@ -69,16 +67,6 @@ export default class LaserEffect extends Animate {
     return this;
   }
 
-  private clear(): this {
-    if (!this.canvas || !this.context) {
-      return this;
-    }
-    this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    this.context.fillStyle = 'hsl(261,43%,7%)';
-    this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
-    return this;
-  }
-
   update(): void {
     this.lasters.forEach((item) => {
       item.y -= item.v;
@@ -92,7 +80,7 @@ export default class LaserEffect extends Animate {
     if (!this.context) {
       return;
     }
-    this.clear();
+    this.clear('hsl(261,43%,7%)');
     this.lasters.forEach((item) => item.draw(this.context, 1 - (this.height - item.y) / this.height * 0.8));
   }
 

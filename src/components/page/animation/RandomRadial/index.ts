@@ -58,8 +58,6 @@ class RadialLine {
   }
 }
 export default class RandomRadial extends Animate {
-  canvas: HTMLCanvasElement | null = null;
-  context: CanvasRenderingContext2D | null = null;
   width: number;
   height: number;
   option: IOption = {
@@ -111,15 +109,8 @@ export default class RandomRadial extends Animate {
     console.log(this.lines.length);
   }
   draw(): RandomRadial {
-    this.clear();
+    this.clear(null);
     this.lines.forEach((item) => item.stroke(this.context, { strokeStyle: this.option.lineColor }));
-    return this;
-  }
-  private clear(): RandomRadial {
-    if (!this.canvas || !this.context) {
-      return this;
-    }
-    this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
     return this;
   }
   private randomLine(): RadialLine {

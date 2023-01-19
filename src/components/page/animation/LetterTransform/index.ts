@@ -27,8 +27,6 @@ class Particle {
   }
 }
 export default class LetterTransform extends Animate {
-  canvas: HTMLCanvasElement | null = null;
-  context: CanvasRenderingContext2D | null = null;
   shadeCanvas: HTMLCanvasElement | null = null;
   shadeContext: CanvasRenderingContext2D | null = null;
   width: number;
@@ -114,6 +112,7 @@ export default class LetterTransform extends Animate {
 
   draw(): LetterTransform {
     this.clear();
+    // this.clear();
     // this.particlePositions.forEach((item) => this.drawRect(item.x, item.y));
     for (let index = 0; index < this.particlePositions.length; index++) {
       const p = this.particles[index];
@@ -157,7 +156,7 @@ export default class LetterTransform extends Animate {
     this.context.restore();
   }
 
-  private clear(): LetterTransform {
+  clear(): this {
     if (!this.canvas || !this.context || !this.shadeCanvas || !this.shadeContext) {
       return this;
     }
