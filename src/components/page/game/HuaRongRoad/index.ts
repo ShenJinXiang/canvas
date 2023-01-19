@@ -69,8 +69,6 @@ class Element {
   }
 }
 export class HuaRongRoad extends Animate {
-  canvas: HTMLCanvasElement | null = null;
-  context: CanvasRenderingContext2D | null = null;
   width: number;
   height: number;
   colLength: number = 4;
@@ -144,7 +142,7 @@ export class HuaRongRoad extends Animate {
     if (!this.context) {
       return;
     }
-    this.clear();
+    this.clear(this.option.backgroundColor);
     this.context.save();
     this.drawBorder();
     this.context.translate(0.5 * this.side, 0.5 * this.side);
@@ -285,17 +283,6 @@ export class HuaRongRoad extends Animate {
     return nexts;
   }
 
-  private clear(): this {
-    if (!this.canvas || !this.context) {
-      return this;
-    }
-    this.context.save();
-    this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    this.context.fillStyle = this.option.backgroundColor;
-    this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
-    this.context.restore();
-    return this;
-  }
   private drawBorder() {
     if (!this.context) {
       return;
