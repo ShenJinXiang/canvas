@@ -83,8 +83,6 @@ class GoStar implements Point {
   }
 }
 export default class ChineseGo extends Animate {
-  canvas: HTMLCanvasElement | null = null;
-  context: CanvasRenderingContext2D | null = null;
   gridWidth: number;
   width: number;
   height: number;
@@ -164,7 +162,7 @@ export default class ChineseGo extends Animate {
   }
 
   draw(): ChineseGo {
-    this.clear();
+    this.clear(this.option.backgroundColor);
     if (!this.canvas || !this.context) {
       return this;
     }
@@ -185,17 +183,6 @@ export default class ChineseGo extends Animate {
   }
   setDownPieceType(pieceType: PieceType): ChineseGo {
     this.pieceType = pieceType;
-    return this;
-  }
-  private clear(): ChineseGo {
-    if (!this.canvas || !this.context) {
-      return this;
-    }
-    this.context.save();
-    this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    this.context.fillStyle = this.option.backgroundColor;
-    this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
-    this.context.restore();
     return this;
   }
   private reStart(): ChineseGo {

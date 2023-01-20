@@ -2,19 +2,28 @@ export default class Animate {
   canvas: HTMLCanvasElement | null = null;
   markCanvas: HTMLCanvasElement | null = null;
   context: CanvasRenderingContext2D | null = null;
+  showMark: boolean;
 
   constructor() {
     this.createMarkCanvas('rgba(204, 204, 204, 0.5)', 300, 100);
+    this.showMark = true;
   }
 
   run(): void {
     this.update();
     this.draw();
-    this.drawMark();
+    if (this.showMark) {
+      this.drawMark();
+    }
     requestAnimationFrame(this.run.bind(this));
   }
   update(): void { }
   draw(): void { }
+
+  hideMark(): this {
+    this.showMark = false;
+    return this;
+  }
 
   protected clear(fillStyle: string | CanvasGradient | CanvasPattern | null): this {
     if (!this.canvas || !this.context) {

@@ -87,6 +87,7 @@ export class HuaRongRoad extends Animate {
     this.width = this.side * (this.colLength + 1);
     this.height = this.side * (this.rowLength + 1);
     this.initData();
+    this.hideMark();
   }
   initCanvas(canvas: HTMLCanvasElement): this {
     if (!canvas) {
@@ -288,10 +289,6 @@ export class HuaRongRoad extends Animate {
       return;
     }
     this.context.save();
-    // this.context.shadowColor = 'rgba(0, 0, 0, 0.1)';
-    // this.context.shadowOffsetX = 0;
-    // this.context.shadowOffsetY = 0;
-    // this.context.shadowBlur = this.side * 0.1;
     this.context.scale(this.side, this.side);
     this.context.fillStyle = '#ddd';
     this.context.beginPath();
