@@ -33,25 +33,3 @@ export const randomColor = () => {
 export const distance = (sPoint: Point, ePoint: Point) => {
   return Math.sqrt(Math.pow(sPoint.x - ePoint.x, 2) + Math.pow(sPoint.y - ePoint.y, 2));
 }
-
-export const getMarkCanvas = (fillStyle: string, width: number, height: number): HTMLCanvasElement => {
-  const markCanvas: HTMLCanvasElement = document.createElement('canvas');
-  markCanvas.width = width || 240;
-  markCanvas.height = height || 60;
-  const context: CanvasRenderingContext2D | null = markCanvas.getContext('2d');
-
-  if (context) {
-    context.fillStyle = fillStyle || 'rgba(204, 204, 204, 0.5)';
-    context.textAlign = 'center';
-    context.textBaseline = 'middle';
-    context.font = `${markCanvas.height * 0.6}px cursive`;
-    context.fillText('shenjinxiang.com', markCanvas.width / 2, markCanvas.height / 2);
-  }
-  return markCanvas;
-};
-export const drawMark = (context: CanvasRenderingContext2D | null, mark: HTMLCanvasElement | null) => {
-  if (!context || !mark) {
-    return;
-  }
-  context.drawImage(mark, context.canvas.width - mark.width, context.canvas.height - mark.height);
-};
