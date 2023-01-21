@@ -1,3 +1,4 @@
+import BaseCanvas from '@/lib/BaseCanvas';
 import Text from '@/lib/Text';
 class Piece {
   radius: number;
@@ -77,23 +78,12 @@ class Piece {
     }
   }
 }
-export default class ChineseChess {
-  canvas: HTMLCanvasElement | null = null;
-  context: CanvasRenderingContext2D | null = null;
-  width: number;
-  height: number;
+export default class ChineseChess extends BaseCanvas {
   constructor(width: number, height: number) {
+    super();
     this.width = width;
     this.height = height;
   }
-  initCanvas(canvas: HTMLCanvasElement): this {
-    this.canvas = canvas;
-    this.canvas.width = this.width;
-    this.canvas.height = this.height;
-    this.context = this.canvas.getContext('2d');
-    return this;
-  }
-
   draw() {
     const p1 = new Piece(200);
     p1.draw(this.context, this.width / 2, this.height / 2);

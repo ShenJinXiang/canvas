@@ -1,3 +1,4 @@
+import BaseCanvas from "@/lib/BaseCanvas";
 import { StrokeOption } from "@/lib/DrawOption";
 import Line from "@/lib/Line";
 import Point from "@/lib/Point";
@@ -69,11 +70,7 @@ class TianGrid extends Grid {
 }
 
 
-export default class PenExercisePaper {
-  private canvas: HTMLCanvasElement | null = null;
-  private context: CanvasRenderingContext2D | null = null;
-  private width: number = 0;
-  private height: number = 0;
+export default class PenExercisePaper extends BaseCanvas {
   private option: IOption;
   private gridWidth: number;
   private row: number;
@@ -88,6 +85,7 @@ export default class PenExercisePaper {
   private rect: Rect | null = null;
 
   constructor(gridWidth: number, row: number, col: number, lineStyle: string, gridStyle: string) {
+    super();
     this.gridWidth = gridWidth;
     this.row = row;
     this.col = col;
@@ -140,16 +138,6 @@ export default class PenExercisePaper {
     this.bottomText = new Text('硬笔书法纸', 0.85 * this.gridWidth, this.height - 0.75 * this.gridWidth);
   }
 
-  initCanvas(canvas: HTMLCanvasElement) {
-    if (!canvas) {
-      throw new Error('初始化canvas错误：对象为空！');
-    }
-    this.canvas = canvas;
-    this.canvas.width = this.width;
-    this.canvas.height = this.height;
-    this.context = this.canvas.getContext('2d');
-    this.draw();
-  }
   draw() {
     if (!this.canvas || !this.context) {
       return;

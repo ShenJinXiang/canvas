@@ -33,8 +33,6 @@ class Laster {
   }
 }
 export default class LaserEffect extends Animate {
-  width: number;
-  height: number;
   option: IOption = {
     maxV: 3,
     minV: 1
@@ -59,14 +57,6 @@ export default class LaserEffect extends Animate {
     }
     return this;
   }
-  initCanvas(canvas: HTMLCanvasElement): this {
-    this.canvas = canvas;
-    this.canvas.width = this.width;
-    this.canvas.height = this.height;
-    this.context = this.canvas.getContext('2d');
-    return this;
-  }
-
   update(): void {
     this.lasters.forEach((item) => {
       item.y -= item.v;

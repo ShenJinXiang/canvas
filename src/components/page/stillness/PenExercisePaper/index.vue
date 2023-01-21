@@ -4,7 +4,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { onMounted, Ref, ref, watch } from "vue";
+import { Ref, onMounted, ref, watch } from "vue";
 import PenExercisePaper from ".";
 
 const props = defineProps({
@@ -68,6 +68,6 @@ watch(
   }
 );
 onMounted(() => {
-  canvas.initCanvas(canvasRef.value);
+  canvas.initCanvas(canvasRef.value).draw();
 });
 </script>

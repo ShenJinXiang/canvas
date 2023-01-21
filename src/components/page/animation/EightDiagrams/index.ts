@@ -61,8 +61,6 @@ class DiagramsOuter {
   }
 }
 export default class EightDiagrams extends Animate {
-  width: number = 0;
-  height: number = 0;
   radius: number = 0;
   backgroundColor: string = '#777';
   yangColor: string = '#fff';
@@ -117,18 +115,6 @@ export default class EightDiagrams extends Animate {
     this.innerStep = this.innerBaseStep * this.innerSpeed;
     this.outerStep = this.outerBaseStep * this.outerSpeed;
   }
-
-  initCanvas(canvas: HTMLCanvasElement): EightDiagrams {
-    if (!canvas) {
-      throw new Error('初始化canvas错误：对象为空！');
-    }
-    this.canvas = canvas;
-    this.canvas.width = this.width;
-    this.canvas.height = this.height;
-    this.context = this.canvas.getContext('2d');
-    return this;
-  }
-
   update(): void {
     this.innerRotate += this.innerStep;
     this.outerRotate += this.outerStep;

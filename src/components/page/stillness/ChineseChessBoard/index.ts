@@ -1,3 +1,4 @@
+import BaseCanvas from '@/lib/BaseCanvas';
 import Line from '@/lib/Line';
 import Rect from '@/lib/Rect';
 import Text from '../../../../lib/Text';
@@ -15,11 +16,7 @@ interface IOption {
   fontStyle: string,
 }
 
-export default class ChineseChessBoard {
-  private canvas: HTMLCanvasElement | null = null;
-  private context: CanvasRenderingContext2D | null = null;
-  private width: number = 0;
-  private height: number = 0;
+export default class ChineseChessBoard extends BaseCanvas {
   private gridWidth: number = 80;
   private ox: number = 0;
   private oy: number = 0;
@@ -39,6 +36,7 @@ export default class ChineseChessBoard {
   private texts: Text[] = [];
   private outerRect: Rect | null = null;
   constructor(gridWidth: number) {
+    super();
     this.gridWidth = gridWidth;
     this.initData();
   }
@@ -122,18 +120,6 @@ export default class ChineseChessBoard {
 
     this.outerRect = new Rect(-this.option.margin, -this.option.margin, 2 * this.option.margin + 8 * gridWidth, 2 * this.option.margin + 9 * gridWidth);
   }
-
-  initCanvas(canvas: HTMLCanvasElement) {
-    if (!canvas) {
-      throw new Error('初始化canvas错误：对象为空！');
-    }
-    this.canvas = canvas;
-    this.canvas.width = this.width;
-    this.canvas.height = this.height;
-    this.context = this.canvas.getContext('2d');
-    this.draw();
-  }
-
   setGridWidth(gridWidth: number) {
     if (!this.canvas) {
       throw new Error('canvas未初始化，请先执行 initCanvas() 方法！');
@@ -144,7 +130,7 @@ export default class ChineseChessBoard {
     this.draw();
   }
 
-  private draw() {
+  draw() {
     if (!this.canvas || !this.context) {
       return;
     }

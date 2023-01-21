@@ -35,8 +35,6 @@ class ColorItem {
   }
 }
 export default class ColorTurntable extends Animate {
-  width: number;
-  height: number;
   option: IOption = {
     backgroundColor: '#f1f1f1',
     outer: 0.4,
@@ -76,14 +74,6 @@ export default class ColorTurntable extends Animate {
       this.innerItems.push(new ColorItem(angleStep * i, angleStep * (i + 1), 0, this.innerRadius, `hsla(${colorStep * i}, 100%, 50%, 1)`));
     }
 
-    return this;
-  }
-
-  initCanvas(canvas: HTMLCanvasElement): this {
-    this.canvas = canvas;
-    this.canvas.width = this.width;
-    this.canvas.height = this.height;
-    this.context = this.canvas.getContext('2d');
     return this;
   }
 

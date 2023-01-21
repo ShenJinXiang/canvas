@@ -42,8 +42,6 @@ class Particle {
   }
 }
 export default class Starry extends Animate {
-  width: number;
-  height: number;
   background: CanvasGradient | null = null;
   // 粒子数量
   particleBuffLength: number = 0;

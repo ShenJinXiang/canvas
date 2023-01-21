@@ -26,8 +26,6 @@ class Ball extends Circle {
   }
 }
 export default class RunnerBall extends Animate {
-  width: number;
-  height: number;
   ballNumber: number;
   balls: Ball[] = [];
   option: IOption = {
@@ -65,17 +63,6 @@ export default class RunnerBall extends Animate {
       randomColor()
     )
   }
-  initCanvas(canvas: HTMLCanvasElement): RunnerBall {
-    if (!canvas) {
-      throw new Error('初始化canvas错误：对象为空！');
-    }
-    this.canvas = canvas;
-    this.canvas.width = this.width;
-    this.canvas.height = this.height;
-    this.context = this.canvas.getContext('2d');
-    return this;
-  }
-
   update() {
     this.balls.forEach((item) => item.update(this.width, this.height));
   }

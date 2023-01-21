@@ -4,7 +4,7 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { onMounted, ref, Ref, watch } from 'vue';
+import { Ref, onMounted, ref, watch } from 'vue';
 import ChineseChessBoardVue from '.';
 
 const props = defineProps({
@@ -23,6 +23,6 @@ watch(
   }
 );
 onMounted(() => {
-  canvas.initCanvas(canvasRef.value);
+  canvas.initCanvas(canvasRef.value).draw();
 });
 </script>

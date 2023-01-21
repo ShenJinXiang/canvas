@@ -58,8 +58,6 @@ class RadialLine {
   }
 }
 export default class RandomRadial extends Animate {
-  width: number;
-  height: number;
   option: IOption = {
     lineColor: 'rgba(255, 255, 255, 0.6)',
     maxStep: 30,
@@ -86,16 +84,6 @@ export default class RandomRadial extends Animate {
     }
     return this;
   }
-  initCanvas(canvas: HTMLCanvasElement): RandomRadial {
-    if (!canvas) {
-      throw new Error('初始化canvas错误：对象为空！');
-    }
-    this.canvas = canvas;
-    this.canvas.width = this.width;
-    this.canvas.height = this.height;
-    this.context = this.canvas.getContext('2d');
-    return this;
-  }
   update() {
     this.lines = this.lines.filter((item) => !item.complate());
     if (this.lines.length > this.lineNumber) {
@@ -106,7 +94,6 @@ export default class RandomRadial extends Animate {
       }
     }
     this.lines.forEach((item) => item.update());
-    console.log(this.lines.length);
   }
   draw(): RandomRadial {
     this.clear(null);

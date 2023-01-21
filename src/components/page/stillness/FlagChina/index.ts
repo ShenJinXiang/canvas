@@ -1,3 +1,4 @@
+import BaseCanvas from "@/lib/BaseCanvas";
 import Line from "@/lib/Line";
 import Star from "@/lib/Star";
 
@@ -6,16 +7,13 @@ interface Iconfig {
   starColor: string,
   lineColor: string,
 }
-export default class FlagChina {
-  private canvas: HTMLCanvasElement | null = null;
-  private context: CanvasRenderingContext2D | null = null;
-  private width: number;
-  private height: number;
+export default class FlagChina extends BaseCanvas {
   private config: Iconfig;
   private showLines: boolean;
   private stars: Star[] = [];
   private lines: Line[] = [];
   constructor(width: number, showLines: boolean = false) {
+    super();
     this.width = width;
     this.height = (this.width * 2) / 3;
     this.showLines = showLines;
@@ -54,18 +52,6 @@ export default class FlagChina {
       }
     }
   }
-
-  initCanvas(canvas: HTMLCanvasElement) {
-    if (!canvas) {
-      throw new Error('初始化canvas错误：对象为空！');
-    }
-    this.canvas = canvas;
-    this.canvas.width = this.width;
-    this.canvas.height = this.height;
-    this.context = this.canvas.getContext('2d');
-    this.draw();
-  }
-
   draw() {
     if (!this.canvas || !this.context) {
       return;

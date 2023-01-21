@@ -29,8 +29,6 @@ class Particle {
 export default class LetterTransform extends Animate {
   shadeCanvas: HTMLCanvasElement | null = null;
   shadeContext: CanvasRenderingContext2D | null = null;
-  width: number;
-  height: number;
   option: IOption = {
     backgroundColor: '#303133',
     letterColor: '#67C23A',
@@ -74,7 +72,7 @@ export default class LetterTransform extends Animate {
     }
   }
 
-  initCanvas(canvas: HTMLCanvasElement) {
+  initCanvas(canvas: HTMLCanvasElement): this {
     this.canvas = canvas;
     this.canvas.width = this.width;
     this.canvas.height = this.height;
@@ -112,7 +110,6 @@ export default class LetterTransform extends Animate {
 
   draw(): LetterTransform {
     this.clear();
-    // this.clear();
     // this.particlePositions.forEach((item) => this.drawRect(item.x, item.y));
     for (let index = 0; index < this.particlePositions.length; index++) {
       const p = this.particles[index];

@@ -38,8 +38,6 @@ class ParticleLine extends Line {
   }
 }
 export default class ColorParticle extends Animate {
-  width: number;
-  height: number;
   private particleNum: number;
   private option: IOption = {
     background: '#000',
@@ -63,16 +61,6 @@ export default class ColorParticle extends Animate {
       this.particles.push(this.randomParticle());
     }
     this.refreshLines();
-    return this;
-  }
-  public initCanvas(canvas: HTMLCanvasElement): ColorParticle {
-    if (!canvas) {
-      throw new Error('初始化canvas错误：对象为空！');
-    }
-    this.canvas = canvas;
-    this.canvas.width = this.width;
-    this.canvas.height = this.height;
-    this.context = this.canvas.getContext('2d');
     return this;
   }
   private randomParticle(): Particle {

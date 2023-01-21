@@ -101,4 +101,10 @@ export default [
     name: 'GeometricParticle',
     component: () => import('@/views/page/animation/GeometricParticle.vue'),
   },
+  {
+    title: '数字华容道',
+    path: 'game/DigitalHuarongRoad',
+    name: 'DigitalHuarongRoad',
+    component: () => import('@/views/page/game/DigitalHuarongRoad.vue'),
+  },
 ];

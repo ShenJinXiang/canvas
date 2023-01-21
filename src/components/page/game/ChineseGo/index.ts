@@ -84,8 +84,6 @@ class GoStar implements Point {
 }
 export default class ChineseGo extends Animate {
   gridWidth: number;
-  width: number;
-  height: number;
   size: number;
   private pieceRadius: number = 0;
   private goStarRadius: number = 0;
@@ -150,17 +148,6 @@ export default class ChineseGo extends Animate {
     console.log(this);
     return this;
   }
-  initCanvas(canvas: HTMLCanvasElement): ChineseGo {
-    if (!canvas) {
-      throw new Error('初始化canvas错误：对象为空！');
-    }
-    this.canvas = canvas;
-    this.canvas.width = this.width;
-    this.canvas.height = this.height;
-    this.context = this.canvas.getContext('2d');
-    return this;
-  }
-
   draw(): ChineseGo {
     this.clear(this.option.backgroundColor);
     if (!this.canvas || !this.context) {

@@ -28,8 +28,6 @@ class Ball extends Circle {
   }
 }
 export default class DesultoryBall extends Animate {
-  width: number;
-  height: number;
   ballNumber: number;
   private option: IOption = {
     background: '#fefefe',
@@ -68,16 +66,6 @@ export default class DesultoryBall extends Animate {
       randomOne() * random(minVelocity, maxVelocity),
       randomOne() * random(minVelocity, maxVelocity)
     )
-  }
-  initCanvas(canvas: HTMLCanvasElement): DesultoryBall {
-    if (!canvas) {
-      throw new Error('初始化canvas错误：对象为空！');
-    }
-    this.canvas = canvas;
-    this.canvas.width = this.width;
-    this.canvas.height = this.height;
-    this.context = this.canvas.getContext('2d');
-    return this;
   }
   refreshLines(): void {
     this.lines = [];
