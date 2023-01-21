@@ -1,6 +1,6 @@
 import { StrokeOption } from "@/lib/DrawOption";
 import Line from "@/lib/Line";
-import { Point } from "@/lib/Point";
+import Point from "@/lib/Point";
 import Rect from "@/lib/Rect";
 import Text from "@/lib/Text";
 

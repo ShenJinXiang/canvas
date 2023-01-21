@@ -31,8 +31,9 @@
   </div>
 </template>
 <script lang="ts" setup>
+import { successMsg } from '@/lib/ElKit';
 import { useMouseInElement, useTimestamp, useWindowSize } from '@vueuse/core';
-import { computed, onMounted, reactive, Ref, ref } from 'vue';
+import { Ref, computed, onMounted, reactive, ref } from 'vue';
 import { HuaRongRoad, IResult } from '.';
 
 const timestamp = useTimestamp({ offset: 0 });
@@ -128,6 +129,7 @@ const click = () => {
       if (result.complete) {
         contro.endTimestamp = timestamp.value;
         contro.challengeStatus = ChallengeStatus.COMPLETE;
+        successMsg('成功啦，恭喜你！');
       } else {
         contro.stepNumber += result.step;
       }
@@ -152,10 +154,6 @@ const addQuestion = () => {
 };
 </script>
 <style lang="less" scoped>
-// canvas {
-//   display: inline-block;
-//   margin: 0px 20px;
-// }
 .contro-con {
   display: block;
   margin: 10px auto;
