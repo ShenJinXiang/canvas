@@ -31,7 +31,7 @@ export default class BaseCanvas {
     return this;
   }
 
-  protected clear(fillStyle: string | CanvasGradient | CanvasPattern | null): this {
+  protected clear(fillStyle?: string | CanvasGradient | CanvasPattern | null): this {
     if (!this.canvas || !this.context) {
       return this;
     }
