@@ -107,4 +107,10 @@ export default [
     name: 'DigitalHuarongRoad',
     component: () => import('@/views/page/game/DigitalHuarongRoad.vue'),
   },
+  {
+    title: '新年倒计时',
+    path: 'animation/NewYearCountdown',
+    name: 'NewYearCountdown',
+    component: () => import('@/views/page/animation/NewYearCountdown.vue'),
+  },
 ];

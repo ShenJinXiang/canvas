@@ -14,7 +14,7 @@ export default class BaseCanvas {
     this.showMark = true;
   }
 
-  initCanvas(canvas: HTMLCanvasElement): this {
+  public initCanvas(canvas: HTMLCanvasElement): this {
     if (!canvas) {
       throw new Error('初始化canvas错误：对象为空！');
     }
