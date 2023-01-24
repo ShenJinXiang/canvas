@@ -33,3 +33,18 @@ export const randomColor = () => {
 export const distance = (sPoint: Point, ePoint: Point) => {
   return Math.sqrt(Math.pow(sPoint.x - ePoint.x, 2) + Math.pow(sPoint.y - ePoint.y, 2));
 }
+
+export interface TimeInfo {
+  days: number;
+  hours: number;
+  minutes: number;
+  seconds: number;
+}
+export const timeDis = (time: number): TimeInfo => {
+  return {
+    seconds: Math.floor(time / 1000) % 60,
+    minutes: Math.floor(time / (1000 * 60)) % 60,
+    hours: Math.floor(time / (1000 * 60 * 60)) % 24,
+    days: Math.floor(time / (1000 * 60 * 60 * 24)),
+  };
+}
