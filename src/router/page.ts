@@ -31,27 +31,27 @@ export default [
   },
   {
     title: '乱撞的小球',
-    path: 'animation/RunnerBall',
+    path: 'background/RunnerBall',
     name: 'RunnerBall',
-    component: () => import('@/views/page/animation/RunnerBall.vue'),
+    component: () => import('@/views/page/background/RunnerBall.vue'),
   },
   {
     title: '彩色微粒',
-    path: 'animation/ColorParticle',
+    path: 'background/ColorParticle',
     name: 'ColorParticle',
-    component: () => import('@/views/page/animation/ColorParticle.vue'),
+    component: () => import('@/views/page/background/ColorParticle.vue'),
   },
   {
     title: '散漫的小球',
-    path: 'animation/DesultoryBall',
+    path: 'background/DesultoryBall',
     name: 'DesultoryBall',
-    component: () => import('@/views/page/animation/DesultoryBall.vue'),
+    component: () => import('@/views/page/background/DesultoryBall.vue'),
   },
   {
     title: '随机射线',
-    path: 'animation/RandomRadial',
+    path: 'background/RandomRadial',
     name: 'RandomRadial',
-    component: () => import('@/views/page/animation/RandomRadial.vue'),
+    component: () => import('@/views/page/background/RandomRadial.vue'),
   },
   {
     title: '字母变换',
@@ -73,9 +73,9 @@ export default [
   },
   {
     title: '星空背景',
-    path: 'animation/Starry',
+    path: 'background/Starry',
     name: 'Starry',
-    component: () => import('@/views/page/animation/Starry.vue'),
+    component: () => import('@/views/page/background/Starry.vue'),
   },
   {
     title: '七巧板动画',
@@ -85,9 +85,9 @@ export default [
   },
   {
     title: '激光特效',
-    path: 'animation/LaserEffect',
+    path: 'background/LaserEffect',
     name: 'LaserEffect',
-    component: () => import('@/views/page/animation/LaserEffect.vue'),
+    component: () => import('@/views/page/background/LaserEffect.vue'),
   },
   {
     title: '华容道',
@@ -97,9 +97,9 @@ export default [
   },
   {
     title: '几何颗粒动画',
-    path: 'animation/GeometricParticle',
+    path: 'background/GeometricParticle',
     name: 'GeometricParticle',
-    component: () => import('@/views/page/animation/GeometricParticle.vue'),
+    component: () => import('@/views/page/background/GeometricParticle.vue'),
   },
   {
     title: '数字华容道',
@@ -109,8 +109,8 @@ export default [
   },
   {
     title: '新年倒计时',
-    path: 'animation/NewYearCountdown',
+    path: 'background/NewYearCountdown',
     name: 'NewYearCountdown',
-    component: () => import('@/views/page/animation/NewYearCountdown.vue'),
+    component: () => import('@/views/page/background/NewYearCountdown.vue'),
   },
 ];

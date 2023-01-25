@@ -21,7 +21,7 @@
   </div>
 </template>
 <script lang="ts" setup>
-import LaserEffect from '@/components/page/animation/LaserEffect/index.vue';
+import LaserEffect from '@/components/page/background/LaserEffect/index.vue';
 import { useWindowSize } from '@vueuse/core';
 import { ref } from 'vue';
 

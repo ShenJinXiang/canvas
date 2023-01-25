@@ -3,7 +3,7 @@
 </template>
 <script lang="ts" setup>
 
-import NewYearCountdown from '@/components/page/animation/NewYearCountdown/index.vue';
+import NewYearCountdown from '@/components/page/background/NewYearCountdown/index.vue';
 import { useWindowSize } from '@vueuse/core';
 
 const { width, height } = useWindowSize();
