@@ -31,6 +31,6 @@ watch(
   },
 );
 onMounted(() => {
-  flagChina.initCanvas(canvasRef.value);
+  flagChina.initCanvas(canvasRef.value).draw();
 });
 </script>

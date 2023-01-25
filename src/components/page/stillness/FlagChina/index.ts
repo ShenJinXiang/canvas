@@ -34,8 +34,8 @@ export default class FlagChina extends BaseCanvas {
       new Star(5 * gridWidth, 5 * gridWidth, 3 * gridWidth, -Math.PI / 2),
       new Star(10 * gridWidth, 2 * gridWidth, 1 * gridWidth, Math.PI - Math.atan(3 / 5)),
       new Star(12 * gridWidth, 4 * gridWidth, 1 * gridWidth, Math.PI - Math.atan(1 / 7)),
-      new Star(12 * gridWidth, 7 * gridWidth, 1 * gridWidth, Math.PI - Math.atan(2 / 7)),
-      new Star(10 * gridWidth, 9 * gridWidth, 1 * gridWidth, Math.PI - Math.atan(4 / 5)),
+      new Star(12 * gridWidth, 7 * gridWidth, 1 * gridWidth, Math.PI + Math.atan(2 / 7)),
+      new Star(10 * gridWidth, 9 * gridWidth, 1 * gridWidth, Math.PI + Math.atan(4 / 5)),
     ];
     this.lines = [];
     this.lines.push(new Line(this.width / 2, 0, this.width / 2, this.height));
