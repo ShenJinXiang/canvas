@@ -30,6 +30,9 @@ export default class GluttonousSnake extends Animate {
   gData: number[][] = [];
   cData: IGridPosition[] = [];
   direction: Direction = Direction.UP;
+  refreshCount: number = 0;
+  refreshStep: number = 0;
+
   constructor(width: number, height: number) {
     super();
     this.width = width;
@@ -40,6 +43,8 @@ export default class GluttonousSnake extends Animate {
   }
 
   private initData() {
+    this.refreshCount = 0;
+    this.refreshStep = 20;
     this.initCData();
     this.initGData();
     this.refreshGData();
@@ -69,10 +74,42 @@ export default class GluttonousSnake extends Animate {
   }
 
   private refreshGData() {
+    for (let row = 0; row < this.rowNumber; row++) {
+      for (let col = 0; col < this.colNumber; col++) {
+        this.gData[row][col] = 0;
+      }
+    }
     this.cData.forEach((item) => this.gData[item.row][item.col] = 1);
   }
   private nextGrid(): IGridPosition | null {
     return null;
+  }
+
+  update() {
+    this.refreshCount++;
+    if (this.refreshCount >= this.refreshStep) {
+      this.updateData();
+      this.refreshCount = 0;
+    }
+  }
+  updateData() {
+    const g: IGridPosition = { col: this.cData[0].col, row: this.cData[0].row };
+    if (this.direction == Direction.UP) {
+      g.row = this.cData[0].row - 1;
+    } else if (this.direction == Direction.RIGHT) {
+      g.col = this.cData[0].col + 1;
+    } else if (this.direction == Direction.DOWN) {
+      g.row = this.cData[0].row + 1;
+    } else if (this.direction == Direction.LEFT) {
+      g.col = this.cData[0].col - 1;
+    }
+
+    this.cData.unshift(g);
+    this.cData.pop();
+
+    console.log(this.cData);
+    this.refreshGData();
+
   }
   draw() {
     if (!this.context) {
