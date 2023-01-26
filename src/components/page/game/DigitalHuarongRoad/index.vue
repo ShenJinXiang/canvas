@@ -63,7 +63,8 @@ const contro = reactive({
 const canvas = new DigitalHuarongRoad(props.width - controWidth.value, props.height, contro.rowNumber, contro.colNumber);
 const conStyle = reactive({
   height: `${props.height}px`,
-})
+  width: `${props.width}px`,
+});
 const controStyle = reactive({
   width: `${controWidth.value}px`,
   height: `${props.height}px`,

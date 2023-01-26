@@ -65,12 +65,12 @@ export default [
     name: 'ColorTurntable',
     component: () => import('@/views/page/animation/ColorTurntable.vue'),
   },
-  {
-    title: '象棋',
-    path: 'game/ChineseChess',
-    name: 'ChineseChess',
-    component: () => import('@/views/page/game/ChineseChess.vue'),
-  },
+  // {
+  //   title: '象棋',
+  //   path: 'game/ChineseChess',
+  //   name: 'ChineseChess',
+  //   component: () => import('@/views/page/game/ChineseChess.vue'),
+  // },
   {
     title: '星空背景',
     path: 'background/Starry',
@@ -112,5 +112,11 @@ export default [
     path: 'background/NewYearCountdown',
     name: 'NewYearCountdown',
     component: () => import('@/views/page/background/NewYearCountdown.vue'),
+  },
+  {
+    title: '贪吃蛇',
+    path: 'game/GluttonousSnake',
+    name: 'GluttonousSnake',
+    component: () => import('@/views/page/game/GluttonousSnake.vue'),
   },
 ];
