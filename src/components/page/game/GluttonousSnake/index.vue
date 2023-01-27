@@ -6,8 +6,10 @@
   </div>
 </template>
 <script lang="ts" setup>
+import { useMagicKeys, whenever } from '@vueuse/core';
 import { onMounted, reactive, ref } from 'vue';
-import GluttonousSnake from '.';
+import GluttonousSnake, { Direction } from '.';
+
 const props = defineProps({
   width: {
     type: Number,
@@ -32,6 +34,20 @@ const canvas = new GluttonousSnake(props.width - controWidth.value, props.height
 
 onMounted(() => {
   canvas.initCanvas(canvasRef.value).run();
+});
+
+const { UP, DOWN, LEFT, RIGHt } = useMagicKeys();
+whenever(UP, () => {
+  canvas.directionKey(Direction.UP);
+});
+whenever(DOWN, () => {
+  canvas.directionKey(Direction.DOWN);
+});
+whenever(LEFT, () => {
+  canvas.directionKey(Direction.LEFT);
+});
+whenever(RIGHt, () => {
+  canvas.directionKey(Direction.RIGHT);
 });
 </script>
 <style lang="less" scoped>

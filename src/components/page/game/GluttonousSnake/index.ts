@@ -13,7 +13,7 @@ interface IOption {
   defaultGridColor: string;
   initLength: number;
 }
-enum Direction {
+export enum Direction {
   UP, RIGHT, DOWN, LEFT
 }
 
@@ -31,7 +31,10 @@ export default class GluttonousSnake extends Animate {
   cData: IGridPosition[] = [];
   direction: Direction = Direction.UP;
   refreshCount: number = 0;
-  refreshStep: number = 0;
+  refreshStep: number = 20;
+  target: IGridPosition | null = null;
+  isKey: boolean = true;
+  boundaryless: boolean = true;
 
   constructor(width: number, height: number) {
     super();
@@ -43,10 +46,12 @@ export default class GluttonousSnake extends Animate {
   }
 
   private initData() {
+    this.isKey = true;
     this.refreshCount = 0;
     this.refreshStep = 20;
     this.initCData();
     this.initGData();
+    this.refreshTarget();
     this.refreshGData();
   }
   private initCData() {
@@ -80,9 +85,28 @@ export default class GluttonousSnake extends Animate {
       }
     }
     this.cData.forEach((item) => this.gData[item.row][item.col] = 1);
+    if (this.target) {
+      this.gData[this.target.row][this.target.col] = 1;
+    }
   }
-  private nextGrid(): IGridPosition | null {
-    return null;
+  private refreshTarget() {
+    if (this.cData.length >= this.colNumber * this.rowNumber) {
+      this.target = null;
+      return;
+    }
+    const arr: IGridPosition[] = [];
+    for (let row = 0; row < this.rowNumber; row++) {
+      for (let col = 0; col < this.colNumber; col++) {
+        if (this.gData[row][col] === 0) {
+          arr.push({ row, col });
+        }
+      }
+    }
+    if (arr.length <= 0) {
+      this.target = null;
+      return;
+    }
+    this.target = arr[randomInt(arr.length)];
   }
 
   update() {
@@ -93,23 +117,21 @@ export default class GluttonousSnake extends Animate {
     }
   }
   updateData() {
-    const g: IGridPosition = { col: this.cData[0].col, row: this.cData[0].row };
+    const next: IGridPosition = { col: this.cData[0].col, row: this.cData[0].row };
     if (this.direction == Direction.UP) {
-      g.row = this.cData[0].row - 1;
+      next.row = next.row === 0 ? (this.rowNumber - 1) : (next.row - 1);
     } else if (this.direction == Direction.RIGHT) {
-      g.col = this.cData[0].col + 1;
+      next.col = next.col === this.colNumber - 1 ? 0 : next.col + 1;
     } else if (this.direction == Direction.DOWN) {
-      g.row = this.cData[0].row + 1;
+      next.row = next.row === this.rowNumber - 1 ? 0 : next.row + 1;
     } else if (this.direction == Direction.LEFT) {
-      g.col = this.cData[0].col - 1;
+      next.col = next.col === 0 ? (this.colNumber - 1) : next.col - 1;
     }
 
-    this.cData.unshift(g);
+    this.cData.unshift(next);
     this.cData.pop();
-
-    console.log(this.cData);
     this.refreshGData();
-
+    this.isKey = true;
   }
   draw() {
     if (!this.context) {
@@ -154,5 +176,37 @@ export default class GluttonousSnake extends Animate {
     this.context.fillStyle = style;
     this.context.fill();
     this.context.restore();
+  }
+
+  public directionKey(direction: Direction) {
+    if (!this.isKey) {
+      return;
+    }
+    switch (direction) {
+      case Direction.UP:
+        if (this.direction !== Direction.DOWN) {
+          this.direction = Direction.UP;
+          this.isKey = false;
+        }
+        break;
+      case Direction.DOWN:
+        if (this.direction !== Direction.UP) {
+          this.direction = Direction.DOWN;
+          this.isKey = false;
+        }
+        break;
+      case Direction.LEFT:
+        if (this.direction !== Direction.RIGHT) {
+          this.direction = Direction.LEFT;
+          this.isKey = false;
+        }
+        break;
+      case Direction.RIGHT:
+        if (this.direction !== Direction.LEFT) {
+          this.direction = Direction.RIGHT;
+          this.isKey = false;
+        }
+        break;
+    }
   }
 }
