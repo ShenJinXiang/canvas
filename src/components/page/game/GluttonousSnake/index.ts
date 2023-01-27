@@ -1,5 +1,7 @@
 import Animate from "@/lib/Animate";
+import { alert } from "@/lib/ElKit";
 import { randomInt } from '@/lib/Kit';
+import { Ref, ref } from 'vue';
 
 interface IGridPosition {
   row: number;
@@ -17,6 +19,19 @@ export enum Direction {
   UP, RIGHT, DOWN, LEFT
 }
 
+export enum ChallengeStatus {
+  PREPARE = 'PREPARE',
+  PLAY = 'PLAY',
+  END = 'END'
+};
+
+export interface IPlayStatus {
+  score: number;
+  speed: number;
+  challengeStatus: ChallengeStatus;
+  boundaryless: boolean;
+}
+
 export default class GluttonousSnake extends Animate {
   colNumber: number = 0;
   rowNumber: number = 0;
@@ -31,11 +46,15 @@ export default class GluttonousSnake extends Animate {
   cData: IGridPosition[] = [];
   direction: Direction = Direction.UP;
   refreshCount: number = 0;
-  refreshStep: number = 20;
+  refreshStep: number = 0;
   target: IGridPosition | null = null;
   isKey: boolean = true;
-  boundaryless: boolean = true;
-
+  playStatus: Ref<IPlayStatus> = ref({
+    score: 0,
+    speed: 1,
+    challengeStatus: ChallengeStatus.PREPARE,
+    boundaryless: true
+  });
   constructor(width: number, height: number) {
     super();
     this.width = width;
@@ -47,8 +66,15 @@ export default class GluttonousSnake extends Animate {
 
   private initData() {
     this.isKey = true;
+    this.direction = Direction.UP;
+    this.playStatus.value = {
+      score: 0,
+      speed: 1,
+      challengeStatus: ChallengeStatus.PREPARE,
+      boundaryless: true
+    };
     this.refreshCount = 0;
-    this.refreshStep = 20;
+    this.refreshStep = 16;
     this.initCData();
     this.initGData();
     this.refreshTarget();
@@ -110,6 +136,9 @@ export default class GluttonousSnake extends Animate {
   }
 
   update() {
+    if (this.playStatus.value.challengeStatus !== ChallengeStatus.PLAY) {
+      return;
+    }
     this.refreshCount++;
     if (this.refreshCount >= this.refreshStep) {
       this.updateData();
@@ -117,21 +146,58 @@ export default class GluttonousSnake extends Animate {
     }
   }
   updateData() {
-    const next: IGridPosition = { col: this.cData[0].col, row: this.cData[0].row };
-    if (this.direction == Direction.UP) {
-      next.row = next.row === 0 ? (this.rowNumber - 1) : (next.row - 1);
-    } else if (this.direction == Direction.RIGHT) {
-      next.col = next.col === this.colNumber - 1 ? 0 : next.col + 1;
-    } else if (this.direction == Direction.DOWN) {
-      next.row = next.row === this.rowNumber - 1 ? 0 : next.row + 1;
-    } else if (this.direction == Direction.LEFT) {
-      next.col = next.col === 0 ? (this.colNumber - 1) : next.col - 1;
+
+    const next = this.nextGrid();
+    if (!next) {
+      this.endGame();
+      return;
     }
 
-    this.cData.unshift(next);
-    this.cData.pop();
+    if (this.target && next.row === this.target.row && next.col === this.target.col) {
+      this.cData.unshift(next);
+      this.playStatus.value.score += 10;
+      if (this.playStatus.value.score % 100 === 0) {
+        this.refreshStep -= 1;
+        this.playStatus.value.speed += 1;
+      }
+      this.refreshTarget();
+    } else if (this.gData[next.row][next.col] === 1) {
+      this.endGame();
+    } else {
+      this.cData.unshift(next);
+      this.cData.pop();
+    }
     this.refreshGData();
     this.isKey = true;
+  }
+  private nextGrid(): IGridPosition | null {
+    const next: IGridPosition = { col: this.cData[0].col, row: this.cData[0].row };
+    if (this.direction == Direction.UP) {
+      if (!this.playStatus.value.boundaryless && next.row <= 0) {
+        return null;
+      }
+      next.row = next.row === 0 ? (this.rowNumber - 1) : (next.row - 1);
+      return next;
+    } else if (this.direction == Direction.RIGHT) {
+      if (!this.playStatus.value.boundaryless && next.col >= this.colNumber - 1) {
+        return null;
+      }
+      next.col = next.col === this.colNumber - 1 ? 0 : next.col + 1;
+      return next;
+    } else if (this.direction == Direction.DOWN) {
+      if (!this.playStatus.value.boundaryless && next.row >= this.rowNumber - 1) {
+        return null;
+      }
+      next.row = next.row === this.rowNumber - 1 ? 0 : next.row + 1;
+      return next;
+    } else if (this.direction == Direction.LEFT) {
+      if (!this.playStatus.value.boundaryless && next.col <= 0) {
+        return null;
+      }
+      next.col = next.col === 0 ? (this.colNumber - 1) : next.col - 1;
+      return next;
+    }
+    return null;
   }
   draw() {
     if (!this.context) {
@@ -178,8 +244,13 @@ export default class GluttonousSnake extends Animate {
     this.context.restore();
   }
 
+  private endGame() {
+    alert(`游戏结束，得分：${this.playStatus.value.score}`);
+    this.playStatus.value.challengeStatus = ChallengeStatus.END;
+  }
+
   public directionKey(direction: Direction) {
-    if (!this.isKey) {
+    if (this.playStatus.value.challengeStatus !== ChallengeStatus.PLAY || !this.isKey) {
       return;
     }
     switch (direction) {
@@ -208,5 +279,15 @@ export default class GluttonousSnake extends Animate {
         }
         break;
     }
+  }
+  public start() {
+    if (this.playStatus.value.challengeStatus !== ChallengeStatus.PLAY) {
+      this.playStatus.value.challengeStatus = ChallengeStatus.PLAY;
+    }
+  }
+
+  public reStart() {
+    this.initData();
+    this.playStatus.value.challengeStatus = ChallengeStatus.PLAY;
   }
 }
