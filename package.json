@@ -15,6 +15,7 @@
     "core-js": "^3.27.2",
     "element-plus": "^2.2.28",
     "nprogress": "^0.2.0",
+    "pinia": "^2.0.29",
     "vue": "^3.2.45",
     "vue-router": "^4.1.6",
     "vuex": "^4.1.0"
