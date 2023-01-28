@@ -3,6 +3,12 @@
     <canvas ref="canvasRef"></canvas>
     <div class="contro-con" :style="controStyle">
       <div class="contro-row">
+        <div class="label">穿过边界：</div>
+        <div class="box">
+          <el-switch v-model="playStatus.boundaryless" active-text="是" inactive-text="否" :inline-prompt="true" active-color="#13ce66" inactive-color="#ff4949" />
+        </div>
+      </div>
+      <div class="contro-row">
         <el-button @click="start" v-show="playStatus.challengeStatus === ChallengeStatus.PREPARE">开始挑战</el-button>
         <el-button @click="reStart" v-show="playStatus.challengeStatus !== ChallengeStatus.PREPARE">重新挑战</el-button>
       </div>
@@ -74,11 +80,13 @@ const reStart = () => {
 <style lang="less" scoped>
 .container {
   position: relative;
+
   canvas {
     position: absolute;
     left: 0px;
     top: 0px;
   }
+
   .contro-con {
     box-sizing: border-box;
     background-color: #fff;
@@ -91,7 +99,7 @@ const reStart = () => {
       display: flex;
       align-items: center;
 
-      .label{
+      .label {
         font-size: 14px;
         color: var(--el-text-color-secondary);
         line-height: 44px;
@@ -101,6 +109,7 @@ const reStart = () => {
         white-space: nowrap;
         margin-bottom: 0;
       }
+
       .box {
         flex: 0 0 70%;
         color: var(--el-color-info-dark-2);
