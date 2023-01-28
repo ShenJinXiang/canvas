@@ -119,4 +119,10 @@ export default [
     name: 'GluttonousSnake',
     component: () => import('@/views/page/game/GluttonousSnake.vue'),
   },
+  {
+    title: '彩色烟花动画',
+    path: 'animation/ColorFireworks',
+    name: 'ColorFireworks',
+    component: () => import('@/views/page/animation/ColorFireworks.vue'),
+  },
 ];
