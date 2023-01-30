@@ -5,6 +5,20 @@ import Point from "@/lib/Point";
 interface IOption {
   // 星星半径
   maxStartRadius: number;
+  // 创建新烟花的概率
+  cretefirewordProbability: number;
+  // 烟花半径
+  fireRadius: number;
+  // 烟花尾迹长度
+  fireTrailLen: number;
+  // 烟花距离边界最近距离
+  firePadding: number;
+  // 烟花速度
+  minFireStrength: number;
+  maxFireStrength: number;
+  // 加速度
+  a: number;
+  g: number;
 }
 
 class Start {
@@ -57,11 +71,10 @@ class FireWord {
   private vy: number;
   private ax: number;
   private ay: number;
-  private pathLength: number;
   private rgb: string;
   status: FireWordStatus;
   path: Point[];
-  constructor(x: number, y: number, radius: number, vx: number, vy: number, ax: number, ay: number, pathLength: number) {
+  constructor(x: number, y: number, radius: number, vx: number, vy: number, ax: number, ay: number) {
     this.x = x;
     this.y = y;
     this.radius = radius;
@@ -69,14 +82,23 @@ class FireWord {
     this.vy = vy;
     this.ax = ax;
     this.ay = ay;
-    this.pathLength = pathLength;
     this.rgb = `${randomInt(256)}, ${randomInt(256)}, ${randomInt(256)}`;
     this.status = FireWordStatus.LAUNCH;
     this.path = [];
   }
-  update() {
+  update(pathLength: number, minY: number, minX: number, maxX: number) {
     if (this.status === FireWordStatus.LAUNCH) {
-
+      if (this.path.length > pathLength) {
+        this.path.shift();
+      }
+      this.path.push({ x: this.x, y: this.y });
+      this.x += this.vx;
+      this.y += this.vy;
+      this.vx += this.ax;
+      this.vy += this.ay;
+      if (this.vy > 0 || this.x < minX || this.x > maxX || this.y < minY) {
+        this.status = FireWordStatus.DISAPPEAR;
+      }
       return;
     }
     if (this.status === FireWordStatus.BLAST) {
@@ -84,14 +106,53 @@ class FireWord {
       return;
     }
   }
+  draw(context: CanvasRenderingContext2D | null) {
+    if (!context) {
+      return;
+    }
+    if (this.status === FireWordStatus.LAUNCH) {
+      context.save();
+      context.fillStyle = `rgba(${this.rgb}, 0.5)`;
+      const t = this.path[0];
+      let linearGrad = context.createLinearGradient(this.x, this.y, t.x, t.y);
+      linearGrad.addColorStop(0, `rgba(${this.rgb}, 0.8)`);
+      linearGrad.addColorStop(1, `rgba(${this.rgb}, 0)`);
+      context.fillStyle = linearGrad;
+      context.moveTo(this.x - this.radius, this.y);
+      context.lineTo(this.x + this.radius, this.y);
+      context.lineTo(t.x + this.radius, t.y);
+      context.lineTo(t.x - this.radius, t.y);
+      context.closePath();
+      context.fill();
+      context.restore();
+
+      context.save();
+      context.fillStyle = `rgba(${this.rgb}, 1)`;
+      context.beginPath();
+      context.arc(this.x, this.y, this.radius, 0, 2 * Math.PI, false);
+      context.fill();
+      context.restore();
+    }
+  }
 }
 
 export default class ColorFireworks extends Animate {
   background: CanvasGradient | null = null;
   private option: IOption = {
-    maxStartRadius: 1
+    maxStartRadius: 1,
+    cretefirewordProbability: 0.5,
+    fireRadius: 3,
+    fireTrailLen: 15,
+    firePadding: 0,
+    minFireStrength: 4,
+    maxFireStrength: 6,
+    g: 5e-2,
+    a: 1e-3
   };
   starts: Start[] = [];
+  fireWords: FireWord[] = [];
+  // 烟花数量
+  firewordNumber: number = 0;
   constructor(width: number, height: number) {
     super();
     this.width = width;
@@ -101,6 +162,7 @@ export default class ColorFireworks extends Animate {
 
   private initData() {
     this.starts = [];
+    this.firewordNumber = Math.floor(this.width / 1000);
     for (let x = 0; x < this.width; x++) {
       for (let y = 0; y < this.height; y++) {
         if (randomInt(3000) === 1) {
@@ -120,8 +182,26 @@ export default class ColorFireworks extends Animate {
     return this;
   }
 
+  private refreshFireWord() {
+    this.fireWords = this.fireWords.filter((item) => item.status !== FireWordStatus.DISAPPEAR);
+    // if (this.fireWords.length < this.firewordNumber && random(1) <= this.option.cretefirewordProbability) {
+    if (this.fireWords.length < this.firewordNumber) {
+      this.fireWords.push(new FireWord(
+        random(this.option.firePadding, this.width - this.option.firePadding),
+        this.height,
+        this.option.fireRadius,
+        random(-1, 1),
+        random(-this.option.maxFireStrength, this.option.minFireStrength),
+        random(-this.option.a, this.option.a),
+        random(this.option.g)
+      ));
+    }
+  }
+
   update() {
     this.starts.forEach((item) => item.update());
+    this.refreshFireWord();
+    this.fireWords.forEach(item => item.update(this.option.fireTrailLen, this.option.firePadding, this.option.firePadding, this.width - this.option.firePadding));
   }
   draw() {
     if (!this.context) {
@@ -134,6 +214,7 @@ export default class ColorFireworks extends Animate {
     }
     this.context.save();
     this.starts.forEach((item) => item.draw(this.context));
+    this.fireWords.forEach(item => item.draw(this.context));
     this.context.restore();
   }
 }
