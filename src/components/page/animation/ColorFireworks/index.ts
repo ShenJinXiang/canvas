@@ -1,5 +1,6 @@
 import Animate from "@/lib/Animate";
 import { random, randomInt } from "@/lib/Kit";
+import Point from "@/lib/Point";
 
 interface IOption {
   // 星星半径
@@ -41,6 +42,47 @@ class Start {
     context.arc(this.x, this.y, this.radius, 0, 2 * Math.PI, false);
     context.fill();
     context.restore();
+  }
+}
+enum FireWordStatus {
+  LAUNCH,
+  BLAST,
+  DISAPPEAR
+}
+class FireWord {
+  private x: number;
+  private y: number;
+  private radius: number;
+  private vx: number;
+  private vy: number;
+  private ax: number;
+  private ay: number;
+  private pathLength: number;
+  private rgb: string;
+  status: FireWordStatus;
+  path: Point[];
+  constructor(x: number, y: number, radius: number, vx: number, vy: number, ax: number, ay: number, pathLength: number) {
+    this.x = x;
+    this.y = y;
+    this.radius = radius;
+    this.vx = vx;
+    this.vy = vy;
+    this.ax = ax;
+    this.ay = ay;
+    this.pathLength = pathLength;
+    this.rgb = `${randomInt(256)}, ${randomInt(256)}, ${randomInt(256)}`;
+    this.status = FireWordStatus.LAUNCH;
+    this.path = [];
+  }
+  update() {
+    if (this.status === FireWordStatus.LAUNCH) {
+
+      return;
+    }
+    if (this.status === FireWordStatus.BLAST) {
+
+      return;
+    }
   }
 }
 
