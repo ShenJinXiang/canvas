@@ -112,7 +112,8 @@ class FireWord {
     }
     if (this.status === FireWordStatus.LAUNCH) {
       context.save();
-      context.fillStyle = `rgba(${this.rgb}, 0.5)`;
+      context.beginPath();
+      // context.fillStyle = `rgba(${this.rgb}, 0.5)`;
       const t = this.path[0];
       let linearGrad = context.createLinearGradient(this.x, this.y, t.x, t.y);
       linearGrad.addColorStop(0, `rgba(${this.rgb}, 0.8)`);
@@ -140,14 +141,14 @@ export default class ColorFireworks extends Animate {
   background: CanvasGradient | null = null;
   private option: IOption = {
     maxStartRadius: 1,
-    cretefirewordProbability: 0.5,
+    cretefirewordProbability: 0.1,
     fireRadius: 3,
     fireTrailLen: 15,
     firePadding: 0,
-    minFireStrength: 4,
-    maxFireStrength: 6,
-    g: 5e-2,
-    a: 1e-3
+    minFireStrength: 6,
+    maxFireStrength: 10,
+    g: 0.2,
+    a: 0.001
   };
   starts: Start[] = [];
   fireWords: FireWord[] = [];
@@ -162,7 +163,7 @@ export default class ColorFireworks extends Animate {
 
   private initData() {
     this.starts = [];
-    this.firewordNumber = Math.floor(this.width / 1000);
+    this.firewordNumber = Math.floor(this.width / 100);
     for (let x = 0; x < this.width; x++) {
       for (let y = 0; y < this.height; y++) {
         if (randomInt(3000) === 1) {
@@ -184,14 +185,14 @@ export default class ColorFireworks extends Animate {
 
   private refreshFireWord() {
     this.fireWords = this.fireWords.filter((item) => item.status !== FireWordStatus.DISAPPEAR);
-    // if (this.fireWords.length < this.firewordNumber && random(1) <= this.option.cretefirewordProbability) {
-    if (this.fireWords.length < this.firewordNumber) {
+    if (this.fireWords.length < this.firewordNumber && random(1) <= this.option.cretefirewordProbability) {
+      // if (this.fireWords.length < this.firewordNumber) {
       this.fireWords.push(new FireWord(
         random(this.option.firePadding, this.width - this.option.firePadding),
         this.height,
         this.option.fireRadius,
         random(-1, 1),
-        random(-this.option.maxFireStrength, this.option.minFireStrength),
+        random(-this.option.maxFireStrength, -this.option.minFireStrength),
         random(-this.option.a, this.option.a),
         random(this.option.g)
       ));
