@@ -74,6 +74,64 @@ enum FireWordStatus {
   BLAST,
   DISAPPEAR
 }
+class Particle {
+  private x: number;
+  private y: number;
+  private radius: number;
+  private vx: number;
+  private vy: number;
+  private ax: number;
+  private ay: number;
+  private rgb: string;
+  path: Point[] = [];
+  constructor(x: number, y: number, radius: number, vx: number, vy: number, ax: number, ay: number, rgb: string) {
+    this.x = x;
+    this.y = y;
+    this.radius = radius;
+    this.vx = vx;
+    this.vy = vy;
+    this.ax = ax;
+    this.ay = ay;
+    this.rgb = rgb;
+  }
+  update(pathLength: number) {
+    if (this.path.length > pathLength) {
+      this.path.shift();
+    }
+    this.path.push({ x: this.x, y: this.y });
+    this.x += this.vx;
+    this.y += this.vy;
+    this.vx += this.ax;
+    this.vy += this.ay;
+  }
+  draw(context: CanvasRenderingContext2D | null, alpha: number) {
+    if (!context) {
+      return;
+    }
+    context.save();
+    context.fillStyle = `rgba(${this.rgb + (alpha * 0.7)})`;
+    if (alpha > 0.95) {
+      context.fillStyle = '#fff';
+    }
+    context.beginPath();
+    context.moveTo(this.x - this.radius, this.y);
+    context.lineTo(this.path[0].x, this.path[0].y);
+    context.lineTo(this.x + this.radius, this.y);
+    context.closePath();
+    context.fill();
+    context.restore();
+
+    context.save();
+    context.fillStyle = `rgba(${this.rgb + alpha})`;
+    if (alpha > 0.95) {
+      context.fillStyle = '#fff';
+    }
+    context.beginPath();
+    context.arc(this.x, this.y, this.radius, 0, 2 * Math.PI, false);
+    context.fill();
+    context.restore();
+  }
+}
 class FireWord {
   private x: number;
   private y: number;
