@@ -14,8 +14,19 @@ interface IOption {
   // 烟花距离边界最近距离
   firePadding: number;
   // 烟花速度
-  minFireStrength: number;
-  maxFireStrength: number;
+  minFireVelocity: number;
+  maxFireVelocity: number;
+  // 烟花粒子半径
+  particleRadius: number;
+  particleLifeTime: number;
+  // 烟花粒子尾迹长度
+  particleTrailLen: number;
+  // 烟花粒子数量
+  minParticleNumber: number;
+  maxParticleNumber: number;
+  // 烟花粒子速度
+  minParticleVelocity: number;
+  maxParticleVelocity: number;
   // 加速度
   a: number;
   g: number;
@@ -145,8 +156,15 @@ export default class ColorFireworks extends Animate {
     fireRadius: 3,
     fireTrailLen: 15,
     firePadding: 0,
-    minFireStrength: 6,
-    maxFireStrength: 10,
+    minFireVelocity: 6,
+    maxFireVelocity: 10,
+    particleRadius: 1,
+    particleLifeTime: 150,
+    particleTrailLen: 15,
+    minParticleNumber: 9,
+    maxParticleNumber: 30,
+    minParticleVelocity: 1.75,
+    maxParticleVelocity: 7,
     g: 0.2,
     a: 0.001
   };
@@ -192,7 +210,7 @@ export default class ColorFireworks extends Animate {
         this.height,
         this.option.fireRadius,
         random(-1, 1),
-        random(-this.option.maxFireStrength, -this.option.minFireStrength),
+        random(-this.option.maxFireVelocity, -this.option.minFireVelocity),
         random(-this.option.a, this.option.a),
         random(this.option.g)
       ));
