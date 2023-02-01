@@ -143,6 +143,7 @@ class FireWord {
   private rgb: string;
   status: FireWordStatus;
   path: Point[];
+  particles: Particle[] = [];
   constructor(x: number, y: number, radius: number, vx: number, vy: number, ax: number, ay: number) {
     this.x = x;
     this.y = y;
@@ -203,6 +204,24 @@ class FireWord {
       context.fill();
       context.restore();
     }
+  }
+  createParticles(particleRadius: number, particleNumber: number, particleVelocity: number) {
+    this.particles = [];
+    const angleStep = 2 * Math.PI / particleNumber;
+    for (let i = 0; i < particleNumber; i++) {
+      const angle = i * angleStep;
+      this.particles.push(new Particle(
+        this.x,
+        this.y,
+        particleRadius,
+        particleVelocity * Math.cos(angle),
+        particleVelocity * Math.sin(angle),
+        this.ax,
+        this.ay,
+        this.rgb
+      ))
+    }
+
   }
 }
 
