@@ -14,8 +14,19 @@ interface IOption {
   // 烟花距离边界最近距离
   firePadding: number;
   // 烟花速度
-  minFireStrength: number;
-  maxFireStrength: number;
+  minFireVelocity: number;
+  maxFireVelocity: number;
+  // 烟花粒子半径
+  particleRadius: number;
+  particleLifeTime: number;
+  // 烟花粒子尾迹长度
+  particleTrailLen: number;
+  // 烟花粒子数量
+  minParticleNumber: number;
+  maxParticleNumber: number;
+  // 烟花粒子速度
+  minParticleVelocity: number;
+  maxParticleVelocity: number;
   // 加速度
   a: number;
   g: number;
@@ -63,6 +74,64 @@ enum FireWordStatus {
   BLAST,
   DISAPPEAR
 }
+class Particle {
+  private x: number;
+  private y: number;
+  private radius: number;
+  private vx: number;
+  private vy: number;
+  private ax: number;
+  private ay: number;
+  private rgb: string;
+  path: Point[] = [];
+  constructor(x: number, y: number, radius: number, vx: number, vy: number, ax: number, ay: number, rgb: string) {
+    this.x = x;
+    this.y = y;
+    this.radius = radius;
+    this.vx = vx;
+    this.vy = vy;
+    this.ax = ax;
+    this.ay = ay;
+    this.rgb = rgb;
+  }
+  update(pathLength: number) {
+    if (this.path.length > pathLength) {
+      this.path.shift();
+    }
+    this.path.push({ x: this.x, y: this.y });
+    this.x += this.vx;
+    this.y += this.vy;
+    this.vx += this.ax;
+    this.vy += this.ay;
+  }
+  draw(context: CanvasRenderingContext2D | null, alpha: number) {
+    if (!context) {
+      return;
+    }
+    context.save();
+    context.fillStyle = `rgba(${this.rgb + (alpha * 0.7)})`;
+    if (alpha > 0.95) {
+      context.fillStyle = '#fff';
+    }
+    context.beginPath();
+    context.moveTo(this.x - this.radius, this.y);
+    context.lineTo(this.path[0].x, this.path[0].y);
+    context.lineTo(this.x + this.radius, this.y);
+    context.closePath();
+    context.fill();
+    context.restore();
+
+    context.save();
+    context.fillStyle = `rgba(${this.rgb + alpha})`;
+    if (alpha > 0.95) {
+      context.fillStyle = '#fff';
+    }
+    context.beginPath();
+    context.arc(this.x, this.y, this.radius, 0, 2 * Math.PI, false);
+    context.fill();
+    context.restore();
+  }
+}
 class FireWord {
   private x: number;
   private y: number;
@@ -74,6 +143,7 @@ class FireWord {
   private rgb: string;
   status: FireWordStatus;
   path: Point[];
+  particles: Particle[] = [];
   constructor(x: number, y: number, radius: number, vx: number, vy: number, ax: number, ay: number) {
     this.x = x;
     this.y = y;
@@ -135,6 +205,24 @@ class FireWord {
       context.restore();
     }
   }
+  createParticles(particleRadius: number, particleNumber: number, particleVelocity: number) {
+    this.particles = [];
+    const angleStep = 2 * Math.PI / particleNumber;
+    for (let i = 0; i < particleNumber; i++) {
+      const angle = i * angleStep;
+      this.particles.push(new Particle(
+        this.x,
+        this.y,
+        particleRadius,
+        particleVelocity * Math.cos(angle),
+        particleVelocity * Math.sin(angle),
+        this.ax,
+        this.ay,
+        this.rgb
+      ))
+    }
+
+  }
 }
 
 export default class ColorFireworks extends Animate {
@@ -145,8 +233,15 @@ export default class ColorFireworks extends Animate {
     fireRadius: 3,
     fireTrailLen: 15,
     firePadding: 0,
-    minFireStrength: 6,
-    maxFireStrength: 10,
+    minFireVelocity: 6,
+    maxFireVelocity: 10,
+    particleRadius: 1,
+    particleLifeTime: 150,
+    particleTrailLen: 15,
+    minParticleNumber: 9,
+    maxParticleNumber: 30,
+    minParticleVelocity: 1.75,
+    maxParticleVelocity: 7,
     g: 0.2,
     a: 0.001
   };
@@ -192,7 +287,7 @@ export default class ColorFireworks extends Animate {
         this.height,
         this.option.fireRadius,
         random(-1, 1),
-        random(-this.option.maxFireStrength, -this.option.minFireStrength),
+        random(-this.option.maxFireVelocity, -this.option.minFireVelocity),
         random(-this.option.a, this.option.a),
         random(this.option.g)
       ));
