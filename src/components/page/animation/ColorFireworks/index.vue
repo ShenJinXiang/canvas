@@ -4,7 +4,7 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 import ColorFireworks from '.';
 const props = defineProps({
   width: {
@@ -23,5 +23,16 @@ const colorFireworks = new ColorFireworks(props.width, props.height);
 onMounted(() => {
   colorFireworks.initCanvas(canvasRef.value).run();
 });
-
+watch(
+  () => props.width,
+  () => {
+    colorFireworks.setRect(props.width, props.height);
+  }
+);
+watch(
+  () => props.height,
+  () => {
+    colorFireworks.setRect(props.width, props.height);
+  }
+);
 </script>
