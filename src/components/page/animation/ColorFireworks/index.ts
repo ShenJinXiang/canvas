@@ -277,7 +277,7 @@ export default class ColorFireworks extends Animate {
 
   private initData() {
     this.starts = [];
-    this.firewordNumber = Math.floor(this.width / 100);
+    this.firewordNumber = Math.floor(this.width / 80);
     // this.firewordNumber = 1;
     for (let x = 0; x < this.width; x++) {
       for (let y = 0; y < this.height; y++) {
@@ -337,5 +337,15 @@ export default class ColorFireworks extends Animate {
     this.starts.forEach((item) => item.draw(this.context));
     this.fireWords.forEach(item => item.draw(this.context));
     this.context.restore();
+  }
+  public setRect(width: number, height: number): this {
+    this.width = width;
+    this.height = height;
+    if (this.canvas) {
+      this.canvas.width = this.width;
+      this.canvas.height = this.height;
+    }
+    this.initData();
+    return this;
   }
 }
