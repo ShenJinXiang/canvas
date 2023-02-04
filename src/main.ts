@@ -6,12 +6,20 @@ import { createPinia } from 'pinia';
 import { createApp } from 'vue';
 import App from './App.vue';
 import router from './router';
-import store from './store';
+// import store from './store';
+
+const pinia = createPinia();
+
+pinia.use(({ store }) => {
+  const initialState = JSON.parse(JSON.stringify(store.$state));
+  store.$reset = () => {
+    store.$state = JSON.parse(JSON.stringify(initialState));
+  };
+});
 
 const app = createApp(App);
 app.use(ElementPlus);
-app.use(store);
-app.use(createPinia());
+app.use(pinia);
 app.use(router);
 app.mount('#app');
 
