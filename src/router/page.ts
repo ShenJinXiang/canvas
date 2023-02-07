@@ -125,4 +125,10 @@ export default [
     name: 'ColorFireworks',
     component: () => import('@/views/page/animation/ColorFireworks.vue'),
   },
+  {
+    title: '旋转线条动画',
+    path: 'animation/RotateLineAnimation',
+    name: 'RotateLineAnimation',
+    component: () => import('@/views/page/animation/RotateLineAnimation.vue'),
+  },
 ];
