@@ -35,13 +35,13 @@ export class RotateLineAnimation extends Animate {
   };
   current: number;
   points: Point[] = [];
-  constructor(width: number, height: number) {
+  constructor(width: number, height: number, sideNumber: number, pointNumber: number) {
     super();
     this.width = width;
     this.height = height;
     this.current = 0;
-    this.sideNumber = 5;
-    this.pointNumber = 15;
+    this.sideNumber = sideNumber;
+    this.pointNumber = pointNumber;
     this.initData();
   }
 
@@ -95,5 +95,23 @@ export class RotateLineAnimation extends Animate {
     this.context.lineTo(point2.x, point2.y);
     this.context.stroke();
     this.context.restore();
+  }
+
+  public setRect(width: number, height: number) {
+    this.width = width;
+    this.height = height;
+    if (this.canvas) {
+      this.canvas.width = this.width;
+      this.canvas.height = this.height;
+    }
+    this.initData();
+  }
+  public setSideNumber(sideNumber: number) {
+    this.sideNumber = sideNumber;
+    this.initData();
+  }
+  public setPointNumber(pointNumber: number) {
+    this.pointNumber = pointNumber;
+    this.initData();
   }
 }
