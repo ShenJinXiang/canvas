@@ -131,4 +131,10 @@ export default [
     name: 'RotateLineAnimation',
     component: () => import('@/views/page/animation/RotateLineAnimation.vue'),
   },
+  {
+    title: '彩色旋转线条',
+    path: 'animation/ColoredRotatingLines',
+    name: 'ColoredRotatingLines',
+    component: () => import('@/views/page/animation/ColoredRotatingLines.vue'),
+  },
 ];

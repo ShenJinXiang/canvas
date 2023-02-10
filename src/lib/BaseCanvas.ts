@@ -14,6 +14,16 @@ export default class BaseCanvas {
     this.showMark = true;
   }
 
+  initRect(width: number, height: number): this {
+    this.width = width;
+    this.height = height;
+    if (this.canvas) {
+      this.canvas.width = this.width;
+      this.canvas.height = this.height;
+    }
+    return this;
+  }
+
   public initCanvas(canvas: HTMLCanvasElement): this {
     if (!canvas) {
       throw new Error('初始化canvas错误：对象为空！');
