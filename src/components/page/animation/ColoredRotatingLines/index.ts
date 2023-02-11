@@ -60,9 +60,15 @@ export default class ColoredRotatingLines extends Animate {
     this.innerPoints.forEach((item, index) => {
       const outerPoint: Point = this.outerPoints[index];
       const targetPoint: Point = this.innerPoints[Math.floor(index * this.current) % this.innerPoints.length];
-      item.draw(this.context, 2, '#fff');
-      this.drawLine(item, targetPoint, '#fff');
-      this.drawLine(item, outerPoint, '#fff');
+      let dist = this.pointDistance(item, targetPoint);
+      if (dist > 1) {
+        dist = ~~this.distance(0.5 * this.width, 0.5 * this.height, (item.x + targetPoint.x) / 2, (item.y + targetPoint.y) / 2);
+      }
+      let strokeStyle = 'hsla(' + this.mapVal(dist, 0, 2 * this.innerRadius, 0, 360) + ', 100%, 50%, .6)';
+      // let strokeStyle = `hsla(${dist % 360}, 100%, 50%, 0.6)`;
+      item.draw(this.context, 2, strokeStyle);
+      this.drawLine(item, targetPoint, strokeStyle);
+      this.drawLine(item, outerPoint, strokeStyle);
     });
     this.context.restore();
   }
@@ -78,6 +84,16 @@ export default class ColoredRotatingLines extends Animate {
     this.context.lineTo(point2.x, point2.y);
     this.context.stroke();
     this.context.restore();
+  }
+
+  private pointDistance(point1: Point, point2: Point) {
+    return this.distance(point1.x, point1.y, point2.x, point2.y);
+  }
+  private distance(sx: number, sy: number, ex: number, ey: number): number {
+    return Math.sqrt(Math.pow(sx - ex, 2) + Math.pow(sy - ey, 2));
+  }
+  private mapVal(num: number, in_min: number, in_max: number, out_min: number, out_max: number): number {
+    return (num - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
   }
 
 }
