@@ -60,12 +60,12 @@ export default class ColoredRotatingLines extends Animate {
     this.innerPoints.forEach((item, index) => {
       const outerPoint: Point = this.outerPoints[index];
       const targetPoint: Point = this.innerPoints[Math.floor(index * this.current) % this.innerPoints.length];
-      let dist = this.pointDistance(item, targetPoint);
-      if (dist > 1) {
-        dist = ~~this.distance(0.5 * this.width, 0.5 * this.height, (item.x + targetPoint.x) / 2, (item.y + targetPoint.y) / 2);
-      }
-      let strokeStyle = 'hsla(' + this.mapVal(dist, 0, 2 * this.innerRadius, 0, 360) + ', 100%, 50%, .6)';
-      // let strokeStyle = `hsla(${dist % 360}, 100%, 50%, 0.6)`;
+      // let dist = this.pointDistance(item, targetPoint);
+      // if (dist > 1) {
+      //   dist = ~~this.distance(0.5 * this.width, 0.5 * this.height, (item.x + targetPoint.x) / 2, (item.y + targetPoint.y) / 2);
+      // }
+      // let strokeStyle = 'hsla(' + this.mapVal(dist, 0, 2 * this.innerRadius, 0, 360) + ', 100%, 50%, .6)';
+      let strokeStyle = `hsla(${Math.floor(index * this.current) % 360}, 100%, 50%, .6)`;
       item.draw(this.context, 2, strokeStyle);
       this.drawLine(item, targetPoint, strokeStyle);
       this.drawLine(item, outerPoint, strokeStyle);
