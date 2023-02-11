@@ -26,6 +26,7 @@ export default class ColoredRotatingLines extends Animate {
   outerRadius: number = 0;
   innerPoints: Point[] = [];
   outerPoints: Point[] = [];
+  current: number = 0;
 
   constructor(width: number, height: number) {
     super();
@@ -45,6 +46,10 @@ export default class ColoredRotatingLines extends Animate {
     }
   }
 
+  update() {
+    this.current = performance.now() / 2000;
+  }
+
   draw() {
     if (!this.context) {
       return;
@@ -52,12 +57,26 @@ export default class ColoredRotatingLines extends Animate {
     this.clear('#000');
     this.context.save();
     this.context.translate(0.5 * this.width, 0.5 * this.height);
-    this.innerPoints.forEach((item) => {
+    this.innerPoints.forEach((item, index) => {
+      const outerPoint: Point = this.outerPoints[index];
+      const targetPoint: Point = this.innerPoints[Math.floor(index * this.current) % this.innerPoints.length];
       item.draw(this.context, 2, '#fff');
+      this.drawLine(item, targetPoint, '#fff');
+      this.drawLine(item, outerPoint, '#fff');
     });
-    this.outerPoints.forEach((item) => {
-      item.draw(this.context, 2, '#fff');
-    });
+    this.context.restore();
+  }
+
+  private drawLine(point1: Point, point2: Point, color: string) {
+    if (!this.context) {
+      return;
+    }
+    this.context.save();
+    this.context.strokeStyle = color;
+    this.context.beginPath();
+    this.context.moveTo(point1.x, point1.y);
+    this.context.lineTo(point2.x, point2.y);
+    this.context.stroke();
     this.context.restore();
   }
 
