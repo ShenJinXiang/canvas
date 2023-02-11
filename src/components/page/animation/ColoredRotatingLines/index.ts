@@ -21,7 +21,7 @@ class Point {
 }
 
 export default class ColoredRotatingLines extends Animate {
-  pointNumber: number = 200;
+  pointNumber: number = 360;
   innerRadius: number = 0;
   outerRadius: number = 0;
   innerPoints: Point[] = [];
