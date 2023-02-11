@@ -4,7 +4,7 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 import ColoredRotatingLines from '.';
 
 const props = defineProps({
@@ -23,4 +23,17 @@ const coloredRotatingLines = new ColoredRotatingLines(props.width, props.height)
 onMounted(() => {
   coloredRotatingLines.initCanvas(canvasRef.value).run();
 });
+
+watch(
+  () => props.width,
+  () => {
+    coloredRotatingLines.setRect(props.width, props.height);
+  }
+);
+watch(
+  () => props.height,
+  () => {
+    coloredRotatingLines.setRect(props.width, props.height);
+  }
+);
 </script>

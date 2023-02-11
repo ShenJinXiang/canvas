@@ -96,4 +96,8 @@ export default class ColoredRotatingLines extends Animate {
     return (num - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
   }
 
+  public setRect(width: number, height: number) {
+    this.initRect(width, height);
+    this.initData();
+  }
 }
