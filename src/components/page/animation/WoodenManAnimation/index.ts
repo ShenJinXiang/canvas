@@ -1,6 +1,21 @@
 import Animate from "@/lib/Animate";
 
+interface IOption {
+  backgroundColor: string;
+  bodyColor: string;
+  fixedPointColor: string;
+}
+
+class Element {
+
+}
+
 export default class WoodenManAnimation extends Animate {
+  private option: IOption = {
+    backgroundColor: '#fff',
+    bodyColor: '#333',
+    fixedPointColor: '#f1f1f1'
+  };
   constructor(width: number, height: number) {
     super();
     this.initRect(width, height);
