@@ -137,4 +137,10 @@ export default [
     name: 'ColoredRotatingLines',
     component: () => import('@/views/page/animation/ColoredRotatingLines.vue'),
   },
+  {
+    title: '小木人动画',
+    path: 'animation/WoodenManAnimation',
+    name: 'WoodenManAnimation',
+    component: () => import('@/views/page/animation/WoodenManAnimation.vue'),
+  }
 ];
