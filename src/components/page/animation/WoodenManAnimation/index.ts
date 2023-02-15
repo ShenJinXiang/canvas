@@ -26,11 +26,31 @@ class FixedPoint {
   }
 }
 
+class Head {
+  fixedPoint: FixedPoint;
+  rotate: number;
+  constructor(fixedPoint: FixedPoint, rotate: number) {
+    this.fixedPoint = fixedPoint;
+    this.rotate = rotate;
+  }
+  draw(context: CanvasRenderingContext2D | null, radius: number, style: string) {
+    if (!context) {
+      return;
+    }
+    context.save();
+    context.beginPath();
+    context.fillStyle = style;
+    context.arc(0.5 * radius * Math.cos(this.rotate), 0.5 * radius * Math.sin(this.rotate), radius, 0, 2 * Math.PI, false);
+    context.fill();
+    context.restore();
+  }
+}
 class Element {
-  // rotate: number;
-  // fixedPoints: FixedPoint[];
-  constructor() {
-
+  fixedPoint1: FixedPoint;
+  fixedPoint2: FixedPoint;
+  constructor(fixedPoint1: FixedPoint, fixedPoint2: FixedPoint) {
+    this.fixedPoint1 = fixedPoint1;
+    this.fixedPoint2 = fixedPoint2;
   }
 
 }
