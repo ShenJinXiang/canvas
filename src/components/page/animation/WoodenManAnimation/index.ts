@@ -45,12 +45,32 @@ class Head {
     context.restore();
   }
 }
-class Element {
+class Limb {
   fixedPoint1: FixedPoint;
   fixedPoint2: FixedPoint;
+  next: Limb | null = null;
   constructor(fixedPoint1: FixedPoint, fixedPoint2: FixedPoint) {
     this.fixedPoint1 = fixedPoint1;
     this.fixedPoint2 = fixedPoint2;
+  }
+
+  setNextElement(next: Limb) {
+    this.next = next;
+  }
+
+  draw(context: CanvasRenderingContext2D | null, limbSize: number, style: string) {
+    if (!context) {
+      return;
+    }
+    context.save();
+    context.beginPath();
+    context.lineWidth = limbSize;
+    context.strokeStyle = style;
+    context.lineCap = 'round';
+    context.moveTo(this.fixedPoint1.x, this.fixedPoint1.y);
+    context.lineTo(this.fixedPoint2.x, this.fixedPoint2.y);
+    context.stroke();
+    context.restore();
   }
 
 }
@@ -61,9 +81,23 @@ export default class WoodenManAnimation extends Animate {
     bodyColor: '#333',
     fixedPointColor: '#e1e1e1'
   };
+  points: FixedPoint[] = [];
+  head: Head | null = null;
+  limbs: Limb[] = [];
   constructor(width: number, height: number) {
     super();
     this.initRect(width, height);
+    this.initData();
+  }
+
+  private initData() {
+    this.points = [
+      new FixedPoint(100, 100),
+      new FixedPoint(200, 200),
+    ];
+    this.limbs = [
+      new Limb(this.points[0], this.points[1])
+    ]
   }
 
   draw() {
@@ -72,8 +106,8 @@ export default class WoodenManAnimation extends Animate {
     }
     this.clear(this.option.backgroundColor);
     this.context.save();
-    this.context.fillStyle = '#084';
-    this.context.fillRect(200, 200, 360, 200);
+    this.limbs.forEach((item) => item.draw(this.context, 20, this.option.bodyColor));
+    this.points.forEach((item) => item.draw(this.context, 3, this.option.fixedPointColor));
     this.context.restore();
   }
 }
