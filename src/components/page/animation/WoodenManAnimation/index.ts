@@ -100,16 +100,38 @@ export default class WoodenManAnimation extends Animate {
 
   private initData() {
     this.points = [
-      new FixedPoint(100, 100),
-      new FixedPoint(100, 150),
-      new FixedPoint(200, 200),
-      new FixedPoint(200, 300, true),
+      new FixedPoint(400, 100),
+      new FixedPoint(400, 150),
+      new FixedPoint(300, 200),
+      new FixedPoint(240, 260),
+      new FixedPoint(500, 200),
+      new FixedPoint(560, 260),
+      new FixedPoint(400, 300),
+      new FixedPoint(320, 420),
+      new FixedPoint(480, 420),
+      new FixedPoint(260, 520),
+      new FixedPoint(540, 520),
+      new FixedPoint(220, 520),
+      new FixedPoint(580, 520),
     ];
     this.head = new Head(this.points[0], -0.5 * Math.PI);
     this.limbs = [
       new Limb(this.points[0], this.points[1]),
-      new Limb(this.points[1], this.points[2])
+      new Limb(this.points[1], this.points[2]),
+      new Limb(this.points[2], this.points[3]),
+      new Limb(this.points[1], this.points[4]),
+      new Limb(this.points[4], this.points[5]),
+      new Limb(this.points[1], this.points[6]),
+      new Limb(this.points[6], this.points[7]),
+      new Limb(this.points[6], this.points[8]),
+      new Limb(this.points[7], this.points[9]),
+      new Limb(this.points[8], this.points[10]),
+      new Limb(this.points[9], this.points[11]),
+      new Limb(this.points[10], this.points[12]),
     ]
+  }
+
+  update() {
   }
 
   draw() {
