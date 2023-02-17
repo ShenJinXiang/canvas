@@ -14,6 +14,8 @@ interface ILimbSize {
   thigh: number; // 大腿
   calf: number;  // 小腿
   foot: number;  // 脚
+  limbWidth: number;
+  jointRadius: number;
 }
 
 class FixedPoint {
@@ -111,7 +113,9 @@ export default class WoodenManAnimation extends Animate {
     body: 0,
     thigh: 0,
     calf: 0,
-    foot: 0
+    foot: 0,
+    limbWidth: 0,
+    jointRadius: 0
   }
   constructor(width: number, height: number) {
     super();
@@ -129,7 +133,9 @@ export default class WoodenManAnimation extends Animate {
       body: 12 * this.baseSize,
       thigh: 9 * this.baseSize,
       calf: 7 * this.baseSize,
-      foot: 1.5 * this.baseSize
+      foot: 2 * this.baseSize,
+      limbWidth: 1.6 * this.baseSize,
+      jointRadius: 0.4 * this.baseSize
     };
     this.points = [
       new FixedPoint(0, -this.limbSize.neck - this.limbSize.body - (this.limbSize.thigh + this.limbSize.calf) * Math.cos(Math.PI / 12)),
@@ -143,11 +149,11 @@ export default class WoodenManAnimation extends Animate {
 
       new FixedPoint(this.limbSize.thigh * Math.sin(Math.PI / 12), -this.limbSize.calf * Math.cos(Math.PI / 12)),
       new FixedPoint((this.limbSize.thigh + this.limbSize.calf) * Math.sin(Math.PI / 12), 0),
-      new FixedPoint((this.limbSize.thigh + this.limbSize.calf) * Math.sin(Math.PI / 12) + this.limbSize.foot, 0),
+      new FixedPoint((this.limbSize.thigh + this.limbSize.calf) * Math.sin(Math.PI / 12) + this.limbSize.foot, 0, true),
 
       new FixedPoint(-this.limbSize.thigh * Math.sin(Math.PI / 12), -this.limbSize.calf * Math.cos(Math.PI / 12)),
       new FixedPoint(-(this.limbSize.thigh + this.limbSize.calf) * Math.sin(Math.PI / 12), 0),
-      new FixedPoint(-(this.limbSize.thigh + this.limbSize.calf) * Math.sin(Math.PI / 12) - this.limbSize.foot, 0),
+      new FixedPoint(-(this.limbSize.thigh + this.limbSize.calf) * Math.sin(Math.PI / 12) - this.limbSize.foot, 0, true),
     ];
     this.head = new Head(this.points[0], -0.5 * Math.PI);
     this.limbs = [
@@ -176,9 +182,9 @@ export default class WoodenManAnimation extends Animate {
     this.clear(this.option.backgroundColor);
     this.context.save();
     this.context.translate(0.5 * this.width, this.height * 0.8);
-    this.head?.draw(this.context, 40, this.option.bodyColor);
-    this.limbs.forEach((item) => item.draw(this.context, 20, this.option.bodyColor));
-    this.points.forEach((item) => item.draw(this.context, 3, this.option.fixedPointColor));
+    this.head?.draw(this.context, this.limbSize.headRadius, this.option.bodyColor);
+    this.limbs.forEach((item) => item.draw(this.context, this.limbSize.limbWidth, this.option.bodyColor));
+    this.points.forEach((item) => item.draw(this.context, this.limbSize.jointRadius, this.option.fixedPointColor));
     this.context.restore();
   }
 }
