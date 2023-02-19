@@ -142,5 +142,11 @@ export default [
     path: 'animation/WoodenManAnimation',
     name: 'WoodenManAnimation',
     component: () => import('@/views/page/animation/WoodenManAnimation.vue'),
+  },
+  {
+    title: '加载动画1',
+    path: 'animation/LoadingAnimation1',
+    name: 'LoadingAnimation1',
+    component: () => import('@/views/page/animation/LoadingAnimation1.vue'),
   }
 ];
