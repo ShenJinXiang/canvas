@@ -37,13 +37,6 @@ class FixedPoint {
     context.fillStyle = style;
     context.arc(this.x, this.y, radius, 0, 2 * Math.PI, false);
     context.fill();
-
-    context.beginPath();
-    context.fillStyle = '#000';
-    context.textAlign = 'center';
-    context.textBaseline = 'middle';
-    context.font = `${radius * 0.2}px`;
-    context.fillText(`${index}`, this.x, this.y);
     context.restore();
   }
 }
@@ -140,16 +133,16 @@ export default class WoodenManAnimation extends Animate {
     this.currentPositionIndex = 0;
     this.baseSize = Math.min(this.width, this.height) * 0.02;
     this.limbSize = {
-      headRadius: 4 * this.baseSize,
-      neck: 2 * this.baseSize,
-      upperArm: 8 * this.baseSize,
-      lowerArm: 7 * this.baseSize,
-      body: 12 * this.baseSize,
-      thigh: 8 * this.baseSize,
-      calf: 8 * this.baseSize,
-      foot: 2 * this.baseSize,
-      limbWidth: 1.6 * this.baseSize,
-      jointRadius: 0.4 * this.baseSize
+      headRadius: 4,
+      neck: 3,
+      upperArm: 8,
+      lowerArm: 7,
+      body: 12,
+      thigh: 8,
+      calf: 8,
+      foot: 2,
+      limbWidth: 1.6,
+      jointRadius: 0.4,
     };
     this.pointPosition = [
       [
@@ -166,6 +159,21 @@ export default class WoodenManAnimation extends Animate {
         { x: -this.limbSize.thigh * sinAngle(15), y: -this.limbSize.calf * cosAngle(15) },
         { x: -(this.limbSize.thigh + this.limbSize.calf) * sinAngle(15), y: 0 },
         { x: -(this.limbSize.thigh + this.limbSize.calf) * sinAngle(15) - this.limbSize.foot, y: 0 }
+      ],
+      [
+        { x: 0, y: - this.limbSize.calf - this.limbSize.body - this.limbSize.neck },
+        { x: 0, y: - this.limbSize.calf - this.limbSize.body },
+        { x: 0, y: - this.limbSize.calf },
+        { x: this.limbSize.upperArm, y: - this.limbSize.calf - this.limbSize.body },
+        { x: this.limbSize.upperArm - this.limbSize.lowerArm * sinAngle(50), y: - this.limbSize.calf - this.limbSize.body + this.limbSize.lowerArm * cosAngle(50) },
+        { x: -this.limbSize.upperArm, y: - this.limbSize.calf - this.limbSize.body },
+        { x: -this.limbSize.upperArm + this.limbSize.lowerArm * sinAngle(50), y: - this.limbSize.calf - this.limbSize.body + this.limbSize.lowerArm * cosAngle(50) },
+        { x: this.limbSize.thigh, y: - this.limbSize.calf },
+        { x: this.limbSize.thigh, y: 0 },
+        { x: this.limbSize.thigh + this.limbSize.foot, y: 0 },
+        { x: -this.limbSize.thigh, y: - this.limbSize.calf },
+        { x: -this.limbSize.thigh, y: 0 },
+        { x: -this.limbSize.thigh - this.limbSize.foot, y: 0 },
       ],
       [
         { x: 0, y: -this.limbSize.thigh - this.limbSize.body - this.limbSize.neck },
@@ -196,6 +204,36 @@ export default class WoodenManAnimation extends Animate {
         { x: -this.limbSize.thigh * sinAngle(75), y: -this.limbSize.calf + this.limbSize.thigh * cosAngle(75) },
         { x: -this.limbSize.thigh * sinAngle(75) - this.limbSize.calf * sinAngle(45), y: -this.limbSize.calf + this.limbSize.thigh * cosAngle(75) + this.limbSize.calf * cosAngle(45) },
         { x: -this.limbSize.thigh * sinAngle(75) - this.limbSize.calf * sinAngle(45) - this.limbSize.foot * sinAngle(45), y: -this.limbSize.calf + this.limbSize.thigh * cosAngle(75) + this.limbSize.calf * cosAngle(45) - this.limbSize.foot * cosAngle(45) }
+      ],
+      [
+        { x: 0, y: - this.limbSize.calf - this.limbSize.thigh - this.limbSize.body - this.limbSize.neck },
+        { x: 0, y: - this.limbSize.calf - this.limbSize.thigh - this.limbSize.body },
+        { x: 0, y: - this.limbSize.calf - this.limbSize.thigh },
+        { x: this.limbSize.upperArm * sinAngle(80), y: - this.limbSize.calf - this.limbSize.thigh - this.limbSize.body - this.limbSize.upperArm * cosAngle(80) },
+        { x: this.limbSize.upperArm * sinAngle(80) + this.limbSize.lowerArm, y: - this.limbSize.calf - this.limbSize.thigh - this.limbSize.body - this.limbSize.upperArm * cosAngle(80) },
+        { x: -this.limbSize.upperArm * sinAngle(75), y: - this.limbSize.calf - this.limbSize.thigh - this.limbSize.body - this.limbSize.upperArm * cosAngle(75) },
+        { x: -this.limbSize.upperArm * sinAngle(75) - this.limbSize.lowerArm * sinAngle(45), y: - this.limbSize.calf - this.limbSize.thigh - this.limbSize.body - this.limbSize.upperArm * cosAngle(75) - this.limbSize.lowerArm * cosAngle(45) },
+        { x: this.limbSize.thigh * sinAngle(60), y: - this.limbSize.calf - this.limbSize.thigh - this.limbSize.thigh * cosAngle(60) },
+        { x: this.limbSize.thigh * sinAngle(60) + this.limbSize.calf * sinAngle(35), y: - this.limbSize.calf - this.limbSize.thigh - this.limbSize.thigh * cosAngle(60) - this.limbSize.calf * cosAngle(35) },
+        { x: this.limbSize.thigh * sinAngle(60) + this.limbSize.calf * sinAngle(35) - this.limbSize.foot * sinAngle(60), y: - this.limbSize.calf - this.limbSize.thigh - this.limbSize.thigh * cosAngle(60) - this.limbSize.calf * cosAngle(35) - this.limbSize.foot * cosAngle(60) },
+        { x: 0, y: - this.limbSize.calf },
+        { x: 0, y: 0 },
+        { x: -this.limbSize.foot, y: 0 },
+      ],
+      [
+        { x: 0, y: - this.limbSize.calf - this.limbSize.body - this.limbSize.neck },
+        { x: 0, y: - this.limbSize.calf - this.limbSize.body },
+        { x: 0, y: - this.limbSize.calf },
+        { x: this.limbSize.upperArm * sinAngle(45), y: - this.limbSize.calf - this.limbSize.body + this.limbSize.upperArm * cosAngle(45) },
+        { x: this.limbSize.upperArm * sinAngle(45) + this.limbSize.lowerArm * sinAngle(35), y: - this.limbSize.calf - this.limbSize.body + this.limbSize.upperArm * cosAngle(45) - this.limbSize.lowerArm * cosAngle(35) },
+        { x: - this.limbSize.upperArm * sinAngle(60), y: - this.limbSize.calf - this.limbSize.body + this.limbSize.upperArm * cosAngle(60) },
+        { x: - this.limbSize.upperArm * sinAngle(60) + this.limbSize.lowerArm * sinAngle(60), y: - this.limbSize.calf - this.limbSize.body + this.limbSize.upperArm * cosAngle(60) + this.limbSize.lowerArm * cosAngle(60) },
+        { x: this.limbSize.thigh, y: - this.limbSize.calf },
+        { x: this.limbSize.thigh, y: 0 },
+        { x: this.limbSize.thigh + this.limbSize.foot, y: 0 },
+        { x: -this.limbSize.thigh, y: - this.limbSize.calf },
+        { x: -this.limbSize.thigh, y: 0 },
+        { x: -this.limbSize.thigh - this.limbSize.foot, y: 0 },
       ]
     ]
     for (let i = 0; i < 13; i++) {
@@ -237,8 +275,8 @@ export default class WoodenManAnimation extends Animate {
     }
     const positions = this.pointPosition[this.currentPositionIndex];
     this.points.forEach((item, index) => {
-      item.x += (positions[index].x - item.x) * 0.15;
-      item.y += (positions[index].y - item.y) * 0.15;
+      item.x += (positions[index].x * this.baseSize - item.x) * 0.15;
+      item.y += (positions[index].y * this.baseSize - item.y) * 0.15;
     });
     // console.log('currentPositionIndex', this.currentPositionIndex);
   }
@@ -250,9 +288,9 @@ export default class WoodenManAnimation extends Animate {
     this.clear(this.option.backgroundColor);
     this.context.save();
     this.context.translate(0.5 * this.width, this.height * 0.8);
-    this.head?.draw(this.context, this.limbSize.headRadius, this.option.bodyColor);
-    this.limbs.forEach((item) => item.draw(this.context, this.limbSize.limbWidth, this.option.bodyColor));
-    this.points.forEach((item, index) => item.draw(this.context, this.limbSize.jointRadius, this.option.fixedPointColor, index));
+    this.head?.draw(this.context, this.limbSize.headRadius * this.baseSize, this.option.bodyColor);
+    this.limbs.forEach((item) => item.draw(this.context, this.limbSize.limbWidth * this.baseSize, this.option.bodyColor));
+    this.points.forEach((item, index) => item.draw(this.context, this.limbSize.jointRadius * this.baseSize, this.option.fixedPointColor, index));
     this.context.restore();
   }
 }
