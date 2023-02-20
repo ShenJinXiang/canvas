@@ -21,12 +21,10 @@ interface ILimbSize {
 }
 
 class FixedPoint {
-  // x: number;
-  // y: number;
-  point: Point;
+  x: number = 0;
+  y: number = 0;
   hide: boolean;
-  constructor(point: Point, hide: boolean = false) {
-    this.point = point;
+  constructor(hide: boolean = false) {
     this.hide = hide;
   }
   draw(context: CanvasRenderingContext2D | null, radius: number, style: string, index: number) {
@@ -36,7 +34,7 @@ class FixedPoint {
     context.save();
     context.beginPath();
     context.fillStyle = style;
-    context.arc(this.point.x, this.point.y, radius, 0, 2 * Math.PI, false);
+    context.arc(this.x, this.y, radius, 0, 2 * Math.PI, false);
     context.fill();
 
     context.beginPath();
@@ -44,7 +42,7 @@ class FixedPoint {
     context.textAlign = 'center';
     context.textBaseline = 'middle';
     context.font = `${radius * 0.2}px`;
-    context.fillText(`${index}`, this.point.x, this.point.y);
+    context.fillText(`${index}`, this.x, this.y);
     context.restore();
   }
 }
@@ -65,7 +63,7 @@ class Head {
     }
     context.save();
     context.beginPath();
-    context.translate(this.fixedPoint.point.x, this.fixedPoint.point.y);
+    context.translate(this.fixedPoint.x, this.fixedPoint.y);
     context.fillStyle = style;
     context.arc(0.5 * radius * Math.cos(this.rotate), 0.5 * radius * Math.sin(this.rotate), radius, 0, 2 * Math.PI, false);
     context.fill();
@@ -80,7 +78,7 @@ class Limb {
   constructor(fixedPoint1: FixedPoint, fixedPoint2: FixedPoint) {
     this.fixedPoint1 = fixedPoint1;
     this.fixedPoint2 = fixedPoint2;
-    this.length = distance(this.fixedPoint1.point, this.fixedPoint2.point);
+    this.length = distance(this.fixedPoint1, this.fixedPoint2);
   }
 
   setNextElement(next: Limb) {
@@ -96,8 +94,8 @@ class Limb {
     context.lineWidth = limbSize;
     context.strokeStyle = style;
     context.lineCap = 'round';
-    context.moveTo(this.fixedPoint1.point.x, this.fixedPoint1.point.y);
-    context.lineTo(this.fixedPoint2.point.x, this.fixedPoint2.point.y);
+    context.moveTo(this.fixedPoint1.x, this.fixedPoint1.y);
+    context.lineTo(this.fixedPoint2.x, this.fixedPoint2.y);
     context.stroke();
     context.restore();
   }
@@ -127,6 +125,9 @@ export default class WoodenManAnimation extends Animate {
     limbWidth: 0,
     jointRadius: 0
   }
+  currentRate: number = 0;
+  refreshRate: number = 110;
+  currentPositionIndex: number = 0;
   constructor(width: number, height: number) {
     super();
     this.initRect(width, height);
@@ -134,6 +135,8 @@ export default class WoodenManAnimation extends Animate {
   }
 
   private initData() {
+    this.currentRate = 0;
+    this.currentPositionIndex = 0;
     this.baseSize = Math.min(this.width, this.height) * 0.02;
     this.limbSize = {
       headRadius: 4 * this.baseSize,
@@ -180,58 +183,21 @@ export default class WoodenManAnimation extends Animate {
       ]
     ]
     this.points = [
-      new FixedPoint(this.pointPosition[0][0]),
-      new FixedPoint(this.pointPosition[0][1]),
-      new FixedPoint(this.pointPosition[0][2]),
-      new FixedPoint(this.pointPosition[0][3]),
-      new FixedPoint(this.pointPosition[0][4]),
-      new FixedPoint(this.pointPosition[0][5]),
-      new FixedPoint(this.pointPosition[0][6]),
-      new FixedPoint(this.pointPosition[0][7]),
-      new FixedPoint(this.pointPosition[0][8]),
-      new FixedPoint(this.pointPosition[0][9], true),
-      new FixedPoint(this.pointPosition[0][10]),
-      new FixedPoint(this.pointPosition[0][11]),
-      new FixedPoint(this.pointPosition[0][12], true),
-    ]
-    /*
-    this.points = [
-      new FixedPoint(0, -this.limbSize.neck - this.limbSize.body - (this.limbSize.thigh + this.limbSize.calf) * Math.cos(15 * deg)),
-      new FixedPoint(0, -this.limbSize.body - (this.limbSize.thigh + this.limbSize.calf) * Math.cos(15 * deg)),
-      new FixedPoint(0, -(this.limbSize.thigh + this.limbSize.calf) * Math.cos(15 * deg)),
-
-      new FixedPoint(this.limbSize.upperArm * Math.sin(45 * deg), -this.limbSize.body - (this.limbSize.thigh + this.limbSize.calf) * Math.cos(15 * deg) + this.limbSize.upperArm * Math.cos(45 * deg)),
-      new FixedPoint((this.limbSize.upperArm + this.limbSize.lowerArm) * Math.sin(45 * deg), -this.limbSize.body - (this.limbSize.thigh + this.limbSize.calf) * Math.cos(15 * deg) + (this.limbSize.upperArm + this.limbSize.lowerArm) * Math.cos(45 * deg)),
-      new FixedPoint(-this.limbSize.upperArm * Math.sin(45 * deg), -this.limbSize.body - (this.limbSize.thigh + this.limbSize.calf) * Math.cos(15 * deg) + this.limbSize.upperArm * Math.cos(45 * deg)),
-      new FixedPoint(-(this.limbSize.upperArm + this.limbSize.lowerArm) * Math.sin(45 * deg), -this.limbSize.body - (this.limbSize.thigh + this.limbSize.calf) * Math.cos(15 * deg) + (this.limbSize.upperArm + this.limbSize.lowerArm) * Math.cos(45 * deg)),
-
-      new FixedPoint(this.limbSize.thigh * Math.sin(15 * deg), -this.limbSize.calf * Math.cos(15 * deg)),
-      new FixedPoint((this.limbSize.thigh + this.limbSize.calf) * Math.sin(15 * deg), 0),
-      new FixedPoint((this.limbSize.thigh + this.limbSize.calf) * Math.sin(15 * deg) + this.limbSize.foot, 0, true),
-
-      new FixedPoint(-this.limbSize.thigh * Math.sin(15 * deg), -this.limbSize.calf * Math.cos(15 * deg)),
-      new FixedPoint(-(this.limbSize.thigh + this.limbSize.calf) * Math.sin(15 * deg), 0),
-      new FixedPoint(-(this.limbSize.thigh + this.limbSize.calf) * Math.sin(15 * deg) - this.limbSize.foot, 0, true),
-
-      // new FixedPoint(0, -this.limbSize.thigh - this.limbSize.body - this.limbSize.neck),
-      // new FixedPoint(0, -this.limbSize.thigh - this.limbSize.body),
-      // new FixedPoint(0, -this.limbSize.thigh),
-
-      // new FixedPoint(this.limbSize.upperArm * Math.sin(45 * deg), -this.limbSize.thigh - this.limbSize.body + this.limbSize.upperArm * Math.cos(45 * deg)),
-      // new FixedPoint(this.limbSize.upperArm * Math.sin(45 * deg) - this.limbSize.lowerArm * Math.sin(45 * deg), -this.limbSize.thigh - this.limbSize.body + this.limbSize.upperArm * Math.cos(45 * deg) + this.limbSize.lowerArm * Math.cos(45 * deg)),
-      // new FixedPoint(-this.limbSize.upperArm * Math.sin(80 * deg), -this.limbSize.thigh - this.limbSize.body + this.limbSize.upperArm * Math.cos(80 * deg)),
-      // new FixedPoint(-this.limbSize.upperArm * Math.sin(80 * deg), -this.limbSize.thigh - this.limbSize.body + this.limbSize.upperArm * Math.cos(80 * deg) + this.limbSize.lowerArm),
-
-      // new FixedPoint(0, 0),
-      // new FixedPoint(this.limbSize.calf, 0),
-      // new FixedPoint(this.limbSize.calf, -this.limbSize.foot),
-
-      // new FixedPoint(-this.limbSize.thigh, -this.limbSize.thigh),
-      // new FixedPoint(-this.limbSize.thigh, -this.limbSize.thigh + this.limbSize.calf),
-      // new FixedPoint(-this.limbSize.thigh - this.limbSize.foot, -this.limbSize.thigh + this.limbSize.calf)
-
+      new FixedPoint(),
+      new FixedPoint(),
+      new FixedPoint(),
+      new FixedPoint(),
+      new FixedPoint(),
+      new FixedPoint(),
+      new FixedPoint(),
+      new FixedPoint(),
+      new FixedPoint(),
+      new FixedPoint(true),
+      new FixedPoint(),
+      new FixedPoint(),
+      new FixedPoint(true),
     ];
-    */
+    this.refreshPointPosition(this.pointPosition[0]);
     this.head = new Head(this.points[0], -90 * deg);
     this.limbs = [
       new Limb(this.points[0], this.points[1]),
@@ -249,9 +215,28 @@ export default class WoodenManAnimation extends Animate {
     ]
   }
 
-
+  private refreshPointPosition(ps: Point[]) {
+    this.points.forEach((item, index) => {
+      item.x = ps[index].x;
+      item.y = ps[index].y;
+    });
+  }
 
   update() {
+    this.currentRate++;
+    if (this.currentRate >= this.refreshRate) {
+      this.currentPositionIndex++;
+      if (this.currentPositionIndex >= this.pointPosition.length) {
+        this.currentPositionIndex = 0;
+      }
+      this.currentRate = 0;
+    }
+    const positions = this.pointPosition[this.currentPositionIndex];
+    this.points.forEach((item, index) => {
+      item.x += (positions[index].x - item.x) * 0.15;
+      item.y += (positions[index].y - item.y) * 0.15;
+    });
+    // console.log('currentPositionIndex', this.currentPositionIndex);
   }
 
   draw() {
