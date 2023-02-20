@@ -1,5 +1,8 @@
 import Animate from "@/lib/Animate";
+import Point from "@/lib/Point";
 
+const sinAngle = (angle: number) => Math.sin(angle * Math.PI / 180);
+const cosAngle = (angle: number) => Math.cos(angle * Math.PI / 180);
 interface IOption {
   backgroundColor: string;
   bodyColor: string;
@@ -19,15 +22,13 @@ interface ILimbSize {
 }
 
 class FixedPoint {
-  x: number;
-  y: number;
+  x: number = 0;
+  y: number = 0;
   hide: boolean;
-  constructor(x: number, y: number, hide: boolean = false) {
-    this.x = x;
-    this.y = y;
+  constructor(hide: boolean = false) {
     this.hide = hide;
   }
-  draw(context: CanvasRenderingContext2D | null, radius: number, style: string) {
+  draw(context: CanvasRenderingContext2D | null, radius: number, style: string, index: number) {
     if (!context || this.hide) {
       return;
     }
@@ -36,11 +37,18 @@ class FixedPoint {
     context.fillStyle = style;
     context.arc(this.x, this.y, radius, 0, 2 * Math.PI, false);
     context.fill();
+
+    context.beginPath();
+    context.fillStyle = '#000';
+    context.textAlign = 'center';
+    context.textBaseline = 'middle';
+    context.font = `${radius * 0.2}px`;
+    context.fillText(`${index}`, this.x, this.y);
     context.restore();
   }
 }
 
-const distance = (point1: FixedPoint, point2: FixedPoint) =>
+const distance = (point1: Point, point2: Point) =>
   Math.sqrt(Math.pow(point1.x - point2.x, 2) + Math.pow(point1.y - point2.y, 2));
 
 class Head {
@@ -58,7 +66,7 @@ class Head {
     context.beginPath();
     context.translate(this.fixedPoint.x, this.fixedPoint.y);
     context.fillStyle = style;
-    context.arc(0.5 * radius * Math.cos(this.rotate), 0.5 * radius * Math.sin(this.rotate), radius, 0, 2 * Math.PI, false);
+    context.arc(0.5 * radius * cosAngle(this.rotate), 0.5 * radius * sinAngle(this.rotate), radius, 0, 2 * Math.PI, false);
     context.fill();
     context.restore();
   }
@@ -102,6 +110,7 @@ export default class WoodenManAnimation extends Animate {
     fixedPointColor: '#e1e1e1'
   };
   baseSize: number = 0;
+  pointPosition: Point[][] = [];
   points: FixedPoint[] = [];
   head: Head | null = null;
   limbs: Limb[] = [];
@@ -117,6 +126,9 @@ export default class WoodenManAnimation extends Animate {
     limbWidth: 0,
     jointRadius: 0
   }
+  currentRate: number = 0;
+  refreshRate: number = 110;
+  currentPositionIndex: number = 0;
   constructor(width: number, height: number) {
     super();
     this.initRect(width, height);
@@ -124,38 +136,73 @@ export default class WoodenManAnimation extends Animate {
   }
 
   private initData() {
+    this.currentRate = 0;
+    this.currentPositionIndex = 0;
     this.baseSize = Math.min(this.width, this.height) * 0.02;
     this.limbSize = {
       headRadius: 4 * this.baseSize,
       neck: 2 * this.baseSize,
       upperArm: 8 * this.baseSize,
-      lowerArm: 6 * this.baseSize,
+      lowerArm: 7 * this.baseSize,
       body: 12 * this.baseSize,
-      thigh: 9 * this.baseSize,
-      calf: 7 * this.baseSize,
+      thigh: 8 * this.baseSize,
+      calf: 8 * this.baseSize,
       foot: 2 * this.baseSize,
       limbWidth: 1.6 * this.baseSize,
       jointRadius: 0.4 * this.baseSize
     };
-    this.points = [
-      new FixedPoint(0, -this.limbSize.neck - this.limbSize.body - (this.limbSize.thigh + this.limbSize.calf) * Math.cos(Math.PI / 12)),
-      new FixedPoint(0, -this.limbSize.body - (this.limbSize.thigh + this.limbSize.calf) * Math.cos(Math.PI / 12)),
-      new FixedPoint(0, -(this.limbSize.thigh + this.limbSize.calf) * Math.cos(Math.PI / 12)),
-
-      new FixedPoint(this.limbSize.upperArm * Math.sin(Math.PI / 4), -this.limbSize.body - (this.limbSize.thigh + this.limbSize.calf) * Math.cos(Math.PI / 12) + this.limbSize.upperArm * Math.cos(Math.PI / 4)),
-      new FixedPoint((this.limbSize.upperArm + this.limbSize.lowerArm) * Math.sin(Math.PI / 4), -this.limbSize.body - (this.limbSize.thigh + this.limbSize.calf) * Math.cos(Math.PI / 12) + (this.limbSize.upperArm + this.limbSize.lowerArm) * Math.cos(Math.PI / 4)),
-      new FixedPoint(-this.limbSize.upperArm * Math.sin(Math.PI / 4), -this.limbSize.body - (this.limbSize.thigh + this.limbSize.calf) * Math.cos(Math.PI / 12) + this.limbSize.upperArm * Math.cos(Math.PI / 4)),
-      new FixedPoint(-(this.limbSize.upperArm + this.limbSize.lowerArm) * Math.sin(Math.PI / 4), -this.limbSize.body - (this.limbSize.thigh + this.limbSize.calf) * Math.cos(Math.PI / 12) + (this.limbSize.upperArm + this.limbSize.lowerArm) * Math.cos(Math.PI / 4)),
-
-      new FixedPoint(this.limbSize.thigh * Math.sin(Math.PI / 12), -this.limbSize.calf * Math.cos(Math.PI / 12)),
-      new FixedPoint((this.limbSize.thigh + this.limbSize.calf) * Math.sin(Math.PI / 12), 0),
-      new FixedPoint((this.limbSize.thigh + this.limbSize.calf) * Math.sin(Math.PI / 12) + this.limbSize.foot, 0, true),
-
-      new FixedPoint(-this.limbSize.thigh * Math.sin(Math.PI / 12), -this.limbSize.calf * Math.cos(Math.PI / 12)),
-      new FixedPoint(-(this.limbSize.thigh + this.limbSize.calf) * Math.sin(Math.PI / 12), 0),
-      new FixedPoint(-(this.limbSize.thigh + this.limbSize.calf) * Math.sin(Math.PI / 12) - this.limbSize.foot, 0, true),
-    ];
-    this.head = new Head(this.points[0], -0.5 * Math.PI);
+    this.pointPosition = [
+      [
+        { x: 0, y: -this.limbSize.neck - this.limbSize.body - (this.limbSize.thigh + this.limbSize.calf) * cosAngle(15) },
+        { x: 0, y: -this.limbSize.body - (this.limbSize.thigh + this.limbSize.calf) * cosAngle(15) },
+        { x: 0, y: -(this.limbSize.thigh + this.limbSize.calf) * cosAngle(15) },
+        { x: this.limbSize.upperArm * sinAngle(45), y: -this.limbSize.body - (this.limbSize.thigh + this.limbSize.calf) * cosAngle(15) + this.limbSize.upperArm * cosAngle(45) },
+        { x: (this.limbSize.upperArm + this.limbSize.lowerArm) * sinAngle(45), y: -this.limbSize.body - (this.limbSize.thigh + this.limbSize.calf) * cosAngle(15) + (this.limbSize.upperArm + this.limbSize.lowerArm) * cosAngle(45) },
+        { x: -this.limbSize.upperArm * sinAngle(45), y: -this.limbSize.body - (this.limbSize.thigh + this.limbSize.calf) * cosAngle(15) + this.limbSize.upperArm * cosAngle(45) },
+        { x: -(this.limbSize.upperArm + this.limbSize.lowerArm) * sinAngle(45), y: -this.limbSize.body - (this.limbSize.thigh + this.limbSize.calf) * cosAngle(15) + (this.limbSize.upperArm + this.limbSize.lowerArm) * cosAngle(45) },
+        { x: this.limbSize.thigh * sinAngle(15), y: -this.limbSize.calf * cosAngle(15) },
+        { x: (this.limbSize.thigh + this.limbSize.calf) * sinAngle(15), y: 0 },
+        { x: (this.limbSize.thigh + this.limbSize.calf) * sinAngle(15) + this.limbSize.foot, y: 0 },
+        { x: -this.limbSize.thigh * sinAngle(15), y: -this.limbSize.calf * cosAngle(15) },
+        { x: -(this.limbSize.thigh + this.limbSize.calf) * sinAngle(15), y: 0 },
+        { x: -(this.limbSize.thigh + this.limbSize.calf) * sinAngle(15) - this.limbSize.foot, y: 0 }
+      ],
+      [
+        { x: 0, y: -this.limbSize.thigh - this.limbSize.body - this.limbSize.neck },
+        { x: 0, y: -this.limbSize.thigh - this.limbSize.body },
+        { x: 0, y: -this.limbSize.thigh },
+        { x: this.limbSize.upperArm * sinAngle(45), y: -this.limbSize.thigh - this.limbSize.body + this.limbSize.upperArm * cosAngle(45) },
+        { x: this.limbSize.upperArm * sinAngle(45) - this.limbSize.lowerArm * sinAngle(45), y: -this.limbSize.thigh - this.limbSize.body + this.limbSize.upperArm * cosAngle(45) + this.limbSize.lowerArm * cosAngle(45) },
+        { x: -this.limbSize.upperArm * sinAngle(80), y: -this.limbSize.thigh - this.limbSize.body + this.limbSize.upperArm * cosAngle(80) },
+        { x: -this.limbSize.upperArm * sinAngle(80), y: -this.limbSize.thigh - this.limbSize.body + this.limbSize.upperArm * cosAngle(80) + this.limbSize.lowerArm },
+        { x: 0, y: 0 },
+        { x: this.limbSize.calf, y: 0 },
+        { x: this.limbSize.calf, y: -this.limbSize.foot },
+        { x: -this.limbSize.thigh, y: -this.limbSize.thigh },
+        { x: -this.limbSize.thigh, y: -this.limbSize.thigh + this.limbSize.calf },
+        { x: -this.limbSize.thigh - this.limbSize.foot, y: -this.limbSize.thigh + this.limbSize.calf }
+      ],
+      [
+        { x: 0, y: -this.limbSize.calf - this.limbSize.body - this.limbSize.neck },
+        { x: 0, y: -this.limbSize.calf - this.limbSize.body },
+        { x: 0, y: -this.limbSize.calf },
+        { x: this.limbSize.upperArm, y: -this.limbSize.calf - this.limbSize.body },
+        { x: this.limbSize.upperArm + this.limbSize.lowerArm, y: -this.limbSize.calf - this.limbSize.body },
+        { x: -this.limbSize.upperArm, y: -this.limbSize.calf - this.limbSize.body },
+        { x: -this.limbSize.upperArm - this.limbSize.lowerArm, y: -this.limbSize.calf - this.limbSize.body },
+        { x: this.limbSize.thigh, y: -this.limbSize.calf },
+        { x: this.limbSize.thigh, y: 0 },
+        { x: this.limbSize.thigh + this.limbSize.foot, y: 0 },
+        { x: -this.limbSize.thigh * sinAngle(75), y: -this.limbSize.calf + this.limbSize.thigh * cosAngle(75) },
+        { x: -this.limbSize.thigh * sinAngle(75) - this.limbSize.calf * sinAngle(45), y: -this.limbSize.calf + this.limbSize.thigh * cosAngle(75) + this.limbSize.calf * cosAngle(45) },
+        { x: -this.limbSize.thigh * sinAngle(75) - this.limbSize.calf * sinAngle(45) - this.limbSize.foot * sinAngle(45), y: -this.limbSize.calf + this.limbSize.thigh * cosAngle(75) + this.limbSize.calf * cosAngle(45) - this.limbSize.foot * cosAngle(45) }
+      ]
+    ]
+    for (let i = 0; i < 13; i++) {
+      this.points.push(new FixedPoint(i === 9 || i === 12));
+    }
+    this.refreshPointPosition(this.pointPosition[0]);
+    this.head = new Head(this.points[0], -90);
     this.limbs = [
       new Limb(this.points[0], this.points[1]),
       new Limb(this.points[1], this.points[2]),
@@ -172,7 +219,28 @@ export default class WoodenManAnimation extends Animate {
     ]
   }
 
+  private refreshPointPosition(ps: Point[]) {
+    this.points.forEach((item, index) => {
+      item.x = ps[index].x;
+      item.y = ps[index].y;
+    });
+  }
+
   update() {
+    this.currentRate++;
+    if (this.currentRate >= this.refreshRate) {
+      this.currentPositionIndex++;
+      if (this.currentPositionIndex >= this.pointPosition.length) {
+        this.currentPositionIndex = 0;
+      }
+      this.currentRate = 0;
+    }
+    const positions = this.pointPosition[this.currentPositionIndex];
+    this.points.forEach((item, index) => {
+      item.x += (positions[index].x - item.x) * 0.15;
+      item.y += (positions[index].y - item.y) * 0.15;
+    });
+    // console.log('currentPositionIndex', this.currentPositionIndex);
   }
 
   draw() {
@@ -184,7 +252,7 @@ export default class WoodenManAnimation extends Animate {
     this.context.translate(0.5 * this.width, this.height * 0.8);
     this.head?.draw(this.context, this.limbSize.headRadius, this.option.bodyColor);
     this.limbs.forEach((item) => item.draw(this.context, this.limbSize.limbWidth, this.option.bodyColor));
-    this.points.forEach((item) => item.draw(this.context, this.limbSize.jointRadius, this.option.fixedPointColor));
+    this.points.forEach((item, index) => item.draw(this.context, this.limbSize.jointRadius, this.option.fixedPointColor, index));
     this.context.restore();
   }
 }

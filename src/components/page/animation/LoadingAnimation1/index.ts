@@ -51,7 +51,7 @@ export default class LoadingAnimation extends Animate {
     backgroundColor: '#ddd',
     elementNumber: 36,
     elementColors: ['#000', '#fff'],
-    // elementColors: ['hsla(0, 75%, 60%, 1)', 'hsla(120, 75%, 60%, 1)', 'hsla(240, 75%, 60%, 1)'],
+    // elementColors: ['hsla(0, 75%, 60%, 1)', 'hsla(120, 75%, 60%, 1)', 'hsla(240, 75%, 60%, 1)', 'hsla(280, 75%, 60%, 1)'],
     roStep: Math.PI / 30
   }
 
@@ -65,7 +65,7 @@ export default class LoadingAnimation extends Animate {
     this.radius = Math.min(this.width, this.height) * 0.35;
     this.elementSize = this.radius * 0.04;
     this.elementRange = this.radius * 0.1;
-    this.elementSizeRange = this.radius * 0.001;
+    this.elementSizeRange = this.radius * 0.005;
     this.elements = [];
     const colorBeginRoStep = 2 * Math.PI / this.option.elementColors.length;
     const beginRoStep = 2 * Math.PI / (this.option.elementNumber / 6);
