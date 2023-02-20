@@ -1,7 +1,8 @@
 import Animate from "@/lib/Animate";
 import Point from "@/lib/Point";
 
-const deg = Math.PI / 180;
+const sinAngle = (angle: number) => Math.sin(angle * Math.PI / 180);
+const cosAngle = (angle: number) => Math.cos(angle * Math.PI / 180);
 interface IOption {
   backgroundColor: string;
   bodyColor: string;
@@ -65,7 +66,7 @@ class Head {
     context.beginPath();
     context.translate(this.fixedPoint.x, this.fixedPoint.y);
     context.fillStyle = style;
-    context.arc(0.5 * radius * Math.cos(this.rotate), 0.5 * radius * Math.sin(this.rotate), radius, 0, 2 * Math.PI, false);
+    context.arc(0.5 * radius * cosAngle(this.rotate), 0.5 * radius * sinAngle(this.rotate), radius, 0, 2 * Math.PI, false);
     context.fill();
     context.restore();
   }
@@ -152,53 +153,56 @@ export default class WoodenManAnimation extends Animate {
     };
     this.pointPosition = [
       [
-        { x: 0, y: -this.limbSize.neck - this.limbSize.body - (this.limbSize.thigh + this.limbSize.calf) * Math.cos(15 * deg) },
-        { x: 0, y: -this.limbSize.body - (this.limbSize.thigh + this.limbSize.calf) * Math.cos(15 * deg) },
-        { x: 0, y: -(this.limbSize.thigh + this.limbSize.calf) * Math.cos(15 * deg) },
-        { x: this.limbSize.upperArm * Math.sin(45 * deg), y: -this.limbSize.body - (this.limbSize.thigh + this.limbSize.calf) * Math.cos(15 * deg) + this.limbSize.upperArm * Math.cos(45 * deg) },
-        { x: (this.limbSize.upperArm + this.limbSize.lowerArm) * Math.sin(45 * deg), y: -this.limbSize.body - (this.limbSize.thigh + this.limbSize.calf) * Math.cos(15 * deg) + (this.limbSize.upperArm + this.limbSize.lowerArm) * Math.cos(45 * deg) },
-        { x: -this.limbSize.upperArm * Math.sin(45 * deg), y: -this.limbSize.body - (this.limbSize.thigh + this.limbSize.calf) * Math.cos(15 * deg) + this.limbSize.upperArm * Math.cos(45 * deg) },
-        { x: -(this.limbSize.upperArm + this.limbSize.lowerArm) * Math.sin(45 * deg), y: -this.limbSize.body - (this.limbSize.thigh + this.limbSize.calf) * Math.cos(15 * deg) + (this.limbSize.upperArm + this.limbSize.lowerArm) * Math.cos(45 * deg) },
-        { x: this.limbSize.thigh * Math.sin(15 * deg), y: -this.limbSize.calf * Math.cos(15 * deg) },
-        { x: (this.limbSize.thigh + this.limbSize.calf) * Math.sin(15 * deg), y: 0 },
-        { x: (this.limbSize.thigh + this.limbSize.calf) * Math.sin(15 * deg) + this.limbSize.foot, y: 0 },
-        { x: -this.limbSize.thigh * Math.sin(15 * deg), y: -this.limbSize.calf * Math.cos(15 * deg) },
-        { x: -(this.limbSize.thigh + this.limbSize.calf) * Math.sin(15 * deg), y: 0 },
-        { x: -(this.limbSize.thigh + this.limbSize.calf) * Math.sin(15 * deg) - this.limbSize.foot, y: 0 }
+        { x: 0, y: -this.limbSize.neck - this.limbSize.body - (this.limbSize.thigh + this.limbSize.calf) * cosAngle(15) },
+        { x: 0, y: -this.limbSize.body - (this.limbSize.thigh + this.limbSize.calf) * cosAngle(15) },
+        { x: 0, y: -(this.limbSize.thigh + this.limbSize.calf) * cosAngle(15) },
+        { x: this.limbSize.upperArm * sinAngle(45), y: -this.limbSize.body - (this.limbSize.thigh + this.limbSize.calf) * cosAngle(15) + this.limbSize.upperArm * cosAngle(45) },
+        { x: (this.limbSize.upperArm + this.limbSize.lowerArm) * sinAngle(45), y: -this.limbSize.body - (this.limbSize.thigh + this.limbSize.calf) * cosAngle(15) + (this.limbSize.upperArm + this.limbSize.lowerArm) * cosAngle(45) },
+        { x: -this.limbSize.upperArm * sinAngle(45), y: -this.limbSize.body - (this.limbSize.thigh + this.limbSize.calf) * cosAngle(15) + this.limbSize.upperArm * cosAngle(45) },
+        { x: -(this.limbSize.upperArm + this.limbSize.lowerArm) * sinAngle(45), y: -this.limbSize.body - (this.limbSize.thigh + this.limbSize.calf) * cosAngle(15) + (this.limbSize.upperArm + this.limbSize.lowerArm) * cosAngle(45) },
+        { x: this.limbSize.thigh * sinAngle(15), y: -this.limbSize.calf * cosAngle(15) },
+        { x: (this.limbSize.thigh + this.limbSize.calf) * sinAngle(15), y: 0 },
+        { x: (this.limbSize.thigh + this.limbSize.calf) * sinAngle(15) + this.limbSize.foot, y: 0 },
+        { x: -this.limbSize.thigh * sinAngle(15), y: -this.limbSize.calf * cosAngle(15) },
+        { x: -(this.limbSize.thigh + this.limbSize.calf) * sinAngle(15), y: 0 },
+        { x: -(this.limbSize.thigh + this.limbSize.calf) * sinAngle(15) - this.limbSize.foot, y: 0 }
       ],
       [
         { x: 0, y: -this.limbSize.thigh - this.limbSize.body - this.limbSize.neck },
         { x: 0, y: -this.limbSize.thigh - this.limbSize.body },
         { x: 0, y: -this.limbSize.thigh },
-        { x: this.limbSize.upperArm * Math.sin(45 * deg), y: -this.limbSize.thigh - this.limbSize.body + this.limbSize.upperArm * Math.cos(45 * deg) },
-        { x: this.limbSize.upperArm * Math.sin(45 * deg) - this.limbSize.lowerArm * Math.sin(45 * deg), y: -this.limbSize.thigh - this.limbSize.body + this.limbSize.upperArm * Math.cos(45 * deg) + this.limbSize.lowerArm * Math.cos(45 * deg) },
-        { x: -this.limbSize.upperArm * Math.sin(80 * deg), y: -this.limbSize.thigh - this.limbSize.body + this.limbSize.upperArm * Math.cos(80 * deg) },
-        { x: -this.limbSize.upperArm * Math.sin(80 * deg), y: -this.limbSize.thigh - this.limbSize.body + this.limbSize.upperArm * Math.cos(80 * deg) + this.limbSize.lowerArm },
+        { x: this.limbSize.upperArm * sinAngle(45), y: -this.limbSize.thigh - this.limbSize.body + this.limbSize.upperArm * cosAngle(45) },
+        { x: this.limbSize.upperArm * sinAngle(45) - this.limbSize.lowerArm * sinAngle(45), y: -this.limbSize.thigh - this.limbSize.body + this.limbSize.upperArm * cosAngle(45) + this.limbSize.lowerArm * cosAngle(45) },
+        { x: -this.limbSize.upperArm * sinAngle(80), y: -this.limbSize.thigh - this.limbSize.body + this.limbSize.upperArm * cosAngle(80) },
+        { x: -this.limbSize.upperArm * sinAngle(80), y: -this.limbSize.thigh - this.limbSize.body + this.limbSize.upperArm * cosAngle(80) + this.limbSize.lowerArm },
         { x: 0, y: 0 },
         { x: this.limbSize.calf, y: 0 },
         { x: this.limbSize.calf, y: -this.limbSize.foot },
         { x: -this.limbSize.thigh, y: -this.limbSize.thigh },
         { x: -this.limbSize.thigh, y: -this.limbSize.thigh + this.limbSize.calf },
         { x: -this.limbSize.thigh - this.limbSize.foot, y: -this.limbSize.thigh + this.limbSize.calf }
+      ],
+      [
+        { x: 0, y: -this.limbSize.calf - this.limbSize.body - this.limbSize.neck },
+        { x: 0, y: -this.limbSize.calf - this.limbSize.body },
+        { x: 0, y: -this.limbSize.calf },
+        { x: this.limbSize.upperArm, y: -this.limbSize.calf - this.limbSize.body },
+        { x: this.limbSize.upperArm + this.limbSize.lowerArm, y: -this.limbSize.calf - this.limbSize.body },
+        { x: -this.limbSize.upperArm, y: -this.limbSize.calf - this.limbSize.body },
+        { x: -this.limbSize.upperArm - this.limbSize.lowerArm, y: -this.limbSize.calf - this.limbSize.body },
+        { x: this.limbSize.thigh, y: -this.limbSize.calf },
+        { x: this.limbSize.thigh, y: 0 },
+        { x: this.limbSize.thigh + this.limbSize.foot, y: 0 },
+        { x: -this.limbSize.thigh * sinAngle(75), y: -this.limbSize.calf + this.limbSize.thigh * cosAngle(75) },
+        { x: -this.limbSize.thigh * sinAngle(75) - this.limbSize.calf * sinAngle(45), y: -this.limbSize.calf + this.limbSize.thigh * cosAngle(75) + this.limbSize.calf * cosAngle(45) },
+        { x: -this.limbSize.thigh * sinAngle(75) - this.limbSize.calf * sinAngle(45) - this.limbSize.foot * sinAngle(45), y: -this.limbSize.calf + this.limbSize.thigh * cosAngle(75) + this.limbSize.calf * cosAngle(45) - this.limbSize.foot * cosAngle(45) }
       ]
     ]
-    this.points = [
-      new FixedPoint(),
-      new FixedPoint(),
-      new FixedPoint(),
-      new FixedPoint(),
-      new FixedPoint(),
-      new FixedPoint(),
-      new FixedPoint(),
-      new FixedPoint(),
-      new FixedPoint(),
-      new FixedPoint(true),
-      new FixedPoint(),
-      new FixedPoint(),
-      new FixedPoint(true),
-    ];
+    for (let i = 0; i < 13; i++) {
+      this.points.push(new FixedPoint(i === 9 || i === 12));
+    }
     this.refreshPointPosition(this.pointPosition[0]);
-    this.head = new Head(this.points[0], -90 * deg);
+    this.head = new Head(this.points[0], -90);
     this.limbs = [
       new Limb(this.points[0], this.points[1]),
       new Limb(this.points[1], this.points[2]),
