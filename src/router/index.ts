@@ -18,6 +18,11 @@ const routes = [
     component: () => import('@/views/Page.vue'),
     children: pages,
   },
+  {
+    path: '/test',
+    name: 'Test',
+    component: () => import('@/views/page/Test.vue')
+  },
 ];
 
 const router = createRouter({
