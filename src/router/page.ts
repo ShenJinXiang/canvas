@@ -148,5 +148,11 @@ export default [
     path: 'animation/LoadingAnimation1',
     name: 'LoadingAnimation1',
     component: () => import('@/views/page/animation/LoadingAnimation1.vue'),
+  },
+  {
+    title: '旋转构建动画1',
+    path: 'animation/RotateConstructionAnimation1',
+    name: 'RotateConstructionAnimation1',
+    component: () => import('@/views/page/animation/RotateConstructionAnimation1.vue'),
   }
 ];

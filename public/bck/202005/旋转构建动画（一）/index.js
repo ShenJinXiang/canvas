@@ -30,7 +30,7 @@
             this.ballRadius = ballRadius;
         }
         update() {
-            if(this.counterclockwise) {
+            if (this.counterclockwise) {
                 this.currentAngle += this.angleStep;
             } else {
                 this.currentAngle -= this.angleStep;
@@ -79,7 +79,7 @@
         },
         bindEvent() {
             window.onresize = drawer.reset;
-            $("#numRange").mousemove(function() {
+            $("#numRange").mousemove(function () {
                 let val = ~~$(this).val();
                 $("#num_span").text(val);
                 if (option.num !== val) {
@@ -128,11 +128,11 @@
                     drawer.h / 2 + option.radius * Math.sin(i * step),
                     option.sRadius,
                     option.ballRadius,
-                     - i * step,
+                    - i * step,
                     option.angleStep,
                     option.sColor,
                     // option.ballColor,
-                    'hsla(' + c  + ', 80%, 60%, 1)',
+                    'hsla(' + c + ', 80%, 60%, 1)',
                     false
                 ));
             }
