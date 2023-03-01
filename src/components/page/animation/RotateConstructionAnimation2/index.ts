@@ -1,7 +1,9 @@
 import Animate from "@/lib/Animate";
 
 interface IOption {
-  backgroundColor: string
+  backgroundColor: string;
+  lineColor: string;
+  angleStep: number;
 };
 
 class Element {
@@ -46,14 +48,18 @@ export default class RotateConstructionAnimation extends Animate {
   elementNumber: number;
   radius: number = 0;
   ballRadius: number = 0;
+  elements: Element[] = [];
   private option: IOption = {
-    backgroundColor: '#000'
+    backgroundColor: '#000',
+    lineColor: 'rgba(255, 255, 255, 0.5)',
+    angleStep: Math.PI / 90
   };
   constructor(width: number, height: number, elementNumber: number) {
     super();
     this.initRect(width, height);
     this.elementNumber = elementNumber;
     this.initData();
+    this.initElements();
   }
 
   private initData() {
@@ -62,14 +68,35 @@ export default class RotateConstructionAnimation extends Animate {
     this.ballRadius = 0.01 * base;
   }
 
+  private initElements() {
+    this.elements = [];
+    const angleStep = Math.PI / this.elementNumber;
+    const colorStep = 360 / this.elementNumber;
+    for (let i = 0; i < this.elementNumber; i++) {
+      this.elements.push(new Element(
+        i * angleStep,
+        this.option.lineColor,
+        -i * angleStep,
+        this.option.angleStep,
+        `hsla(${i * colorStep}, 80%, 60%, 1)`,
+      ));
+    }
+  }
+  update() {
+    this.elements.forEach((item) => item.update());
+  }
   draw() {
     if (!this.context) {
       return;
     }
     this.clear(this.option.backgroundColor);
     this.context.save();
-    this.context.fillStyle = '#084';
-    this.context.fillRect(400, 100, 320, 200);
+    this.context.translate(0.5 * this.width, 0.5 * this.height);
+    this.context.beginPath();
+    this.context.strokeStyle = this.option.lineColor;
+    this.context.arc(0, 0, this.radius, 0, 2 * Math.PI, false);
+    this.context.stroke();
+    this.elements.forEach((item) => item.draw(this.context, this.radius, this.ballRadius));
     this.context.restore();
   }
 }
