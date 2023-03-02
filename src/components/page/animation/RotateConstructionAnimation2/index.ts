@@ -99,4 +99,21 @@ export default class RotateConstructionAnimation extends Animate {
     this.elements.forEach((item) => item.draw(this.context, this.radius, this.ballRadius));
     this.context.restore();
   }
+
+  public setRect(width: number, height: number): this {
+    this.width = width;
+    this.height = height;
+    if (this.canvas) {
+      this.canvas.width = this.width;
+      this.canvas.height = this.height;
+    }
+    this.initData();
+    return this;
+  }
+
+  public setElementNumber(elementNumber: number): this {
+    this.elementNumber = elementNumber;
+    this.initElements();
+    return this;
+  }
 }
