@@ -270,8 +270,7 @@ export default class ColorFireworks extends Animate {
   firewordNumber: number = 0;
   constructor(width: number, height: number) {
     super();
-    this.width = width;
-    this.height = height;
+    this.initRect(width, height);
     this.initData();
   }
 

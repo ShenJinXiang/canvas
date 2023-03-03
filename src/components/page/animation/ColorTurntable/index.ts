@@ -53,8 +53,7 @@ export default class ColorTurntable extends Animate {
   outerSpeed: number = 0;
   constructor(width: number, height: number, colorNumber: number, innerSpeed: number, outerSpeed: number) {
     super();
-    this.width = width;
-    this.height = height;
+    this.initRect(width, height);
     this.colorNumber = colorNumber;
     this.innerSpeed = innerSpeed;
     this.outerSpeed = outerSpeed;
