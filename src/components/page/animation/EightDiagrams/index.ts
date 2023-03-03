@@ -86,8 +86,7 @@ export default class EightDiagrams extends Animate {
 
   constructor(width: number, height: number) {
     super();
-    this.width = width;
-    this.height = height;
+    this.initRect(width, height);
     this.radius = Math.min(this.width, this.height) * 0.8;
     this.initData();
   }

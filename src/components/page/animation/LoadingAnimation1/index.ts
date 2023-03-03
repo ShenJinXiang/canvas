@@ -105,5 +105,14 @@ export default class LoadingAnimation extends Animate {
     });
     this.context.restore();
   }
-
+  public setRect(width: number, height: number): this {
+    this.width = width;
+    this.height = height;
+    if (this.canvas) {
+      this.canvas.width = this.width;
+      this.canvas.height = this.height;
+    }
+    this.initData();
+    return this;
+  }
 }
