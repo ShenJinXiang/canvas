@@ -160,5 +160,11 @@ export default [
     path: 'animation/RotateConstructionAnimation2',
     name: 'RotateConstructionAnimation2',
     component: () => import('@/views/page/animation/RotateConstructionAnimation2.vue'),
+  },
+  {
+    title: '单摆运动',
+    path: 'animation/SimplePendulum',
+    name: 'SimplePendulum',
+    component: () => import('@/views/page/animation/SimplePendulum.vue'),
   }
 ];
