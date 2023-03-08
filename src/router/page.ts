@@ -163,8 +163,8 @@ export default [
   },
   {
     title: '单摆运动',
-    path: 'animation/SimplePendulum',
-    name: 'SimplePendulum',
-    component: () => import('@/views/page/animation/SimplePendulum.vue'),
+    path: 'animation/SimplePendulumAnimation',
+    name: 'SimplePendulumAnimation',
+    component: () => import('@/views/page/animation/SimplePendulumAnimation.vue'),
   }
 ];

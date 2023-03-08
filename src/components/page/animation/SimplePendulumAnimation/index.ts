@@ -4,7 +4,7 @@ interface IOption {
   backgroundColor: string;
   lineColor: string;
 }
-export default class SimplePendulum extends Animate {
+export default class SimplePendulumAnimation extends Animate {
   private option: IOption = {
     backgroundColor: '#000',
     lineColor: 'rgba(255, 255, 255, 0.5)'

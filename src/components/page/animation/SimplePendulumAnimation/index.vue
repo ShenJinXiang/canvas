@@ -3,7 +3,7 @@
 </template>
 <script lang="ts" setup>
 import { onMounted, ref } from 'vue';
-import SimplePendulum from '.';
+import SimplePendulumAnimation from '.';
 
 const props = defineProps({
   width: {
@@ -16,8 +16,8 @@ const props = defineProps({
   },
 })
 const canvasRef = ref();
-const simplePendulum = new SimplePendulum(props.width, props.height);
+const animation = new SimplePendulumAnimation(props.width, props.height);
 onMounted(() => {
-  simplePendulum.initCanvas(canvasRef.value).run();
+  animation.initCanvas(canvasRef.value).run();
 })
 </script>
