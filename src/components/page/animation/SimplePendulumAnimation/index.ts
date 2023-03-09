@@ -15,14 +15,15 @@ class Element {
   ballX: number = 0;
   ballY: number = 0;
   ballColor: string;
-  constructor(ox: number, oy: number, lineLength: number, bottomRadius: number, ballColor: string) {
+  constructor(ox: number, oy: number, lineLength: number, maxAngle: number, bottomAngleStep: number, ballColor: string) {
     this.ox = ox;
     this.oy = oy;
     this.lineLength = lineLength;
     this.ballColor = ballColor;
-    this.bottomRadius = bottomRadius;
-    // this.bottomRadius = this.lineLength * Math.sin(maxAngle);
-    this.bottomAngleStep = 6 * 2 * Math.PI / this.lineLength;
+    // this.bottomRadius = bottomRadius;
+    this.bottomRadius = this.lineLength * Math.sin(maxAngle);
+    // this.bottomAngleStep = 0.5 * Math.PI / Math.sqrt(this.lineLength);
+    this.bottomAngleStep = bottomAngleStep;
     this.currentButtomAngle = 0;
   }
   update() {
@@ -71,15 +72,24 @@ export default class SimplePendulumAnimation extends Animate {
   private initData() {
     this.ballRadius = this.height * 0.015;
     const colorStep = 360 / this.elementNumber;
+    const baseAngle = 0.3 * Math.PI / Math.sqrt(this.height - 20);
+    const angleStep = Math.PI / 2048;
     for (let i: number = 0; i < this.elementNumber; i++) {
       this.elements.push(new Element(
         this.origin.x,
         this.origin.y,
+        // Math.pow(0.3 * Math.PI / (baseAngle + (i * angleStep)), 2),
         this.height - 20 - (i * this.ballRadius),
-        this.height * 0.2 - (i * this.ballRadius * 0.1),
+        Math.PI / 12,
+        baseAngle + (i * angleStep),
         `hsla(${i * colorStep}, 80%, 60%, 1)`,
       ));
     }
+    const arr = [];
+    for (let i = 1; i < this.elements.length; i++) {
+      arr.push((this.elements[i].bottomAngleStep - this.elements[i - 1].bottomAngleStep) * 1000);
+    }
+    console.log(arr);
   }
 
   update() {
@@ -97,3 +107,10 @@ export default class SimplePendulumAnimation extends Animate {
     this.context.restore();
   }
 }
+
+/**
+ * ax + b = k * y
+ * a(x + 1) + b = k * z
+ * angle = PI / Math.sqrt(l) 
+ * Math.sqrt(l) = PI / angle,
+ */
