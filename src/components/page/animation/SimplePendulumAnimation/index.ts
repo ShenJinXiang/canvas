@@ -56,15 +56,16 @@ class Element {
 export default class SimplePendulumAnimation extends Animate {
   private option: IOption = {
     backgroundColor: '#000',
-    lineColor: 'rgba(255, 255, 255, 0.5)'
+    lineColor: 'rgba(255, 255, 255, 0.3)'
   }
-  private elementNumber: number = 24;
+  private elementNumber: number = 0;
   private elements: Element[] = [];
   private origin: Point;
   private ballRadius: number = 0;
-  constructor(width: number, height: number) {
+  constructor(width: number, height: number, elementNumber: number) {
     super();
     this.initRect(width, height);
+    this.elementNumber = elementNumber;
     this.origin = { x: 0.5 * this.width, y: 10 };
     this.initData();
   }
@@ -74,6 +75,7 @@ export default class SimplePendulumAnimation extends Animate {
     const colorStep = 360 / this.elementNumber;
     const baseAngle = 0.3 * Math.PI / Math.sqrt(this.height - 20);
     const angleStep = Math.PI / 2048;
+    this.elements = [];
     for (let i: number = 0; i < this.elementNumber; i++) {
       this.elements.push(new Element(
         this.origin.x,
@@ -85,13 +87,7 @@ export default class SimplePendulumAnimation extends Animate {
         `hsla(${i * colorStep}, 80%, 60%, 1)`,
       ));
     }
-    const arr = [];
-    for (let i = 1; i < this.elements.length; i++) {
-      arr.push((this.elements[i].bottomAngleStep - this.elements[i - 1].bottomAngleStep) * 1000);
-    }
-    console.log(arr);
   }
-
   update() {
     this.elements.forEach((item) => item.update());
   }
@@ -105,6 +101,23 @@ export default class SimplePendulumAnimation extends Animate {
     this.context.save();
     this.elements.forEach((item) => item.draw(this.context, this.option.lineColor, this.ballRadius));
     this.context.restore();
+  }
+
+  public setRect(width: number, height: number): this {
+    this.width = width;
+    this.height = height;
+    if (this.canvas) {
+      this.canvas.width = this.width;
+      this.canvas.height = this.height;
+    }
+    this.initData();
+    return this;
+  }
+
+  public setElementNumber(elementNumber: number): this {
+    this.elementNumber = elementNumber;
+    this.initData();
+    return this;
   }
 }
 
