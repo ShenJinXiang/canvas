@@ -166,5 +166,11 @@ export default [
     path: 'animation/SimplePendulumAnimation',
     name: 'SimplePendulumAnimation',
     component: () => import('@/views/page/animation/SimplePendulumAnimation.vue'),
+  },
+  {
+    title: '心形动画1',
+    path: 'animation/CardioidAnimation1',
+    name: 'CardioidAnimation1',
+    component: () => import('@/views/page/animation/CardioidAnimation1.vue'),
   }
 ];
