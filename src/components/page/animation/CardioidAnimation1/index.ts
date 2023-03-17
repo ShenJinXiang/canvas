@@ -1,13 +1,19 @@
-import Animate from "@/lib/Animate"
+import Animate from "@/lib/Animate";
 
 interface IOption {
-  backgroundColor: string
+  minRoundTime: number;
+  maxRoundTime: number;
+  elementColors: string[];
+  elementNumberRatio: number;
 }
 
 export default class CardioidAnimation extends Animate {
 
   private option: IOption = {
-    backgroundColor: ''
+    minRoundTime: 50,
+    maxRoundTime: 100,
+    elementColors: ['#0f628b', '#ccdff0', '#66ebff', '#ffffff', '#f0ff00'],
+    elementNumberRatio: 1,
   };
   constructor(width: number, height: number) {
     super();
@@ -18,7 +24,7 @@ export default class CardioidAnimation extends Animate {
     if (!this.context) {
       return;
     }
-    this.clear(this.option.backgroundColor);
+    this.clear();
     this.context.save();
     this.context.fillStyle = 'red';
     this.context.fillRect(200, 200, 260, 120);
