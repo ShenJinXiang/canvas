@@ -14,7 +14,7 @@ class Element {
   private angle: number;
   private angleStep: number;
   private roundRadius: number;
-  private size: number;
+  protected size: number;
   constructor(x: number, y: number, roundRadius: number, size: number, color: string, roundTime: number) {
     this.x = x;
     this.y = y;
@@ -49,6 +49,7 @@ class Element {
     context.strokeStyle = this.color;
     context.fillStyle = this.color;
     this.path(context);
+    context.fill();
     context.restore();
   }
 
@@ -60,7 +61,8 @@ class CircleElement extends Element {
     super(x, y, roundRadius, size, color, roundTime);
   }
   private path(context: CanvasRenderingContext2D) {
-
+    context.beginPath();
+    context.arc(0, 0, this.size, 0, 2 * Math.PI, false);
   }
 }
 class RectElement extends Element {
@@ -68,7 +70,8 @@ class RectElement extends Element {
     super(x, y, roundRadius, size, color, roundTime);
   }
   private path(context: CanvasRenderingContext2D) {
-
+    context.beginPath();
+    context.rect(-0.5 * this.size, -0.5 * this.size, this.size, this.size);
   }
 }
 
@@ -84,6 +87,11 @@ export default class CardioidAnimation extends Animate {
   constructor(width: number, height: number) {
     super();
     this.initRect(width, height);
+    this.initData();
+  }
+
+  private initData() {
+    this.elements = [];
   }
 
   draw() {
