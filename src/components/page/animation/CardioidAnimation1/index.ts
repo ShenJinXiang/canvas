@@ -1,4 +1,6 @@
 import Animate from "@/lib/Animate";
+import { random, randomInt } from "@/lib/Kit";
+import Point from "@/lib/Point";
 
 interface IOption {
   minRoundTime: number;
@@ -53,23 +55,24 @@ class Element {
     context.restore();
   }
 
-  private path(context: CanvasRenderingContext2D) { }
+  path(context: CanvasRenderingContext2D) { }
 }
 
 class CircleElement extends Element {
   constructor(x: number, y: number, roundRadius: number, size: number, color: string, roundTime: number) {
     super(x, y, roundRadius, size, color, roundTime);
   }
-  private path(context: CanvasRenderingContext2D) {
+  path(context: CanvasRenderingContext2D) {
     context.beginPath();
-    context.arc(0, 0, this.size, 0, 2 * Math.PI, false);
+    context.arc(0, 0, this.size * 0.5, 0, 2 * Math.PI, false);
   }
 }
 class RectElement extends Element {
   constructor(x: number, y: number, roundRadius: number, size: number, color: string, roundTime: number) {
     super(x, y, roundRadius, size, color, roundTime);
   }
-  private path(context: CanvasRenderingContext2D) {
+  path(context: CanvasRenderingContext2D) {
+    context.rotate(Math.PI / 4);
     context.beginPath();
     context.rect(-0.5 * this.size, -0.5 * this.size, this.size, this.size);
   }
@@ -92,6 +95,33 @@ export default class CardioidAnimation extends Animate {
 
   private initData() {
     this.elements = [];
+    const base = Math.min(this.width, this.height);
+    const elementNumber = Math.floor(base / 10);
+    const angleStep = 2 * Math.PI / elementNumber;
+    const baseRadius = base * 0.4 / 16;
+    for (let i = 0; i < elementNumber; i++) {
+      const color = this.option.elementColors[randomInt(this.option.elementColors.length)];
+      const roundRadius = random(base * 0.008, base * 0.015);
+      const size = random(base * 0.006, base * 0.011);
+      const roundTime = random(this.option.minRoundTime, this.option.maxRoundTime);
+      const p: Point = this.cardioidPosition(baseRadius, i * angleStep);
+      this.elements.push(
+        random() > 0.6 ?
+          new CircleElement(p.x, p.y, roundRadius, size, color, roundTime) :
+          new RectElement(p.x, p.y, roundRadius, size, color, roundTime)
+      );
+    }
+  }
+
+  private cardioidPosition(r: number, θ: number): Point {
+    return {
+      x: r * 16 * Math.pow(Math.sin(θ), 3),
+      y: -r * (13 * Math.cos(θ) - 5 * Math.cos(2 * θ) - 2 * Math.cos(3 * θ) - Math.cos(4 * θ))
+    }
+  }
+
+  update() {
+    this.elements.forEach((item) => item.update());
   }
 
   draw() {
@@ -100,8 +130,8 @@ export default class CardioidAnimation extends Animate {
     }
     this.clear();
     this.context.save();
-    this.context.fillStyle = 'red';
-    this.context.fillRect(200, 200, 260, 120);
+    this.context.translate(0.5 * this.width, 0.45 * this.height);
+    this.elements.forEach((item) => item.draw(this.context));
     this.context.restore();
   }
 }
