@@ -1,6 +1,6 @@
 <template>
   <div>
-    <cardioid-animation :width="width" :height="height"></cardioid-animation>
+    <cardioid-animation :width="width" :height="height - 40"></cardioid-animation>
   </div>
 </template>
 <script lang="ts" setup>

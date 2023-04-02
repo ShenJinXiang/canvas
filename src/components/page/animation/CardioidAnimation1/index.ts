@@ -72,9 +72,14 @@ class RectElement extends Element {
     super(x, y, roundRadius, size, color, roundTime);
   }
   path(context: CanvasRenderingContext2D) {
-    context.rotate(Math.PI / 4);
+    // context.rotate(Math.PI / 4);
     context.beginPath();
-    context.rect(-0.5 * this.size, -0.5 * this.size, this.size, this.size);
+    // context.rect(-0.5 * this.size, -0.5 * this.size, this.size, this.size);
+    context.moveTo(0.5 * this.size, 0);
+    context.lineTo(0, 0.5 * this.size);
+    context.lineTo(-0.5 * this.size, 0);
+    context.lineTo(0, -0.5 * this.size);
+    context.closePath();
   }
 }
 
@@ -96,13 +101,17 @@ export default class CardioidAnimation extends Animate {
   private initData() {
     this.elements = [];
     const base = Math.min(this.width, this.height);
-    const elementNumber = Math.floor(base / 10);
+    const elementNumber = Math.floor(base / 6);
     const angleStep = 2 * Math.PI / elementNumber;
     const baseRadius = base * 0.4 / 16;
+    const [minRoundRadius, maxRoundRadius] = [base * 0.0062, base * 0.013];
+    const [minElementSize, maxElementSize] = [base * 0.003, base * 0.02];
+    // console.log('roundRadius', minRoundRadius, maxRoundRadius);
+    // console.log('size', minElementSize, maxElementSize);
     for (let i = 0; i < elementNumber; i++) {
       const color = this.option.elementColors[randomInt(this.option.elementColors.length)];
-      const roundRadius = random(base * 0.008, base * 0.015);
-      const size = random(base * 0.006, base * 0.011);
+      const roundRadius = random(minRoundRadius, maxRoundRadius);
+      const size = random(minElementSize, maxElementSize);
       const roundTime = random(this.option.minRoundTime, this.option.maxRoundTime);
       const p: Point = this.cardioidPosition(baseRadius, i * angleStep);
       this.elements.push(
