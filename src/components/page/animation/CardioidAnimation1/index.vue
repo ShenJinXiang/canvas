@@ -2,7 +2,7 @@
   <canvas ref="canvas"></canvas>
 </template>
 <script lang="ts" setup>
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 import CardioidAnimation from '.';
 
 const props = defineProps({
@@ -21,6 +21,18 @@ const animation = new CardioidAnimation(props.width, props.height);
 onMounted(() => {
   animation.initCanvas(canvas.value).run();
 });
+watch(
+  () => props.width,
+  () => {
+    animation.setRect(props.width, props.height);
+  }
+);
+watch(
+  () => props.height,
+  () => {
+    animation.setRect(props.width, props.height);
+  }
+);
 </script>
 <style lang="less" scoped>
 canvas {

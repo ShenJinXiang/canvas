@@ -143,4 +143,13 @@ export default class CardioidAnimation extends Animate {
     this.elements.forEach((item) => item.draw(this.context));
     this.context.restore();
   }
+  public setRect(width: number, height: number) {
+    this.width = width;
+    this.height = height;
+    if (this.canvas) {
+      this.canvas.width = this.width;
+      this.canvas.height = this.height;
+    }
+    this.initData();
+  }
 }
