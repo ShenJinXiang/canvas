@@ -106,8 +106,6 @@ export default class CardioidAnimation extends Animate {
     const baseRadius = base * 0.4 / 16;
     const [minRoundRadius, maxRoundRadius] = [base * 0.0062, base * 0.013];
     const [minElementSize, maxElementSize] = [base * 0.003, base * 0.02];
-    // console.log('roundRadius', minRoundRadius, maxRoundRadius);
-    // console.log('size', minElementSize, maxElementSize);
     for (let i = 0; i < elementNumber; i++) {
       const color = this.option.elementColors[randomInt(this.option.elementColors.length)];
       const roundRadius = random(minRoundRadius, maxRoundRadius);
