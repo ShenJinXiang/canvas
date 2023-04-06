@@ -172,5 +172,11 @@ export default [
     path: 'animation/CardioidAnimation1',
     name: 'CardioidAnimation1',
     component: () => import('@/views/page/animation/CardioidAnimation1.vue'),
+  },
+  {
+    title: '旋转构建动画3',
+    path: 'animation/RotateConstructionAnimation3',
+    name: 'RotateConstructionAnimation3',
+    component: () => import('@/views/page/animation/RotateConstructionAnimation3.vue'),
   }
 ];
