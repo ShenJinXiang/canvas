@@ -1,30 +1,39 @@
 import Animate from "@/lib/Animate";
 import Point from "@/lib/Point";
 
-class LineDrawer {
-  lineLength: number;
+enum ElementPostionType {
+  M, L, R
+}
+
+class Element {
+  roundRadius: number;
   rotate: number = 0;
   lineWidth: number = 1;
   lineColor: string;
   pointColor: string;
   pointRadius: number;
-  sPoint: Point;
-  ePoint: Point;
-  mPoint: Point;
-  constructor(lineLength: number, lineWidth: number, lineColor: string, pointColor: string) {
-    this.lineLength = lineLength;
+  leftPoint: Point;
+  rightPoint: Point;
+  middelPoint: Point;
+  positionPoint: Point;
+  positionType: ElementPostionType;
+  constructor(roundRadius: number, lineWidth: number, lineColor: string, pointColor: string) {
+    this.roundRadius = roundRadius;
     this.lineWidth = lineWidth;
     this.lineColor = lineColor;
     this.pointColor = pointColor;
     this.pointRadius = this.lineWidth * 0.35;
-    this.sPoint = { x: 0, y: 0 };
-    this.ePoint = { x: this.lineLength, y: 0 };
-    this.mPoint = { x: 0.5 * this.lineLength, y: 0 };
+    this.leftPoint = { x: -this.roundRadius, y: 0 };
+    this.middelPoint = { x: 0, y: 0 };
+    this.rightPoint = { x: this.roundRadius, y: 0 };
+    this.positionPoint = { x: 0, y: 0 };
+    this.positionType = ElementPostionType.M;
   }
 
-  position(x: number, y: number) {
-    this.sPoint.x = x;
-    this.sPoint.y = y;
+  position(positionType: ElementPostionType, x: number, y: number) {
+    this.positionType = positionType;
+    this.positionPoint.x = x;
+    this.positionPoint.y = y;
   }
 
   draw(context: CanvasRenderingContext2D | null) {
@@ -32,17 +41,27 @@ class LineDrawer {
       return;
     }
     context.save();
-    context.translate(this.sPoint.x, this.sPoint.y);
+    context.translate(this.positionPoint.x, this.positionPoint.y);
+    switch (this.positionType) {
+      case ElementPostionType.L:
+        context.translate(-this.leftPoint.x, -this.leftPoint.y);
+        break;
+      case ElementPostionType.R:
+        context.translate(-this.rightPoint.x, -this.rightPoint.y);
+        break;
+      default:
+        context.translate(0, 0);
+    }
     context.lineCap = 'round';
     context.beginPath();
     context.strokeStyle = this.lineColor;
     context.lineWidth = this.lineWidth;
-    context.moveTo(0, 0);
-    context.lineTo(this.ePoint.x, this.ePoint.y);
+    context.moveTo(-this.roundRadius - this.lineWidth, 0);
+    context.lineTo(this.roundRadius + this.lineWidth, 0);
     context.stroke();
-    this.drawPoint(context, { x: 0, y: 0 });
-    this.drawPoint(context, this.ePoint);
-    this.drawPoint(context, this.mPoint);
+    this.drawPoint(context, this.middelPoint);
+    this.drawPoint(context, this.leftPoint);
+    this.drawPoint(context, this.rightPoint);
     context.restore();
   }
 
@@ -54,8 +73,12 @@ class LineDrawer {
   }
 }
 
+class LineAnimation {
+  constructor(element: Element, duration: number) { }
+}
+
 export default class RotateConstructionAnimation extends Animate {
-  lineDrawer: LineDrawer | null = null;
+  element: Element | null = null;
   constructor(width: number, height: number) {
     super();
     this.initRect(width, height);
@@ -63,7 +86,7 @@ export default class RotateConstructionAnimation extends Animate {
   }
 
   initData() {
-    this.lineDrawer = new LineDrawer(400, 12, '#ccc', '#666');
+    this.element = new Element(200, 12, '#ccc', '#666');
   }
 
   draw() {
@@ -72,8 +95,8 @@ export default class RotateConstructionAnimation extends Animate {
     }
     this.clear();
     this.context.save();
-    this.lineDrawer?.position(100, 200);
-    this.lineDrawer?.draw(this.context);
+    this.element?.position(ElementPostionType.M, 400, 200);
+    this.element?.draw(this.context);
     this.context.restore();
   }
 
