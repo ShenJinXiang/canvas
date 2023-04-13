@@ -109,14 +109,25 @@ class ElementTask {
   private duration: number;
   private taskStatus: TaskStatus = TaskStatus.PREPARE;
   private current: number = 0;
+  private currentAngle: number = 0;
   private counterclockwise: boolean;
   constructor(element: Element, position: Point, positionType: ElementPostionType, startAngle: number, endAngle: number, duration: number, counterclockwise: boolean = false) {
     this.element = element;
     this.position = position;
     this.positionType = positionType;
+    const rPi = 2 * Math.PI;
+    startAngle = startAngle % rPi;
+    endAngle = endAngle % rPi;
+    startAngle = startAngle < 0 ? startAngle + rPi : startAngle;
+    endAngle = endAngle < 0 ? endAngle + rPi : endAngle;
+    if (!counterclockwise) {
+      startAngle = startAngle > endAngle ? startAngle - rPi : startAngle;
+    } else {
+      endAngle = endAngle > startAngle ? endAngle - rPi : endAngle;
+    }
+    this.duration = duration;
     this.startAngle = startAngle;
     this.endAngle = endAngle;
-    this.duration = duration;
     this.angleStep = (this.endAngle - this.startAngle) / this.duration;
     this.counterclockwise = counterclockwise;
     this.reset();
@@ -124,21 +135,25 @@ class ElementTask {
   update() {
     if (this.taskStatus === TaskStatus.DOING) {
       this.current++;
-      this.element.setRotate(this.startAngle + this.angleStep * this.current);
+      this.currentAngle = this.startAngle + this.angleStep * this.current;
+      this.element.setRotate(this.currentAngle);
       if (this.current >= this.duration) {
         this.taskStatus = TaskStatus.COMPLETE;
         this.current = this.duration;
+        this.currentAngle = this.endAngle;
       }
     }
   }
   start() {
     this.taskStatus = TaskStatus.DOING;
     this.current = 0;
+    this.currentAngle = this.startAngle;
   }
   reset() {
     this.taskStatus = TaskStatus.PREPARE;
     this.element.position(this.positionType, this.position.x, this.position.y);
     this.current = 0;
+    this.currentAngle = this.startAngle;
   }
   draw(context: CanvasRenderingContext2D | null) {
     if (!context) {
@@ -166,12 +181,10 @@ export default class RotateConstructionAnimation extends Animate {
   }
 
   initData() {
+    const PI = Math.PI;
     const element = new Element(100, 12, '#ccc', '#666');
-    this.element = new Element(100, 12, '#ccc', '#666');
-    this.element.position(ElementPostionType.L, 600, 400);
-    this.element.setRotate(Math.PI / 6);
     this.tasks = [
-      new ElementTask(element, { x: 400, y: 200 }, ElementPostionType.L, 0, Math.PI * 0.5, 100)
+      new ElementTask(element, { x: 400, y: 200 }, ElementPostionType.L, -PI / 6, Math.PI * 0.5, 200, false)
     ]
     this.tasks[0].start();
 
@@ -187,22 +200,15 @@ export default class RotateConstructionAnimation extends Animate {
     }
     this.clear();
     this.context.save();
-    // this.element?.position(ElementPostionType.M, 400, 200);
-    // this.element?.draw(this.context);
     this.tasks.forEach((item) => item.draw(this.context));
-    this.element?.draw(this.context);
-    // this.element2?.draw(this.context);
-    // this.element3?.draw(this.context);
-
-    this.context.beginPath();
-    this.context.moveTo(500, 400);
-    this.context.lineTo(700, 400);
-    this.context.stroke();
-    this.context.beginPath();
-    this.context.moveTo(600, 300);
-    this.context.lineTo(600, 500);
-    this.context.stroke();
-
+    // this.context.beginPath();
+    // this.context.moveTo(500, 400);
+    // this.context.lineTo(700, 400);
+    // this.context.stroke();
+    // this.context.beginPath();
+    // this.context.moveTo(600, 300);
+    // this.context.lineTo(600, 500);
+    // this.context.stroke();
     this.context.restore();
   }
 
