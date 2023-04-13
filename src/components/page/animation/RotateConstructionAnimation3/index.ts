@@ -163,11 +163,48 @@ class ElementTask {
       case TaskStatus.PREPARE:
         break;
       case TaskStatus.DOING:
+        switch (this.positionType) {
+          case ElementPostionType.L:
+            this.arc(context, this.element.roundRadius, this.startAngle, this.currentAngle);
+            this.arc(context, 2 * this.element.roundRadius, this.startAngle, this.currentAngle);
+            break;
+          case ElementPostionType.M:
+            this.arc(context, this.element.roundRadius, this.startAngle + Math.PI, this.currentAngle + Math.PI);
+            this.arc(context, this.element.roundRadius, this.startAngle, this.currentAngle);
+            break;
+          case ElementPostionType.R:
+            this.arc(context, this.element.roundRadius, this.startAngle + Math.PI, this.currentAngle + Math.PI);
+            this.arc(context, 2 * this.element.roundRadius, this.startAngle + Math.PI, this.currentAngle + Math.PI);
+            break;
+        }
         break;
       case TaskStatus.COMPLETE:
-        break;
+        switch (this.positionType) {
+          case ElementPostionType.L:
+            this.arc(context, this.element.roundRadius, this.startAngle, this.endAngle);
+            this.arc(context, 2 * this.element.roundRadius, this.startAngle, this.endAngle);
+            break;
+          case ElementPostionType.M:
+            this.arc(context, this.element.roundRadius, this.startAngle + Math.PI, this.endAngle + Math.PI);
+            this.arc(context, this.element.roundRadius, this.startAngle, this.endAngle);
+            break;
+          case ElementPostionType.R:
+            this.arc(context, this.element.roundRadius, this.startAngle + Math.PI, this.endAngle + Math.PI);
+            this.arc(context, 2 * this.element.roundRadius, this.startAngle + Math.PI, this.endAngle + Math.PI);
+            break;
+        }
     }
     this.element.draw(context);
+  }
+
+  arc(context: CanvasRenderingContext2D, radius: number, startAngle: number, endAngle: number) {
+    context.save();
+    context.beginPath();
+    context.strokeStyle = this.element.lineColor;
+    context.lineWidth = this.element.lineWidth * 0.8;
+    context.arc(this.position.x, this.position.y, radius, startAngle, endAngle, this.counterclockwise);
+    context.stroke();
+    context.restore();
   }
 }
 
@@ -184,10 +221,9 @@ export default class RotateConstructionAnimation extends Animate {
     const PI = Math.PI;
     const element = new Element(100, 12, '#ccc', '#666');
     this.tasks = [
-      new ElementTask(element, { x: 400, y: 200 }, ElementPostionType.L, -PI / 6, Math.PI * 0.5, 200, false)
+      new ElementTask(element, { x: 400, y: 200 }, ElementPostionType.L, -PI / 6, Math.PI / 6, 200, false)
     ]
     this.tasks[0].start();
-
   }
 
   update() {
