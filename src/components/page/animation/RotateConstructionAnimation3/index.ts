@@ -148,7 +148,7 @@ class Task {
         this.current = this.duration;
     }
   }
-  draw(context: CanvasRenderingContext2D) { }
+  draw(context: CanvasRenderingContext2D | null) { }
   start() {
     this.taskStatus = TaskStatus.DOING;
     this.current = 0;
@@ -156,6 +156,12 @@ class Task {
   reset() {
     this.taskStatus = TaskStatus.PREPARE;
     this.current = 0;
+  }
+  started() {
+    return this.taskStatus === TaskStatus.DOING;
+  }
+  completed() {
+    return this.taskStatus === TaskStatus.COMPLETE;
   }
 }
 
@@ -188,17 +194,12 @@ class ElementTask extends Task {
     this.endAngle = endAngle;
     this.angleStep = (this.endAngle - this.startAngle) / this.duration;
     this.counterclockwise = counterclockwise;
-    this.reset();
   }
   update() {
     super.update();
     if (this.taskStatus === TaskStatus.DOING) {
       this.currentAngle = this.startAngle + this.angleStep * this.current;
       this.element.setRotate(this.currentAngle);
-      if (this.current >= this.duration) {
-        this.taskStatus = TaskStatus.COMPLETE;
-        this.currentAngle = this.endAngle;
-      }
     }
     if (this.taskStatus === TaskStatus.COMPLETE) {
       this.currentAngle = this.endAngle;
@@ -208,11 +209,7 @@ class ElementTask extends Task {
   start() {
     super.start();
     this.currentAngle = this.startAngle;
-  }
-  reset() {
-    super.reset();
     this.element.position(this.positionType, this.position.x, this.position.y);
-    this.currentAngle = this.startAngle;
   }
   draw(context: CanvasRenderingContext2D | null) {
     if (!context) {
@@ -268,9 +265,11 @@ class ElementTask extends Task {
 }
 
 export default class RotateConstructionAnimation extends Animate {
-  tasks: ElementTask[] = [];
-  element: Element | null = null;
+  origin: Point = { x: 0, y: 0 };
   points: Point[] = [];
+  tasks: Task[] = [];
+  element: Element | null = null;
+  current: number = 0;
   constructor(width: number, height: number) {
     super();
     this.initRect(width, height);
@@ -279,16 +278,43 @@ export default class RotateConstructionAnimation extends Animate {
 
   initData() {
     const PI = Math.PI;
+    this.origin = { x: 0.5 * this.width, y: 0.5 * this.height };
     const base = Math.min(this.width, this.height);
-    const element = new Element(100, 12, '#ccc', '#666');
+    const baseRadius = base * 0.2;
+    const angleStep = PI / 3;
+    for (let index = 0; index < 6; index++) {
+      this.points.push({
+        x: baseRadius * Math.cos(-PI / 2 + angleStep * index),
+        y: baseRadius * Math.sin(-PI / 2 + angleStep * index)
+      });
+    }
+    const element = new Element(baseRadius, 10, '#ccc', '#666');
+    const sAngle = - PI / 6;
     this.tasks = [
-      new ElementTask(element, { x: 400, y: 200 }, ElementPostionType.L, -PI / 6, Math.PI / 6, 200, false)
+      new ElementTask(element, this.points[4], ElementPostionType.L, sAngle, sAngle + angleStep, 100),
+      new ElementTask(element, this.points[3], ElementPostionType.M, sAngle + 1 * angleStep, sAngle + 2 * angleStep, 100),
+      new Task(50),
+      new ElementTask(element, { x: 0, y: 0 }, ElementPostionType.L, sAngle + 2 * angleStep, sAngle + 3 * angleStep, 100),
+      new ElementTask(element, this.points[4], ElementPostionType.M, sAngle + 3 * angleStep, sAngle + 4 * angleStep, 100),
+      new Task(50),
     ]
     this.tasks[0].start();
   }
 
   update() {
-    this.tasks.forEach((item) => item.update());
+    const task = this.tasks[this.current];
+    if (task.started()) {
+      task.update();
+    } else {
+      task.start();
+    }
+    if (task.completed()) {
+      this.current++;
+    }
+    if (this.current >= this.tasks.length) {
+      this.current = 0;
+      this.tasks.forEach((item) => item.reset());
+    }
   }
 
   draw() {
@@ -297,15 +323,9 @@ export default class RotateConstructionAnimation extends Animate {
     }
     this.clear();
     this.context.save();
+    this.context.translate(this.origin.x, this.origin.y);
+    this.drawPoints(this.context);
     this.tasks.forEach((item) => item.draw(this.context));
-    // this.context.beginPath();
-    // this.context.moveTo(500, 400);
-    // this.context.lineTo(700, 400);
-    // this.context.stroke();
-    // this.context.beginPath();
-    // this.context.moveTo(600, 300);
-    // this.context.lineTo(600, 500);
-    // this.context.stroke();
     this.context.restore();
   }
 
@@ -318,6 +338,18 @@ export default class RotateConstructionAnimation extends Animate {
     }
     this.initData();
     return this;
+  }
+
+  private drawPoints(context: CanvasRenderingContext2D | null) {
+    if (!context) {
+      return;
+    }
+    this.points.forEach((item) => {
+      context.beginPath();
+      context.fillStyle = '#333';
+      context.arc(item.x, item.y, 5, 0, Math.PI * 2, false);
+      context.fill();
+    });
   }
 
 }
