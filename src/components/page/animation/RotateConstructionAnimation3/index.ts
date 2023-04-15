@@ -293,7 +293,7 @@ export default class RotateConstructionAnimation extends Animate {
         y: baseRadius * Math.sin(-PI / 2 + angleStep * index)
       });
     }
-    this.element = new Element(baseRadius, 10, '#ccc', '#666');
+    this.element = new Element(baseRadius, 10, '#CDD0D6', '#337ecc');
     const sAngle = - PI / 6;
     let angle = sAngle;
     let duration = 60;
