@@ -163,6 +163,9 @@ class Task {
   completed() {
     return this.taskStatus === TaskStatus.COMPLETE;
   }
+  hasBody() {
+    return false;
+  }
 }
 
 class ElementTask extends Task {
@@ -250,7 +253,6 @@ class ElementTask extends Task {
             break;
         }
     }
-    this.element.draw(context);
   }
 
   arc(context: CanvasRenderingContext2D, radius: number, startAngle: number, endAngle: number) {
@@ -261,6 +263,9 @@ class ElementTask extends Task {
     context.arc(this.position.x, this.position.y, radius, startAngle, endAngle, this.counterclockwise);
     context.stroke();
     context.restore();
+  }
+  hasBody() {
+    return true;
   }
 }
 
@@ -288,17 +293,28 @@ export default class RotateConstructionAnimation extends Animate {
         y: baseRadius * Math.sin(-PI / 2 + angleStep * index)
       });
     }
-    const element = new Element(baseRadius, 10, '#ccc', '#666');
+    this.element = new Element(baseRadius, 10, '#ccc', '#666');
     const sAngle = - PI / 6;
-    this.tasks = [
-      new ElementTask(element, this.points[4], ElementPostionType.L, sAngle, sAngle + angleStep, 100),
-      new ElementTask(element, this.points[3], ElementPostionType.M, sAngle + 1 * angleStep, sAngle + 2 * angleStep, 100),
-      new Task(50),
-      new ElementTask(element, { x: 0, y: 0 }, ElementPostionType.L, sAngle + 2 * angleStep, sAngle + 3 * angleStep, 100),
-      new ElementTask(element, this.points[4], ElementPostionType.M, sAngle + 3 * angleStep, sAngle + 4 * angleStep, 100),
-      new Task(50),
-    ]
-    this.tasks[0].start();
+    let angle = sAngle;
+    let duration = 60;
+    let type = false;
+    for (let sIndex = 4, index = sIndex; index < sIndex + this.points.length; index++) {
+      this.tasks.push(new ElementTask(this.element, this.pointByIndex(index), (type = !type) ? ElementPostionType.L : ElementPostionType.M, angle, angle += angleStep, duration));
+      this.tasks.push(new ElementTask(this.element, this.pointByIndex(index - 1), (type = !type) ? ElementPostionType.L : ElementPostionType.M, angle, angle += angleStep, duration));
+      this.tasks.push(new ElementTask(this.element, { x: 0, y: 0 }, (type = !type) ? ElementPostionType.L : ElementPostionType.M, angle, angle += angleStep, duration));
+      this.tasks.push(new ElementTask(this.element, this.pointByIndex(index), (type = !type) ? ElementPostionType.L : ElementPostionType.M, angle, angle += angleStep, duration));
+      this.tasks.push(new ElementTask(this.element, this.pointByIndex(index - 1), (type = !type) ? ElementPostionType.L : ElementPostionType.M, angle, angle += angleStep, duration));
+      this.tasks.push(new ElementTask(this.element, { x: 0, y: 0 }, (type = !type) ? ElementPostionType.L : ElementPostionType.M, angle, angle += angleStep, duration));
+      this.tasks.push(new Task(20));
+      angle += angleStep;
+    }
+    this.tasks.push(new Task(80));
+  }
+
+  private pointByIndex(index: number): Point {
+    let i = index % this.points.length;
+    i = i < 0 ? i + this.points.length : i;
+    return this.points[i];
   }
 
   update() {
@@ -326,6 +342,9 @@ export default class RotateConstructionAnimation extends Animate {
     this.context.translate(this.origin.x, this.origin.y);
     this.drawPoints(this.context);
     this.tasks.forEach((item) => item.draw(this.context));
+    if (this.tasks[this.current].hasBody()) {
+      this.element?.draw(this.context);
+    }
     this.context.restore();
   }
 
