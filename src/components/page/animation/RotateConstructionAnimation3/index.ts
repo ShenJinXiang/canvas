@@ -1,6 +1,13 @@
 import Animate from "@/lib/Animate";
 import Point from "@/lib/Point";
 
+interface IOption {
+  backgroundColor: string;
+  elementColor: string;
+  trajectoryColor: string;
+  fixedPointColor: string;
+  duration: number;
+}
 enum ElementPostionType {
   M, L, R
 }
@@ -271,10 +278,20 @@ class ElementTask extends Task {
 
 export default class RotateConstructionAnimation extends Animate {
   origin: Point = { x: 0, y: 0 };
-  points: Point[] = [];
+  fixedPoints: Point[] = [];
   tasks: Task[] = [];
   element: Element | null = null;
   current: number = 0;
+  trajectoryWidth: number = 1;
+  fixedPointRadius: number = 1;
+  private option: IOption = {
+    backgroundColor: '#fff',
+    elementColor: '#CDD0D6',
+    trajectoryColor: '#337ecc',
+    fixedPointColor: '#409EFF',
+    duration: 60
+  };
+
   constructor(width: number, height: number) {
     super();
     this.initRect(width, height);
@@ -283,28 +300,31 @@ export default class RotateConstructionAnimation extends Animate {
 
   initData() {
     const PI = Math.PI;
-    this.origin = { x: 0.5 * this.width, y: 0.5 * this.height };
+    this.origin = { x: 0, y: 0 };
     const base = Math.min(this.width, this.height);
     const baseRadius = base * 0.2;
+    this.trajectoryWidth = baseRadius * 0.08;
+    this.fixedPointRadius = this.trajectoryWidth * 0.6;
     const angleStep = PI / 3;
+    this.fixedPoints = [];
     for (let index = 0; index < 6; index++) {
-      this.points.push({
+      this.fixedPoints.push({
         x: baseRadius * Math.cos(-PI / 2 + angleStep * index),
         y: baseRadius * Math.sin(-PI / 2 + angleStep * index)
       });
     }
-    this.element = new Element(baseRadius, 10, '#CDD0D6', '#337ecc');
+    this.element = new Element(baseRadius, this.trajectoryWidth, this.option.elementColor, this.option.trajectoryColor);
     const sAngle = - PI / 6;
     let angle = sAngle;
-    let duration = 60;
     let type = false;
-    for (let sIndex = 4, index = sIndex; index < sIndex + this.points.length; index++) {
-      this.tasks.push(new ElementTask(this.element, this.pointByIndex(index), (type = !type) ? ElementPostionType.L : ElementPostionType.M, angle, angle += angleStep, duration));
-      this.tasks.push(new ElementTask(this.element, this.pointByIndex(index - 1), (type = !type) ? ElementPostionType.L : ElementPostionType.M, angle, angle += angleStep, duration));
-      this.tasks.push(new ElementTask(this.element, { x: 0, y: 0 }, (type = !type) ? ElementPostionType.L : ElementPostionType.M, angle, angle += angleStep, duration));
-      this.tasks.push(new ElementTask(this.element, this.pointByIndex(index), (type = !type) ? ElementPostionType.L : ElementPostionType.M, angle, angle += angleStep, duration));
-      this.tasks.push(new ElementTask(this.element, this.pointByIndex(index - 1), (type = !type) ? ElementPostionType.L : ElementPostionType.M, angle, angle += angleStep, duration));
-      this.tasks.push(new ElementTask(this.element, { x: 0, y: 0 }, (type = !type) ? ElementPostionType.L : ElementPostionType.M, angle, angle += angleStep, duration));
+    this.tasks = [];
+    for (let sIndex = 4, index = sIndex; index < sIndex + this.fixedPoints.length; index++) {
+      this.tasks.push(new ElementTask(this.element, this.pointByIndex(index), (type = !type) ? ElementPostionType.L : ElementPostionType.M, angle, angle += angleStep, this.option.duration));
+      this.tasks.push(new ElementTask(this.element, this.pointByIndex(index - 1), (type = !type) ? ElementPostionType.L : ElementPostionType.M, angle, angle += angleStep, this.option.duration));
+      this.tasks.push(new ElementTask(this.element, { x: 0, y: 0 }, (type = !type) ? ElementPostionType.L : ElementPostionType.M, angle, angle += angleStep, this.option.duration));
+      this.tasks.push(new ElementTask(this.element, this.pointByIndex(index), (type = !type) ? ElementPostionType.L : ElementPostionType.M, angle, angle += angleStep, this.option.duration));
+      this.tasks.push(new ElementTask(this.element, this.pointByIndex(index - 1), (type = !type) ? ElementPostionType.L : ElementPostionType.M, angle, angle += angleStep, this.option.duration));
+      this.tasks.push(new ElementTask(this.element, { x: 0, y: 0 }, (type = !type) ? ElementPostionType.L : ElementPostionType.M, angle, angle += angleStep, this.option.duration));
       this.tasks.push(new Task(20));
       angle += angleStep;
     }
@@ -312,9 +332,9 @@ export default class RotateConstructionAnimation extends Animate {
   }
 
   private pointByIndex(index: number): Point {
-    let i = index % this.points.length;
-    i = i < 0 ? i + this.points.length : i;
-    return this.points[i];
+    let i = index % this.fixedPoints.length;
+    i = i < 0 ? i + this.fixedPoints.length : i;
+    return this.fixedPoints[i];
   }
 
   update() {
@@ -337,9 +357,9 @@ export default class RotateConstructionAnimation extends Animate {
     if (!this.context) {
       return;
     }
-    this.clear();
+    this.clear(this.option.backgroundColor);
     this.context.save();
-    this.context.translate(this.origin.x, this.origin.y);
+    this.context.translate(0.5 * this.width, 0.5 * this.height);
     this.drawPoints(this.context);
     this.tasks.forEach((item) => item.draw(this.context));
     if (this.tasks[this.current].hasBody()) {
@@ -363,10 +383,10 @@ export default class RotateConstructionAnimation extends Animate {
     if (!context) {
       return;
     }
-    this.points.forEach((item) => {
+    this.fixedPoints.forEach((item) => {
       context.beginPath();
-      context.fillStyle = '#333';
-      context.arc(item.x, item.y, 5, 0, Math.PI * 2, false);
+      context.fillStyle = this.option.fixedPointColor;
+      context.arc(item.x, item.y, this.fixedPointRadius, 0, Math.PI * 2, false);
       context.fill();
     });
   }
