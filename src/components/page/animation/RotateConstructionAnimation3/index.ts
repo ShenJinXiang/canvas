@@ -173,6 +173,10 @@ class Task {
   hasBody() {
     return false;
   }
+  complete() {
+    this.taskStatus = TaskStatus.COMPLETE;
+    this.current = this.duration;
+  }
 }
 
 class ElementTask extends Task {
@@ -351,6 +355,11 @@ export default class RotateConstructionAnimation extends Animate {
       this.current = 0;
       this.tasks.forEach((item) => item.reset());
     }
+    this.tasks.forEach((item, index) => {
+      if (index < this.current) {
+        item.complete();
+      }
+    });
   }
 
   draw() {
