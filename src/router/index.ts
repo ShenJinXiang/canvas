@@ -3,6 +3,7 @@ import NProgress from 'nprogress';
 import { createRouter, createWebHashHistory } from 'vue-router';
 import Home from '../views/Home.vue';
 import pages from './page';
+import tentative from './tentative';
 
 NProgress.configure({ showSpinner: false });
 
@@ -17,6 +18,12 @@ const routes = [
     name: 'Page',
     component: () => import('@/views/Page.vue'),
     children: pages,
+  },
+  {
+    path: '/tentative',
+    name: 'Tentative',
+    component: () => import('@/views/Tentative.vue'),
+    children: tentative,
   },
   {
     path: '/test',
