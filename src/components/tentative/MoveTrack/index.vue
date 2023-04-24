@@ -1,14 +1,10 @@
 <template>
     <div class="box">
+        <track-background></track-background>
     </div>
 </template>
 <script lang="ts" setup>
+import TrackBackground from './TrackBackground.vue';
 </script>
 <style lang="less" scoped>
-.box {
-    width: 600px;
-    height: 300px;
-    background-image: url('./background.svg');
-    background-repeat: no-repeat;
-}
 </style>
