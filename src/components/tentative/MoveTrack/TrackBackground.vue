@@ -1,6 +1,6 @@
 <template>
     <!-- <svg width="400" height="300" xmlns="http://www.w3.org/2000/svg"> -->
-    <svg width="800" height="600" viewBox="200 100 400 300" xmlns="http://www.w3.org/2000/svg">
+    <svg :width="viewBox.width" :height="viewBox.height" :viewBox="[viewBox.vx, viewBox.vy, viewBox.vw, viewBox.vh]" xmlns="http://www.w3.org/2000/svg">
         <g>
             <rect stroke="#000" id="svg_2" height="600" width="800" x="-1" fill="#b2b2b2"/>
             <line stroke-width="10" stroke="#ffffff" id="svg_4" y2="60" x2="800" y1="60" x1="0" fill="none"/>
@@ -28,7 +28,36 @@
     </svg>
 </template>
 <script lang="ts" setup>
+import { reactive, watch } from 'vue';
+import { useMagicKeys } from '@vueuse/core'
+import { vi } from 'element-plus/es/locale';
+
 // const clickCircle = () => {
 //     console.log('clickCircle');
 // };
+const viewBox = reactive({
+    vx: 0,
+    vy: 0,
+    vw: 800,
+    vh: 600,
+    width: 800,
+    height: 600
+});
+const keys = useMagicKeys();
+const { up, down, left, right } = keys;
+
+setInterval(() => {
+    if (up.value) {
+        viewBox.vy = viewBox.vy <= 0 ? 0 : viewBox.vy - 1;
+    }
+    if (down.value) {
+        viewBox.vy = viewBox.vy >= viewBox.height - viewBox.vh ? viewBox.height - viewBox.vh : viewBox.vy + 1;
+    }
+    if (left.value) {
+        viewBox.vx = viewBox.vx <= 0 ? 0 : viewBox.vx - 1;
+    }
+    if (right.value) {
+        viewBox.vx = viewBox.vx >= viewBox.width - viewBox.vw ? viewBox.width - viewBox.vw : viewBox.vx + 1;
+    }
+}, 10);
 </script>
