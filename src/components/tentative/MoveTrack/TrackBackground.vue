@@ -2,12 +2,12 @@
     <!-- <svg width="400" height="300" xmlns="http://www.w3.org/2000/svg"> -->
     <svg :width="viewBox.width" :height="viewBox.height" :viewBox="[viewBox.vx, viewBox.vy, viewBox.vw, viewBox.vh]" xmlns="http://www.w3.org/2000/svg">
         <g>
-            <rect stroke="#000" id="svg_2" height="600" width="800" x="-1" fill="#b2b2b2"/>
+            <rect stroke="#000" id="svg_2" height="600" width="800" fill="#f1f3fb"/>
             <line stroke-width="10" stroke="#ffffff" id="svg_4" y2="60" x2="800" y1="60" x1="0" fill="none"/>
             <line stroke-width="10" stroke="#ffffff" id="svg_5" y2="120" x2="800" y1="120" x1="0" fill="none"/>
-            <line stroke-width="15" stroke="#ffffff" id="svg_6" y2="181" x2="797" y1="181" x1="-3" fill="none"/>
+            <line stroke-width="15" stroke="#ffffff" id="svg_6" y2="181" x2="800" y1="181" x1="-3" fill="none"/>
             <line stroke-width="10" stroke="#ffffff" id="svg_7" y2="240" x2="800" y1="240" x1="0" fill="none"/>
-            <line stroke-width="10" stroke="#ffffff" id="svg_8" y2="311" x2="797" y1="311" x1="-3" fill="none"/>
+            <line stroke-width="10" stroke="#ffffff" id="svg_8" y2="311" x2="800" y1="311" x1="-3" fill="none"/>
             <line stroke-width="15" stroke="#ffffff" id="svg_9" y2="390" x2="800" y1="390" x1="0" fill="none"/>
             <line stroke-width="10" stroke="#ffffff" id="svg_10" y2="461" x2="800" y1="461" x1="0" fill="none"/>
             <line stroke-width="20" stroke="#ffffff" id="svg_11" y2="531" x2="800" y1="531" x1="0" fill="none"/>
@@ -41,10 +41,11 @@ const viewBox = reactive({
     vw: 800,
     vh: 600,
     width: 800,
-    height: 600
+    height: 600,
+    scale: 1,
 });
 const keys = useMagicKeys();
-const { up, down, left, right } = keys;
+const { up, down, left, right, Digit9, Digit0 } = keys;
 
 setInterval(() => {
     if (up.value) {
@@ -58,6 +59,26 @@ setInterval(() => {
     }
     if (right.value) {
         viewBox.vx = viewBox.vx >= viewBox.width - viewBox.vw ? viewBox.width - viewBox.vw : viewBox.vx + 1;
+    }
+    if (Digit9.value) {
+        viewBox.scale -= 0.01;
+        viewBox.scale = viewBox.scale <= 0.1 ? 0.01 : viewBox.scale;
+        viewBox.vw = viewBox.width * viewBox.scale;
+        viewBox.vh = viewBox.height * viewBox.scale;
+        viewBox.vy = viewBox.vy <= 0 ? 0 : viewBox.vy;
+        viewBox.vx = viewBox.vx <= 0 ? 0 : viewBox.vx;
+        viewBox.vx = viewBox.vx >= viewBox.width - viewBox.vw ? viewBox.width - viewBox.vw : viewBox.vx;
+        viewBox.vy = viewBox.vy >= viewBox.height - viewBox.vh ? viewBox.height - viewBox.vh : viewBox.vy;
+    }
+    if (Digit0.value) {
+        viewBox.scale += 0.01;
+        viewBox.scale = viewBox.scale >= 1 ? 1 : viewBox.scale;
+        viewBox.vw = viewBox.width * viewBox.scale;
+        viewBox.vh = viewBox.height * viewBox.scale;
+        viewBox.vy = viewBox.vy <= 0 ? 0 : viewBox.vy;
+        viewBox.vx = viewBox.vx <= 0 ? 0 : viewBox.vx;
+        viewBox.vx = viewBox.vx >= viewBox.width - viewBox.vw ? viewBox.width - viewBox.vw : viewBox.vx;
+        viewBox.vy = viewBox.vy >= viewBox.height - viewBox.vh ? viewBox.height - viewBox.vh : viewBox.vy;
     }
 }, 10);
 </script>

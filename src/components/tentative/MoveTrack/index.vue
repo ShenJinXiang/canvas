@@ -5,6 +5,7 @@
 </template>
 <script lang="ts" setup>
 import TrackBackground from './TrackBackground.vue';
+
 </script>
 <style lang="less" scoped>
 </style>
