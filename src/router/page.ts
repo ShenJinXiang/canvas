@@ -184,5 +184,11 @@ export default [
     path: 'animation/CardioidAnimation2',
     name: 'CardioidAnimation2',
     component: () => import('@/views/page/animation/CardioidAnimation2.vue'),
+  },
+  {
+    title: '视觉误差图1',
+    path: 'stillness/VisualErrorImage1',
+    name: 'VisualErrorImage1',
+    component: () => import('@/views/page/stillness/VisualErrorImage1.vue'),
   }
 ];
