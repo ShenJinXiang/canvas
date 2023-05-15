@@ -190,5 +190,11 @@ export default [
     path: 'stillness/VisualErrorImage1',
     name: 'VisualErrorImage1',
     component: () => import('@/views/page/stillness/VisualErrorImage1.vue'),
-  }
+  },
+  {
+    title: '旋转构建动画4',
+    path: 'animation/RotateConstructionAnimation4',
+    name: 'RotateConstructionAnimation4',
+    component: () => import('@/views/page/animation/RotateConstructionAnimation4.vue'),
+  },
 ];
