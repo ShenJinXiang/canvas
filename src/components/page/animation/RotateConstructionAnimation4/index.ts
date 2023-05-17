@@ -84,6 +84,20 @@ export default class RotateConstructionAnimation extends Animate {
     return this;
   }
 
+  refreshElements() {
+    if (!this.elements || !this.elements.length) {
+      return;
+    }
+    this.elements.forEach((item, index) => {
+      item.refresh(
+        0,
+        0,
+        this.elementWidth * index,
+        this.elementWidth
+      );
+    });
+  }
+
   update() {
     this.elements.forEach((item) => item.update());
   }
@@ -102,5 +116,6 @@ export default class RotateConstructionAnimation extends Animate {
   public setRect(width: number, height: number) {
     this.initRect(width, height);
     this.initData();
+    this.refreshElements();
   }
 }
