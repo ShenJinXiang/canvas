@@ -52,17 +52,40 @@ export default class RotateConstructionAnimation extends Animate {
     backgroundColor: '#061928',
     elementNumber: 30
   };
+  private elementWidth: number = 0;
+  private elements: Element[] = [];
   constructor(width: number, height: number) {
     super();
     this.initRect(width, height);
     this.initData();
+    this.initElement();
   }
 
   initData(): this {
     const base = Math.min(this.width, this.height);
     const radius = 0.4 * base;
-    const elementWidth = radius / this.option.elementNumber;
+    this.elementWidth = radius / this.option.elementNumber;
     return this;
+  }
+
+  initElement(): this {
+    this.elements = [];
+    for (let i = 0; i < this.option.elementNumber; i++) {
+      this.elements.push(new Element(
+        0,
+        0,
+        this.elementWidth * i,
+        this.elementWidth,
+        -Math.PI,
+        (this.option.elementNumber + 1 - i) * Math.PI / 450,
+        'hsla(' + (i * 180 / this.option.elementNumber) + ', 80%, 60%, 1)'
+      ));
+    }
+    return this;
+  }
+
+  update() {
+    this.elements.forEach((item) => item.update());
   }
 
   draw(): void {
@@ -72,8 +95,7 @@ export default class RotateConstructionAnimation extends Animate {
     this.clear(this.option.backgroundColor);
     this.context.save();
     this.context.translate(0.5 * this.width, 0.5 * this.height);
-    this.context.fillStyle = 'red';
-    this.context.fillRect(-120, -80, 240, 160);
+    this.elements.forEach((item) => item.draw(this.context));
     this.context.restore();
   }
 
