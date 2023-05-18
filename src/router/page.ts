@@ -197,4 +197,10 @@ export default [
     name: 'RotateConstructionAnimation4',
     component: () => import('@/views/page/animation/RotateConstructionAnimation4.vue'),
   },
+  {
+    title: '色彩版',
+    path: 'stillness/ColorBoard',
+    name: 'ColorBoard',
+    component: () => import('@/views/page/stillness/ColorBoard.vue'),
+  }
 ];
