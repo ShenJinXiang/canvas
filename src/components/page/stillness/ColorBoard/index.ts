@@ -38,6 +38,7 @@ export default class ColorBoard extends BaseCanvas {
 
   public setRect(width: number, height: number) {
     this.initRect(width, height);
-    // this.initData();
+    this.initData();
+    this.draw();
   }
 }
