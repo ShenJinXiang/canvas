@@ -202,5 +202,11 @@ export default [
     path: 'stillness/ColorBoard',
     name: 'ColorBoard',
     component: () => import('@/views/page/stillness/ColorBoard.vue'),
+  },
+  {
+    title: '视觉误差动画1',
+    path: 'animation/VisualErrorAnimation1',
+    name: 'VisualErrorAnimation1',
+    component: () => import('@/views/page/animation/VisualErrorAnimation1.vue'),
   }
 ];
