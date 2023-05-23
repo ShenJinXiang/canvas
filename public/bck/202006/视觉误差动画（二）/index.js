@@ -94,16 +94,16 @@
         initElements() {
             drawer.elements = [];
             for (let y = -option.lineLength / 2, ny = 0, angle = 0;
-                 y < drawer.h + option.lineLength / 2;
-                 y += option.lineLength, ny++, angle += Math.PI / 3) {
+                y < drawer.h + option.lineLength / 2;
+                y += option.lineLength, ny++, angle += Math.PI / 3) {
                 for (let x = 2 * option.lineSpace / 3, a = angle; x < drawer.w; x += option.lineSpace) {
                     if (ny % 2 === 0) {
-                        let ele  = new Element({x, y}, option.lineLength, option.lineWidth, option.lineColors[0], true);
+                        let ele = new Element({ x, y }, option.lineLength, option.lineWidth, option.lineColors[0], true);
                         ele.arrow(option.lineSpace / 3, option.arrowHeight, option.arrowStyle, a += 0.2, option.arrowAngleStep)
                         drawer.elements.push(ele);
 
                     } else {
-                        drawer.elements.push(new Element({x, y}, option.lineLength, option.lineWidth, option.lineColors[1], false));
+                        drawer.elements.push(new Element({ x, y }, option.lineLength, option.lineWidth, option.lineColors[1], false));
                     }
                 }
             }
