@@ -4,6 +4,8 @@ import Point from "@/lib/Point";
 interface IOption {
   backgroundColor: string;
   lineColors: string[];
+  arrowStyle: string;
+  arrowAngleStep: number;
 };
 
 class Element {
@@ -37,12 +39,17 @@ class Element {
 export default class VisualErrorAnimation extends Animate {
   private option: IOption = {
     backgroundColor: '#ccc',
-    lineColors: ['coral', 'Cyan']
+    lineColors: ['coral', 'Cyan'],
+    arrowStyle: '#dddddd',
+    arrowAngleStep: Math.PI / 40
   };
   private lineWidth: number = 1;
   private lineLength: number = 1;
   private lineSpace: number = 1;
   private elements: Element[] = [];
+  private arrowWidth: number = 1;
+  private arrowHeight: number = 1;
+  private arrowAngleStep: number = 0;
   constructor(width: number, height: number) {
     super();
     this.initRect(width, height);
@@ -53,6 +60,8 @@ export default class VisualErrorAnimation extends Animate {
     this.lineLength = this.height / 7;
     this.lineWidth = this.lineLength * 0.03;
     this.lineSpace = this.lineLength * 0.2;
+    this.arrowWidth = this.lineSpace / 3;
+    this.arrowHeight = this.lineLength / 4;
     this.elements = [];
     for (let y = -this.lineLength / 2, yCount = 0; y < this.height + this.lineLength / 2; y += this.lineLength, yCount++) {
       for (let x = 2 * this.lineSpace / 3; x < this.width; x += this.lineSpace) {
@@ -82,8 +91,6 @@ export default class VisualErrorAnimation extends Animate {
     }
     this.clear(this.option.backgroundColor);
     this.context.save();
-    // this.context.fillStyle = 'red';
-    // this.context.fillRect(200, 300, 320, 200);
     this.elements.forEach((item) => item.draw(this.context));
     this.context.restore();
   }
