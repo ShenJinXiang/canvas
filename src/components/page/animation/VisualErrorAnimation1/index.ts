@@ -13,11 +13,34 @@ class Element {
   private lineLength: number;
   private lineWidth: number;
   private lineStyle: string;
-  constructor(point: Point, lineLength: number, lineWidth: number, lineStyle: string) {
+  private hasArrow: boolean = false;
+  private arrowWidth: number = 0;
+  private arrowHeight: number = 0;
+  private arrowH: number = 0;
+  private arrowStyle: string = '';
+  private angle: number = 0;
+  private angleStep: number = 0;
+  constructor(point: Point, lineLength: number, lineWidth: number, lineStyle: string, hasArrow: boolean) {
     this.point = point;
     this.lineLength = lineLength;
     this.lineWidth = lineWidth;
     this.lineStyle = lineStyle;
+    this.hasArrow = hasArrow;
+  }
+
+  arrow(arrowWidth: number, arrowHeight: number, arrowStyle: string, angle: number, angleStep: number) {
+    this.arrowWidth = arrowWidth;
+    this.arrowHeight = arrowHeight;
+    this.arrowStyle = arrowStyle;
+    this.angle = angle;
+    this.angleStep = angleStep;
+  }
+
+  update() {
+    if (this.hasArrow) {
+      this.angle += this.angleStep;
+      this.arrowH = this.arrowHeight * Math.sin(this.angle);
+    }
   }
 
   draw(context: CanvasRenderingContext2D | null) {
@@ -32,13 +55,28 @@ class Element {
     context.moveTo(0, 0);
     context.lineTo(0, this.lineLength);
     context.stroke();
+    if (this.hasArrow) {
+      context.strokeStyle = this.arrowStyle;
+      context.lineCap = 'round';
+      context.beginPath();
+      context.moveTo(-this.arrowWidth, this.arrowH);
+      context.lineTo(0, 0);
+      context.lineTo(this.arrowWidth, this.arrowH);
+      context.stroke();
+
+      context.beginPath();
+      context.moveTo(-this.arrowWidth, this.lineLength - this.arrowH);
+      context.lineTo(0, this.lineLength);
+      context.lineTo(this.arrowWidth, this.lineLength - this.arrowH);
+      context.stroke();
+    }
     context.restore();
   }
 }
 
 export default class VisualErrorAnimation extends Animate {
   private option: IOption = {
-    backgroundColor: '#ccc',
+    backgroundColor: '#061928',
     lineColors: ['coral', 'Cyan'],
     arrowStyle: '#dddddd',
     arrowAngleStep: Math.PI / 40
@@ -63,26 +101,28 @@ export default class VisualErrorAnimation extends Animate {
     this.arrowWidth = this.lineSpace / 3;
     this.arrowHeight = this.lineLength / 4;
     this.elements = [];
-    for (let y = -this.lineLength / 2, yCount = 0; y < this.height + this.lineLength / 2; y += this.lineLength, yCount++) {
-      for (let x = 2 * this.lineSpace / 3; x < this.width; x += this.lineSpace) {
+    for (let y = -this.lineLength / 2, yCount = 0, angle = 0; y < this.height + this.lineLength / 2; y += this.lineLength, yCount++, angle += Math.PI / 3) {
+      for (let x = 2 * this.lineSpace / 3, ang = angle; x < this.width; x += this.lineSpace) {
         if (yCount % 2 === 0) {
-          this.elements.push(new Element(
-            { x, y },
-            this.lineLength,
-            this.lineWidth,
-            this.option.lineColors[0]
-          ));
+          const element = new Element({ x, y }, this.lineLength, this.lineWidth, this.option.lineColors[0], true);
+          element.arrow(this.arrowWidth, this.arrowHeight, this.option.arrowStyle, ang += 0.2, this.option.arrowAngleStep);
+          this.elements.push(element);
         } else {
           this.elements.push(new Element(
             { x, y },
             this.lineLength,
             this.lineWidth,
-            this.option.lineColors[1]
+            this.option.lineColors[1],
+            false
           ));
         }
       }
     }
     console.log(this.elements);
+  }
+
+  update() {
+    this.elements.forEach((item) => item.update());
   }
 
   draw() {
