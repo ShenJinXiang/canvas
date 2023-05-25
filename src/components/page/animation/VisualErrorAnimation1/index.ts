@@ -92,6 +92,7 @@ export default class VisualErrorAnimation extends Animate {
     super();
     this.initRect(width, height);
     this.initData();
+    this.initElements();
   }
 
   initData() {
@@ -100,6 +101,10 @@ export default class VisualErrorAnimation extends Animate {
     this.lineSpace = this.lineLength * 0.2;
     this.arrowWidth = this.lineSpace / 3;
     this.arrowHeight = this.lineLength / 4;
+    this.initElements();
+  }
+
+  private initElements() {
     this.elements = [];
     for (let y = -this.lineLength / 2, yCount = 0, angle = 0; y < this.height + this.lineLength / 2; y += this.lineLength, yCount++, angle += Math.PI / 3) {
       for (let x = 2 * this.lineSpace / 3, ang = angle; x < this.width; x += this.lineSpace) {
@@ -118,7 +123,6 @@ export default class VisualErrorAnimation extends Animate {
         }
       }
     }
-    console.log(this.elements);
   }
 
   update() {
@@ -136,5 +140,6 @@ export default class VisualErrorAnimation extends Animate {
   }
   public setRect(width: number, height: number) {
     this.initRect(width, height);
+    this.initData();
   }
 }
