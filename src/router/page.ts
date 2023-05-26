@@ -208,5 +208,11 @@ export default [
     path: 'animation/VisualErrorAnimation1',
     name: 'VisualErrorAnimation1',
     component: () => import('@/views/page/animation/VisualErrorAnimation1.vue'),
+  },
+  {
+    title: '旋转构建动画5',
+    path: 'animation/RotateConstructionAnimation5',
+    name: 'RotateConstructionAnimation5',
+    component: () => import('@/views/page/animation/RotateConstructionAnimation5.vue'),
   }
 ];
