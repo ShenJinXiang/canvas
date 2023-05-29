@@ -1,4 +1,5 @@
 import Animate from "@/lib/Animate";
+import Point from "@/lib/Point";
 
 interface IOption {
     backgroundColor: string;
@@ -37,6 +38,10 @@ class Element {
 }
 
 export default class RotateConstructionAnimation extends Animate {
+    private origin: Point = { x: 0, y: 0 }
+    // private baseRadius: number = 0;
+    private baseElement: Element | null = null;
+    private elements: Element[] = [];
     private option: IOption = {
         backgroundColor: '#000',
         elementColor: 'red',
@@ -45,6 +50,27 @@ export default class RotateConstructionAnimation extends Animate {
     constructor(width: number, height: number) {
         super();
         this.initRect(width, height);
+        this.initData();
+    }
+
+    initData() {
+        const base = Math.min(this.width, this.height);
+        const baseRadius = base * 0.2;
+        this.origin = {
+            x: 0.5 * this.width,
+            y: 0.35 * this.height
+        }
+        this.baseElement = new Element(0, 0, baseRadius);
+        const num = 90;
+        const angleStep = 2 * Math.PI / num;
+        this.elements = [];
+        for (let index = 0; index < num; index++) {
+            this.elements.push(new Element(
+                baseRadius * Math.cos(angleStep * index),
+                baseRadius * Math.sin(angleStep * index),
+                2 * baseRadius * Math.sin(index * angleStep / 2)
+            ));
+        }
     }
 
     draw(): void {
@@ -53,7 +79,10 @@ export default class RotateConstructionAnimation extends Animate {
         }
         this.clear(this.option.backgroundColor);
         this.context.save();
-        new Element(0.5 * this.width, 0.5 * this.height, 0.2 * this.height).draw(this.context, this.option.elementColor);
+        this.context.translate(this.origin.x, this.origin.y);
+        this.context.rotate(-Math.PI / 2);
+        this.baseElement?.draw(this.context, this.option.lineColor);
+        // this.elements.forEach((item) => item.draw(this.context, this.option.elementColor));
         this.context.restore();
     }
 }
