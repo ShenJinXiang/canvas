@@ -12,6 +12,13 @@ export default class Line {
     this.ey = ey;
   }
 
+  updatePosition(sx: number, sy: number, ex: number, ey: number) {
+    this.sx = sx;
+    this.sy = sy;
+    this.ex = ex;
+    this.ey = ey;
+  }
+
   stroke(context: CanvasRenderingContext2D | null, { strokeStyle = '#000', lineWidth = 1, lineDash = null }: StrokeOption) {
     if (!context) {
       return;

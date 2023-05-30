@@ -4,7 +4,6 @@
 <script lang="ts" setup>
 import { onMounted, ref } from 'vue';
 import RotateConstructionAnimation from '.';
-import { ca } from 'element-plus/es/locale';
 
 const props = defineProps({
     width: {
@@ -21,6 +20,6 @@ const canvasRef = ref();
 const cnavas = new RotateConstructionAnimation(props.width, props.height);
 
 onMounted(() => {
-    cnavas.initCanvas(canvasRef.value).draw();
+    cnavas.initCanvas(canvasRef.value).run();
 });
 </script>
