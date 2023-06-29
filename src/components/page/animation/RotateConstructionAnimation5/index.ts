@@ -121,4 +121,8 @@ export default class RotateConstructionAnimation extends Animate {
         this.elements.forEach((item, index) => index <= this.currentIndex ? item.draw(this.context, this.option.elementColor) : '');
         this.context.restore();
     }
+    public setRect(width: number, height: number) {
+        this.initRect(width, height);
+        this.initData();
+    }
 }

@@ -2,7 +2,7 @@
     <canvas ref="canvasRef"></canvas>
 </template>
 <script lang="ts" setup>
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 import RotateConstructionAnimation from '.';
 
 const props = defineProps({
@@ -17,9 +17,22 @@ const props = defineProps({
 })
 
 const canvasRef = ref();
-const cnavas = new RotateConstructionAnimation(props.width, props.height);
+const canvas = new RotateConstructionAnimation(props.width, props.height);
 
 onMounted(() => {
-    cnavas.initCanvas(canvasRef.value).run();
+    canvas.initCanvas(canvasRef.value).run();
 });
+
+watch(
+  () => props.width,
+  () => {
+    canvas.setRect(props.width, props.height);
+  }
+);
+watch(
+  () => props.height,
+  () => {
+    canvas.setRect(props.width, props.height);
+  }
+);
 </script>
