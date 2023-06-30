@@ -9,30 +9,30 @@ export default class Animate extends BaseCanvas {
 
   constructor() {
     super();
-    this.fps = 1;
+    this.fps = 75;
     this.fpsInterval = 1000 / this.fps;
     this.last= new Date().getTime();
   }
 
-  run(): void {
+  animate(): void {
     this.update();
-    this.draw();
     if (this.showMark) {
       this.markCanvas.draw(this.context);
     }
-    requestAnimationFrame(this.run.bind(this));
+    // requestAnimationFrame(this.run.bind(this));
   }
   update(): void { }
   draw(): void { }
 
-  // run() {
-  //   const now = new Date().getTime();
-  //   const elapsed = now - this.last;
-  //   if (elapsed >= this.fpsInterval) {
-  //     this.last = now - (elapsed % this.fpsInterval);
-  //     this.animate();
-  //   }
-  //   requestAnimationFrame(this.run.bind(this));
-  // }
+  run() {
+    const now = new Date().getTime();
+    const elapsed = now - this.last;
+    if (elapsed >= this.fpsInterval) {
+      this.last = now - (elapsed % this.fpsInterval);
+      this.animate();
+    }
+    this.draw();
+    requestAnimationFrame(this.run.bind(this));
+  }
 
 }
