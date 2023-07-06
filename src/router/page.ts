@@ -214,5 +214,11 @@ export default [
     path: 'animation/RotateConstructionAnimation5',
     name: 'RotateConstructionAnimation5',
     component: () => import('@/views/page/animation/RotateConstructionAnimation5.vue'),
-  }
+  },
+  {
+    title: '祥云花纹',
+    path: 'stillness/AuspiciousCloudPattern',
+    name: 'AuspiciousCloudPattern',
+    component: () => import('@/views/page/stillness/AuspiciousCloudPattern.vue'),
+  },
 ];
