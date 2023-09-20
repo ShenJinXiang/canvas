@@ -1,4 +1,4 @@
-import BaseCanvas from "@/lib/BaseCanvas"
+import BaseCanvas from "@/lib/BaseCanvas";
 
 interface IOption {
     backgroundColor: string;
@@ -23,16 +23,24 @@ class Element {
         this.radius = radius;
     }
 
-    draw(context: CanvasRenderingContext2D | null, style: string) {
+    draw(context: CanvasRenderingContext2D | null, style: string, backgroundColor: string) {
         if (!context) {
             return;
         }
         context.save();
         context.translate(this.x, this.y);
-        this.rs.forEach((item) => {
+        // backaground
+        context.beginPath();
+        context.fillStyle = backgroundColor;
+        context.arc(0, 0, this.radius, -Math.PI, 0, false);
+        context.fill();
+        context.closePath();
+        // line
+        this.rs.forEach((item, index) => {
             context.beginPath();
             context.strokeStyle = style;
-            context.lineWidth = 1;
+            const radius = this.radius * item;
+            context.lineWidth = index === 0 ? (radius * 0.05 > 2 ? radius * 0.05 : 2) : (radius * 0.02 > 1 ? radius * 0.02 : 1);
             context.arc(0, 0, this.radius * item, -Math.PI, 0, false);
             context.stroke();
         });
@@ -62,6 +70,8 @@ export default class AuspiciousCloudPattern extends BaseCanvas {
         this.elements = [
             ele
         ];
+        // const size = this.width * 0.05;
+
     }
 
     draw() {
@@ -71,7 +81,7 @@ export default class AuspiciousCloudPattern extends BaseCanvas {
         this.clear(this.option.backgroundColor);
 
         this.context.save();
-        this.elements.forEach((item) => item.draw(this.context, this.option.cloudColor));
+        this.elements.forEach((item) => item.draw(this.context, this.option.cloudColor, this.option.backgroundColor));
         this.context.restore();
     }
 }
