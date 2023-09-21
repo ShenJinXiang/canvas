@@ -21,6 +21,7 @@ class Element {
         this.x = x;
         this.y = y;
         this.radius = radius;
+        return this;
     }
 
     draw(context: CanvasRenderingContext2D | null, style: string, backgroundColor: string) {
@@ -61,17 +62,21 @@ export default class AuspiciousCloudPattern extends BaseCanvas {
     }
 
     initData() {
-        const ele = new Element();
-        ele.data(
-            this.width * 0.5,
-            this.height * 0.5,
-            200
-        );
-        this.elements = [
-            ele
-        ];
-        // const size = this.width * 0.05;
-
+        // const ele = new Element();
+        // ele.data(
+        //     this.width * 0.5,
+        //     this.height * 0.5,
+        //     200
+        // );
+        // this.elements = [
+        //     ele
+        // ];
+        const size = this.width * 0.05;
+        for (let x: number = 0; x < this.width; x += 2 * size) {
+            this.elements.push(
+                new Element().data(x, size, size)
+            );
+        }
     }
 
     draw() {
