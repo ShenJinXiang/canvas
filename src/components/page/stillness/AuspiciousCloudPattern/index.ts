@@ -14,7 +14,7 @@ class Element {
         this.x = 0;
         this.y = 0;
         this.radius = 0;
-        this.rs = [1, 0.8, 0.6, 0.5, 0.4, 0.3];
+        this.rs = [1, 0.8, 0.6, 0.5, 0.4, 0.3, 0.2, 0.1];
     }
 
     data(x: number, y: number, radius: number) {
@@ -71,11 +71,22 @@ export default class AuspiciousCloudPattern extends BaseCanvas {
         // this.elements = [
         //     ele
         // ];
-        const size = this.width * 0.05;
-        for (let x: number = 0; x < this.width; x += 2 * size) {
-            this.elements.push(
-                new Element().data(x, size, size)
-            );
+        const size = this.width * 0.025;
+        // const yStep = size * Math.tan(Math.PI / 6);
+        const yStep = size * 0.5;
+        const xStep = size * 2;
+        for (let yIndex = 0; yIndex * yStep < this.height + size; yIndex += 1) {
+            for (let xIndex = 0; xIndex * xStep < this.width + size; xIndex += 1) {
+                if (yIndex % 2 === 0) {
+                    this.elements.push(
+                        new Element().data(xIndex * xStep, yIndex * yStep, size)
+                    );
+                } else {
+                    this.elements.push(
+                        new Element().data(xIndex * xStep + size, yIndex * yStep, size)
+                    );
+                }
+            }
         }
     }
 
