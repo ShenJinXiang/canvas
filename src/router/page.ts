@@ -221,4 +221,10 @@ export default [
     name: 'AuspiciousCloudPattern',
     component: () => import('@/views/page/stillness/AuspiciousCloudPattern.vue'),
   },
+  {
+    title: '旋转构建动画6',
+    path: 'animation/RotateConstructionAnimation6',
+    name: 'RotateConstructionAnimation6',
+    component: () => import('@/views/page/animation/RotateConstructionAnimation6.vue'),
+  },
 ];
