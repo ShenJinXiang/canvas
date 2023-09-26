@@ -31,7 +31,6 @@ export default class RotateConstructionAnimation extends Animate {
         if (!this.context) {
             return;
         }
-        console.log('draw');
         this.clear(this.option.backgroundColor);
         this.context.save();
         this.context.translate(this.width / 2, this.height / 2);
