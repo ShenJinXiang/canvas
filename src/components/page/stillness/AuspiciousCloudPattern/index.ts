@@ -62,17 +62,7 @@ export default class AuspiciousCloudPattern extends BaseCanvas {
     }
 
     initData() {
-        // const ele = new Element();
-        // ele.data(
-        //     this.width * 0.5,
-        //     this.height * 0.5,
-        //     200
-        // );
-        // this.elements = [
-        //     ele
-        // ];
-        const size = this.width * 0.025;
-        // const yStep = size * Math.tan(Math.PI / 6);
+        const size = this.width * 0.025 < 30 ? 30 : this.width * 0.025;
         const yStep = size * 0.5;
         const xStep = size * 2;
         for (let yIndex = 0; yIndex * yStep < this.height + size; yIndex += 1) {
@@ -99,5 +89,11 @@ export default class AuspiciousCloudPattern extends BaseCanvas {
         this.context.save();
         this.elements.forEach((item) => item.draw(this.context, this.option.cloudColor, this.option.backgroundColor));
         this.context.restore();
+    }
+
+    public setRect(width: number, height: number) {
+        this.initRect(width, height);
+        this.initData();
+        this.draw();
     }
 }
