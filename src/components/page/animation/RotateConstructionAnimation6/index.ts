@@ -1,4 +1,5 @@
 import Animate from "@/lib/Animate";
+import Point from "@/lib/Point";
 
 const PI = Math.PI / 360;
 
@@ -22,6 +23,17 @@ class Element {
         this.angle = angle;
         this.angleStep = angleStep;
         this.lineColor = lineColor;
+    }
+    update() {
+        this.angle += this.angleStep;
+    }
+    draw(context: CanvasRenderingContext2D, origin: Point) {
+        if (!context) {
+            return;
+        }
+        context.save();
+        context.translate(origin.x, origin.y);
+        context.restore();
     }
 }
 
