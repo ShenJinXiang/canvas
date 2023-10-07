@@ -3,7 +3,7 @@
 </template>
 <script lang="ts" setup>
 import { onMounted, ref, watch } from 'vue';
-import AuspiciousCloudPattern from '.';
+import RotateConstructionAnimation from '.';
 
 const props = defineProps({
     width: {
@@ -14,23 +14,25 @@ const props = defineProps({
         type: Number,
         required: true
     }
-});
+})
 
 const canvasRef = ref();
-const canvas = new AuspiciousCloudPattern(props.width, props.height);
+const canvas = new RotateConstructionAnimation(props.width, props.height);
+
 onMounted(() => {
-    canvas.initCanvas(canvasRef.value).draw();
+    canvas.initCanvas(canvasRef.value).run();
 });
+
 watch(
-    () => props.width,
-    () => {
-        canvas.setRect(props.width, props.height);
-    }
+  () => props.width,
+  () => {
+    canvas.setRect(props.width, props.height);
+  }
 );
 watch(
-    () => props.height,
-    () => {
-        canvas.setRect(props.width, props.height);
-    }
+  () => props.height,
+  () => {
+    canvas.setRect(props.width, props.height);
+  }
 );
 </script>
