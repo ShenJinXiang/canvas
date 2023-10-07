@@ -13,6 +13,16 @@ interface IOption {
 };
 
 class Element {
+    private radius: number;
+    private angle: number;
+    private angleStep: number;
+    private lineColor: string;
+    constructor(radius: number, angle: number, angleStep: number, lineColor: string) {
+        this.radius = radius;
+        this.angle = angle;
+        this.angleStep = angleStep;
+        this.lineColor = lineColor;
+    }
 }
 
 export default class RotateConstructionAnimation extends Animate {
@@ -27,6 +37,7 @@ export default class RotateConstructionAnimation extends Animate {
     };
     private baseRadius: number = 0;
     private eleRadius: number = 0;
+    private baseAngle: number = 0;
     constructor(width: number, height: number) {
         super();
         this.initRect(width, height);
@@ -40,6 +51,7 @@ export default class RotateConstructionAnimation extends Animate {
     }
 
     update() {
+
     }
 
     draw(): void {
@@ -49,8 +61,20 @@ export default class RotateConstructionAnimation extends Animate {
         this.clear(this.option.backgroundColor);
         this.context.save();
         this.context.translate(this.width / 2, this.height / 2);
-        this.context.fillStyle = 'red';
-        this.context.fillRect(-120, -50, 240, 100);
+        this.drawBaseLine();
+        this.context.restore();
+    }
+    drawBaseLine() {
+        if (!this.context) {
+            return;
+        }
+        this.context.save();
+        this.context.strokeStyle = this.option.lineColor;
+        this.context.beginPath();
+        this.context.moveTo(0, 0);
+        this.context.lineTo(this.baseRadius * Math.cos(this.baseAngle), this.baseRadius * Math.sin(this.baseAngle));
+        this.context.closePath();
+        this.context.stroke();
         this.context.restore();
     }
     public setRect(width: number, height: number) {
