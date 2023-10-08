@@ -33,6 +33,13 @@ class Element {
         }
         context.save();
         context.translate(origin.x, origin.y);
+        context.beginPath();
+        context.strokeStyle = this.lineColor;
+        context.lineWidth = 1;
+        context.moveTo(0, 0);
+        context.lineTo(this.radius * Math.cos(this.angle), this.radius * Math.sin(this.angle));
+        context.closePath();
+        context.stroke();
         context.restore();
     }
 }
@@ -41,15 +48,18 @@ export default class RotateConstructionAnimation extends Animate {
     private option: IOption = {
         backgroundColor: '#000',
         elementColor: 'red',
-        lineColor: 'rgba(255, 255, 255, 0.3)',
+        // lineColor: 'rgba(255, 255, 255, 0.3)',
+        lineColor: 'rgba(255, 0, 0, 1)',
         baseRadiusRatio: 0.25,
-        baseAngleStep: PI * 10,
+        baseAngleStep: PI * 2,
         eleRadiusRatio: 0.2,
         eleAngleStep: PI * 5
     };
     private baseRadius: number = 0;
     private eleRadius: number = 0;
     private baseAngle: number = 0;
+    private baseElement: Element | null = null;
+    private angle: number = 0;
     constructor(width: number, height: number) {
         super();
         this.initRect(width, height);
@@ -58,12 +68,16 @@ export default class RotateConstructionAnimation extends Animate {
 
     initData() {
         const base = Math.min(this.width, this.height);
-        this.baseRadius = base * this.option.baseRadiusRatio;
+        const baseRadius = base * this.option.baseRadiusRatio;
         this.eleRadius = base * this.option.eleRadiusRatio;
+        this.baseElement = new Element(baseRadius, 0, this.option.baseAngleStep, this.option.lineColor);
     }
 
     update() {
-
+        if (!this.baseElement) {
+            return;
+        }
+        this.baseElement.update();
     }
 
     draw(): void {
@@ -73,20 +87,7 @@ export default class RotateConstructionAnimation extends Animate {
         this.clear(this.option.backgroundColor);
         this.context.save();
         this.context.translate(this.width / 2, this.height / 2);
-        this.drawBaseLine();
-        this.context.restore();
-    }
-    drawBaseLine() {
-        if (!this.context) {
-            return;
-        }
-        this.context.save();
-        this.context.strokeStyle = this.option.lineColor;
-        this.context.beginPath();
-        this.context.moveTo(0, 0);
-        this.context.lineTo(this.baseRadius * Math.cos(this.baseAngle), this.baseRadius * Math.sin(this.baseAngle));
-        this.context.closePath();
-        this.context.stroke();
+        this.baseElement?.draw(this.context, { x: 0, y: 0 });
         this.context.restore();
     }
     public setRect(width: number, height: number) {

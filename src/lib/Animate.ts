@@ -1,4 +1,3 @@
-import { el } from "element-plus/es/locale";
 import BaseCanvas from "./BaseCanvas";
 
 export default class Animate extends BaseCanvas {
@@ -11,7 +10,7 @@ export default class Animate extends BaseCanvas {
     super();
     this.fps = 75;
     this.fpsInterval = 1000 / this.fps;
-    this.last= new Date().getTime();
+    this.last = new Date().getTime();
   }
 
   animate(): void {
