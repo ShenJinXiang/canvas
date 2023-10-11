@@ -48,3 +48,11 @@ export const timeDis = (time: number): TimeInfo => {
     days: Math.floor(time / (1000 * 60 * 60 * 24)),
   };
 }
+export const maxDivisor = (num1: number, num2: number): number => {
+  const max = Math.max(num1, num2);
+  const min = Math.min(num1, num2);
+  return max % min == 0 ? (min) : maxDivisor(min, max % min);
+};
+export const minMultiple = (num1: number, num2: number): number => {
+  return (num1 * num2) / maxDivisor(num1, num2);
+};

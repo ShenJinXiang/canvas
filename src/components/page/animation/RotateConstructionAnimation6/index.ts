@@ -1,7 +1,9 @@
 import Animate from "@/lib/Animate";
+import { maxDivisor, minMultiple } from "@/lib/Kit";
 import Point from "@/lib/Point";
 
 const PI = Math.PI;
+const PPI = PI / 360;
 
 interface IOption {
     backgroundColor: string;
@@ -21,13 +23,15 @@ class Element {
     private point: Point;
     private hasTrace: boolean;
     private traces: Point[];
-    constructor(radius: number, angle: number, angleStep: number, hasTrace: boolean) {
+    private traceLength: number;
+    constructor(radius: number, angle: number, angleStep: number, hasTrace: boolean, traceLength: number) {
         this.radius = radius;
         this.angle = angle;
         this.angleStep = angleStep;
         this.hasTrace = hasTrace;
         this.point = { x: 0, y: radius };
         this.traces = [];
+        this.traceLength = traceLength;
     }
     update() {
         this.angle += this.angleStep;
@@ -48,6 +52,9 @@ class Element {
                 x: origin.x + this.point.x,
                 y: origin.y + this.point.y
             });
+            if (this.traces.length > this.traceLength) {
+                this.traces.shift();
+            }
         }
         context.save();
         context.translate(origin.x, origin.y);
@@ -80,13 +87,13 @@ class Element {
 export default class RotateConstructionAnimation extends Animate {
     private option: IOption = {
         backgroundColor: '#000',
-        elementColor: 'red',
+        elementColor: 'rgba(255, 255, 255, 1)',
         lineColor: 'rgba(255, 255, 255, 0.3)',
         // lineColor: 'rgba(255, 0, 0, 1)',
-        baseRadiusRatio: 0.35,
-        baseAngleStep: PI / 180,
-        eleRadiusRatio: 0.1,
-        eleAngleStep: PI / 20,
+        baseRadiusRatio: 0.25,
+        baseAngleStep: 2,
+        eleRadiusRatio: 0.20,
+        eleAngleStep: 14.4,
         elementNumber: 3
     };
     private baseAngle: number = 0;
@@ -103,11 +110,16 @@ export default class RotateConstructionAnimation extends Animate {
         const base = Math.min(this.width, this.height);
         const baseRadius = base * this.option.baseRadiusRatio;
         const eleRadius = base * this.option.eleRadiusRatio;
-        this.baseElement = new Element(baseRadius, 0, this.option.baseAngleStep, false);
+        // const traceLength = minMultiple(2 * PI / this.option.baseAngleStep, 2 * PI / this.option.eleAngleStep);
+        const num1 = 2 * 360 / this.option.baseAngleStep;
+        const num2 = 2 * 360 / this.option.eleAngleStep;
+        const traceLength = minMultiple(num1, num2) + maxDivisor(num1, num2);
+        console.log('traceLength ', traceLength);
+        this.baseElement = new Element(baseRadius, 0, this.option.baseAngleStep * PPI, false, 0);
         this.elements = [];
         const angleStep = 2 * PI / this.option.elementNumber;
         for (let i = 0; i < this.option.elementNumber; i++) {
-            this.elements.push(new Element(eleRadius, i * angleStep, this.option.eleAngleStep, true));
+            this.elements.push(new Element(eleRadius, i * angleStep, this.option.eleAngleStep * PPI, true, traceLength));
         }
     }
 
@@ -139,3 +151,14 @@ export default class RotateConstructionAnimation extends Animate {
         this.initData();
     }
 }
+
+/*
+
+px = R * cos(a) + r * cos(b)
+py = R * sin(a) + r * sin(b)
+n * da % 2PI + n * db % 2PI = 0;
+2PI / PI /180  360
+2PI / PI / 25  50 
+
+
+*/
