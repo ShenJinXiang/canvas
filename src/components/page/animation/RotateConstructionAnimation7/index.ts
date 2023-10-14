@@ -64,7 +64,8 @@ export default class RotateConstructionAnimation extends Animate {
     private option: IOption = {
         backgroundColor: '#000',
     };
-    private elements: Element[] = [];
+    private wElements: Element[] = [];
+    private bElements: Element[] = [];
     constructor(width: number, height: number) {
         super();
         this.initRect(width, height);
@@ -72,22 +73,44 @@ export default class RotateConstructionAnimation extends Animate {
     }
 
     initData() {
-        const base = Math.min(this.width, this.height);
-        this.elements = [
-            new Element(
-                { x: this.width / 2, y: this.height / 2 },
-                base * 0.2,
-                10,
-                0,
-                PI,
-                PPI,
-                'red'
-            )
-        ]
+        const base = Math.min(this.width, this.height) * 0.24;
+        // let elementRadius = base / 50;
+        // elementRadius = elementRadius <= 3 ? 3 : elementRadius;
+        // elementRadius = elementRadius >= 8 ? 8 : elementRadius;
+        let elementRadius = 3;
+        const len = Math.floor(base / elementRadius);
+        this.wElements = [];
+        this.bElements = [];
+        const origin = { x: this.width / 2, y: this.height / 2};
+        for (let i = 0; i < len; i++) {
+            this.wElements.push(
+                new Element(
+                    origin,
+                    (2 * i + 1) * elementRadius,
+                    elementRadius,
+                    0,
+                    PI,
+                    (len - i) * PPI / 10,
+                    'green'
+                )
+            );
+            this.wElements.push(
+                new Element(
+                    origin,
+                    (2 * i + 1) * elementRadius,
+                    elementRadius,
+                    -PI,
+                    0,
+                    (len - i) * PPI / 10,
+                    'red'
+                )
+            );
+        }
     }
 
     update() {
-        this.elements.forEach((item) => item.update());
+        this.wElements.forEach((item) => item.update());
+        this.bElements.forEach((item) => item.update());
     }
 
     draw(): void {
@@ -96,7 +119,8 @@ export default class RotateConstructionAnimation extends Animate {
         }
         this.clear(this.option.backgroundColor);
         this.context.save();
-        this.elements.forEach((item) => item.draw(this.context));
+        this.wElements.forEach((item) => item.draw(this.context));
+        this.bElements.forEach((item) => item.draw(this.context));
         this.context.restore();
     }
     public setRect(width: number, height: number) {
