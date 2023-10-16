@@ -1,7 +1,6 @@
 import Animate from "@/lib/Animate";
-import { hueColor, randomColor } from "@/lib/Kit";
+import { hueColor } from "@/lib/Kit";
 import Point from "@/lib/Point";
-import { el } from "element-plus/es/locale";
 
 const PI = Math.PI;
 const PPI = PI / 360;
@@ -68,7 +67,7 @@ class Element {
 
 export default class RotateConstructionAnimation extends Animate {
     private option: IOption = {
-        backgroundColor: '#ddd',
+        backgroundColor: '#999',
     };
     private wElements: Element[] = [];
     private bElements: Element[] = [];
@@ -87,11 +86,11 @@ export default class RotateConstructionAnimation extends Animate {
         const len = Math.floor(base / elementRadius);
         this.wElements = [];
         this.bElements = [];
-        const origin = { x: this.width / 2, y: this.height / 2};
-        const hueColorStep= 240 / len;
+        const origin = { x: this.width / 2, y: this.height / 2 };
+        const hueColorStep = 240 / len;
         for (let i = 0; i < len; i++) {
             const color = hueColor(Math.round(hueColorStep * i));
-            this.wElements.push(
+            this.bElements.push(
                 new Element(
                     origin,
                     (2 * i + 1) * elementRadius,
@@ -102,7 +101,7 @@ export default class RotateConstructionAnimation extends Animate {
                     color
                 )
             );
-            this.bElements.push(
+            this.wElements.push(
                 new Element(
                     origin,
                     (2 * i + 1) * elementRadius,
