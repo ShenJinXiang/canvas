@@ -67,8 +67,9 @@ class Element {
 
 export default class RotateConstructionAnimation extends Animate {
     private option: IOption = {
-        backgroundColor: '#999',
+        backgroundColor: '#000',
     };
+    private base: number = 0;
     private wElements: Element[] = [];
     private bElements: Element[] = [];
     constructor(width: number, height: number) {
@@ -78,12 +79,13 @@ export default class RotateConstructionAnimation extends Animate {
     }
 
     initData() {
-        const base = Math.min(this.width, this.height) * 0.24;
-        let elementRadius = base / 50;
+        this.base = Math.min(this.width, this.height) * 0.5;
+        const baseRadius = this.base * 0.48;
+        let elementRadius = baseRadius / 50;
         elementRadius = elementRadius <= 3 ? 3 : elementRadius;
         elementRadius = elementRadius >= 8 ? 8 : elementRadius;
         // let elementRadius = 3;
-        const len = Math.floor(base / elementRadius);
+        const len = Math.floor(baseRadius / elementRadius);
         this.wElements = [];
         this.bElements = [];
         const origin = { x: this.width / 2, y: this.height / 2 };
@@ -126,11 +128,32 @@ export default class RotateConstructionAnimation extends Animate {
         }
         this.clear(this.option.backgroundColor);
         this.context.save();
+        this.drawFrame();
         this.drawElementsLines(this.bElements, '#000');
         this.drawElementsLines(this.wElements, '#fff');
         this.wElements.forEach((item) => item.draw(this.context));
         this.bElements.forEach((item) => item.draw(this.context));
         this.context.restore();
+    }
+    private drawFrame() {
+        if (!this.context) {
+            return;
+        }
+        const ox = this.width / 2;
+        const oy = this.height / 2;
+        this.context.save();
+        this.context.beginPath();
+        this.context.fillStyle = '#999';
+        this.context.arc(ox, oy, this.base, 0, 2 * PI, false);
+        this.context.fill();
+        this.context.beginPath();
+        this.context.lineWidth = 2;
+        this.context.strokeStyle = '#000';
+        this.context.moveTo(0, oy);
+        this.context.lineTo(this.width, oy);
+        this.context.stroke();
+        this.context.restore();
+
     }
     private drawElementsLines(elements: Element[], color: string) {
         if (!this.context) {
