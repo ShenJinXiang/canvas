@@ -89,6 +89,7 @@ export default class AuspiciousCloudPattern extends BaseCanvas {
         this.context.save();
         this.elements.forEach((item) => item.draw(this.context, this.option.cloudColor, this.option.backgroundColor));
         this.context.restore();
+        this.drawMark();
     }
 
     public setRect(width: number, height: number) {

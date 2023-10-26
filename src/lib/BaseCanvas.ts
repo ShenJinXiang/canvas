@@ -36,6 +36,12 @@ export default class BaseCanvas {
   }
   draw(): void { }
 
+  drawMark(): void {
+    if (this.showMark) {
+      this.markCanvas.draw(this.context);
+    }
+  }
+
   hideMark(): this {
     this.showMark = false;
     return this;

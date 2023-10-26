@@ -15,9 +15,6 @@ export default class Animate extends BaseCanvas {
 
   animate(): void {
     this.update();
-    if (this.showMark) {
-      this.markCanvas.draw(this.context);
-    }
     // requestAnimationFrame(this.run.bind(this));
   }
   update(): void { }
@@ -31,6 +28,7 @@ export default class Animate extends BaseCanvas {
       this.animate();
     }
     this.draw();
+    this.drawMark();
     requestAnimationFrame(this.run.bind(this));
   }
 
