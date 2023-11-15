@@ -233,4 +233,10 @@ export default [
     name: 'RotateConstructionAnimation7',
     component: () => import('@/views/page/animation/RotateConstructionAnimation7.vue'),
   },
+  {
+    title: '木制花纹1',
+    path: 'stillness/WoodenPatterns1',
+    name: 'WoodenPatterns1',
+    component: () => import('@/views/page/stillness/WoodenPatterns1.vue'),
+  }
 ];
