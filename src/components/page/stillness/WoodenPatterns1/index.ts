@@ -2,11 +2,13 @@ import BaseCanvas from "@/lib/BaseCanvas";
 
 interface IOption {
     backgroundColor: string;
+    gridWidth: number;
 };
 
 export default class WoodenPatterns extends BaseCanvas {
     private option: IOption = {
         backgroundColor: '#f1f1f1',
+        gridWidth: 200
     };
     constructor(width: number, height: number) {
         super();
@@ -15,6 +17,7 @@ export default class WoodenPatterns extends BaseCanvas {
     }
 
     initData() {
+
     }
 
     draw() {
