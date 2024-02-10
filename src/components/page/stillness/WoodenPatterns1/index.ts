@@ -10,6 +10,8 @@ export default class WoodenPatterns extends BaseCanvas {
         backgroundColor: '#f1f1f1',
         gridWidth: 200
     };
+    gridCanvas: HTMLCanvasElement = document.createElement('canvas');
+    gridContext: CanvasRenderingContext2D | null  = null;
     constructor(width: number, height: number) {
         super();
         this.initRect(width, height);
@@ -17,7 +19,10 @@ export default class WoodenPatterns extends BaseCanvas {
     }
 
     initData() {
-
+        const griwWidth = this.width / 10;
+        this.gridCanvas.width = griwWidth;
+        this.gridCanvas.height = griwWidth;
+        this.gridContext = this.gridCanvas.getContext('2d');
     }
 
     draw() {
@@ -26,10 +31,10 @@ export default class WoodenPatterns extends BaseCanvas {
         }
         this.clear(this.option.backgroundColor);
 
-        this.context.save();
-        this.context.fillStyle = '#084';
-        this.context.fillRect(200, 200, 200, 146);
-        this.context.restore();
+        // this.context.save();
+        // this.context.fillStyle = '#084';
+        // this.context.fillRect(200, 200, 200, 146);
+        // this.context.restore();
         this.drawMark();
     }
 
