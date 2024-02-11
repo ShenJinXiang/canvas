@@ -1,4 +1,5 @@
 import BaseCanvas from "@/lib/BaseCanvas";
+import { pa } from "element-plus/es/locale";
 
 interface IOption {
     backgroundColor: string;
@@ -19,10 +20,50 @@ export default class WoodenPatterns extends BaseCanvas {
     }
 
     initData() {
-        const griwWidth = this.width / 10;
-        this.gridCanvas.width = griwWidth;
-        this.gridCanvas.height = griwWidth;
+        const gridWidth: number = this.width / 10;
+        this.gridCanvas.width = gridWidth;
+        this.gridCanvas.height = gridWidth;
         this.gridContext = this.gridCanvas.getContext('2d');
+        this.drawGrid(gridWidth);
+    }
+
+    drawGrid(gridWidth: number) {
+        if (!this.gridContext) {
+            return;
+        }
+        let lineWidth: number = gridWidth / 60;
+        lineWidth = lineWidth < 2 ? 2 : lineWidth;
+        const gw = gridWidth / 6;
+        this.gridContext.save();
+        this.gridContext.lineWidth = lineWidth;
+        this.gridContext.strokeStyle = 'black';
+        this.gridContext.translate(0.5 * gridWidth, 0.5 * gridWidth);
+        this.gridContext.strokeRect(-0.5 * gw, -0.5 * gw, gw, gw);
+        this.gridContext.strokeRect(-2 * gw, -2 * gw, 4 * gw, 4 * gw);
+        this.gridContext.strokeRect(-3 * gw, -3 * gw, 2 * gw, 2 * gw);
+        this.gridContext.strokeRect(-3 * gw, 1 * gw, 2 * gw, 2 * gw);
+        this.gridContext.strokeRect(1 * gw, -3 * gw, 2 * gw, 2 * gw);
+        this.gridContext.strokeRect(1 * gw, 1 * gw, 2 * gw, 2 * gw);
+
+        this.gridContext.moveTo(0, -2 * gw);
+        this.gridContext.lineTo(0, -0.5 * gw);
+        this.gridContext.stroke();
+
+        this.gridContext.moveTo(0, 2 * gw);
+        this.gridContext.lineTo(0, 0.5 * gw);
+        this.gridContext.stroke();
+
+        this.gridContext.moveTo(-2 * gw, 0);
+        this.gridContext.lineTo(-0.5 * gw, 0);
+        this.gridContext.stroke();
+
+        this.gridContext.moveTo(2 * gw, 0);
+        this.gridContext.lineTo(0.5 * gw, 0);
+        this.gridContext.stroke();
+
+        this.gridContext.lineWidth = 2 * lineWidth;
+        this.gridContext.strokeRect(-3 * gw, -3 * gw, 6 * gw, 6 * gw);
+        this.gridContext.restore();
     }
 
     draw() {
@@ -30,11 +71,12 @@ export default class WoodenPatterns extends BaseCanvas {
             return;
         }
         this.clear(this.option.backgroundColor);
-
-        // this.context.save();
-        // this.context.fillStyle = '#084';
-        // this.context.fillRect(200, 200, 200, 146);
-        // this.context.restore();
+        const pattern : CanvasPattern | null = this.context.createPattern(this.gridCanvas, 'repeat');
+        if (!pattern) {
+            return;
+        }
+        this.context.fillStyle = pattern;
+        this.context.fillRect(0, 0, this.width, this.height);
         this.drawMark();
     }
 
