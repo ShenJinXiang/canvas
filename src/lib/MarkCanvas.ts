@@ -1,5 +1,3 @@
-import { fi } from "element-plus/es/locale";
-
 export default class MarkCanvas {
   canvas: HTMLCanvasElement;
   context: CanvasRenderingContext2D | null = null;
