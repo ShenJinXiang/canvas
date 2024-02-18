@@ -238,5 +238,11 @@ export default [
     path: 'stillness/WoodenPatterns1',
     name: 'WoodenPatterns1',
     component: () => import('@/views/page/stillness/WoodenPatterns1.vue'),
+  },
+  {
+    title: '分形图1',
+    path: 'animation/FractalImage1',
+    name: 'FractalImage1',
+    component: () => import('@/views/page/animation/FractalImage1.vue'),
   }
 ];
