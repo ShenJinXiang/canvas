@@ -1,0 +1,10 @@
+<template>
+    <div>
+        FractalImage1
+    </div>
+  </template>
+  <script lang="ts" setup>
+  import { useWindowSize } from '@vueuse/core';
+  
+  const { width, height } = useWindowSize();
+  </script>
