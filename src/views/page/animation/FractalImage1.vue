@@ -1,12 +1,11 @@
 <template>
     <div>
-        FractalImage1
-        <fractal-image></fractal-image>
+        <fractal-image :width="windowWidth" :height="windowHeight - 40"></fractal-image>
     </div>
   </template>
   <script lang="ts" setup>
   import { useWindowSize } from '@vueuse/core';
   import FractalImage from '@/components/page/animation/FractalImage1/index.vue';
   
-  const { width, height } = useWindowSize();
+  const { width: windowWidth, height: windowHeight } = useWindowSize();
   </script>
