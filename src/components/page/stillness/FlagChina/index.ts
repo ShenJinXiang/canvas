@@ -2,21 +2,28 @@ import BaseCanvas from "@/lib/BaseCanvas";
 import Line from "@/lib/Line";
 import Star from "@/lib/Star";
 
+// 配置接口
 interface Iconfig {
   flagColor: string,
   starColor: string,
   lineColor: string,
 }
+// 中国国旗绘制类
 export default class FlagChina extends BaseCanvas {
+  // 静态配置
   private static readonly config: Iconfig = {
       flagColor: '#F00',
       starColor: '#FF0',
       lineColor: '#fff',
   };
+  // 是否显示线条
   private showLines: boolean;
+  // 星星数组
   private stars: Star[] = [];
+  // 线条数组
   private lines: Line[] = [];
 
+  // 构造函数
   constructor(width: number, showLines: boolean = false) {
     super();
     this.width = width;
@@ -26,12 +33,14 @@ export default class FlagChina extends BaseCanvas {
     this.initData();
   }
 
+  // 初始化数据
   private initData() {
     this.height = this.calculateHeight();
     this.stars = this.createStarts();
     this.lines = this.createLines();
   }
 
+  // 创建星星
   private createStarts(): Star[] {
     const gridWidth = this.width / 30;
     return [
@@ -43,6 +52,7 @@ export default class FlagChina extends BaseCanvas {
     ];
   }
 
+  // 创建线条
   private createLines(): Line[] {
     const gridWidth = this.width / 30;
     return [
@@ -53,6 +63,7 @@ export default class FlagChina extends BaseCanvas {
       ...this.stars.map((star, i) => new Line(star.ox, star.oy, this.stars[0].ox, this.stars[0].oy)),
     ];
   }
+  // 绘制国旗
   draw() {
     if (!this.canvas || !this.context) {
       return;
@@ -70,6 +81,7 @@ export default class FlagChina extends BaseCanvas {
     }
   }
 
+  // 设置宽度
   setWidth(width: number) {
     this.width = width;
     this.initData();
@@ -80,6 +92,7 @@ export default class FlagChina extends BaseCanvas {
     }
   }
 
+  // 设置是否显示线条
   setShowLines(showLines: boolean) {
     this.showLines = showLines;
     if (this.canvas) {
@@ -87,6 +100,7 @@ export default class FlagChina extends BaseCanvas {
     }
   }
 
+  // 计算高度
   private calculateHeight(): number {
     return this.width * 2 / 3;
   }
