@@ -4,6 +4,7 @@ interface IOption {
   backgroundColor: string;
   deepNum: number;
   color: string;
+  timeStep: number;
 };
 
 class Element {
@@ -61,11 +62,13 @@ export default class FractalImage extends Animate {
   private static readonly option: IOption = {
     backgroundColor: '#fff',
     deepNum: 6,
-    color: '#0075c9'
+    color: '#0075c9',
+    timeStep: 100,
   };
   private static readonly sideNum: number = 6;
   private elementGroups: Element[][] = [];
-  private current: number = 3;
+  private currentIndex: number = 0;
+  private current: number = 0;
   constructor(width: number, height: number) {
     super();
     this.initRect(width, height);
@@ -73,7 +76,6 @@ export default class FractalImage extends Animate {
   }
   initData() {
     this.initElementGroups();
-    console.log(this.elementGroups)
   }
   initElementGroups() {
     this.elementGroups = [];
@@ -87,13 +89,26 @@ export default class FractalImage extends Animate {
         this.elementGroups.push(eles);
     }
   }
+  update(): void {
+    this.current++;
+    if (this.current >= FractalImage.option.timeStep) {
+        this.current = 0;
+        this.isDraw = true;
+        this.currentIndex++;
+        if (this.currentIndex >= FractalImage.option.deepNum) {
+            this.currentIndex = 0;
+        }
+    } else {
+        this.isDraw = false;
+    }
+  }
   draw(): void {
     if (!this.context) {
         return;
     }
     this.clear(FractalImage.option.backgroundColor);
     this.context.save();
-    this.elementGroups[this.current].forEach((item) => item.draw(this.context));
+    this.elementGroups[this.currentIndex].forEach((item) => item.draw(this.context));
     this.context.restore();
   }
 

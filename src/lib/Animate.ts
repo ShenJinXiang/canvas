@@ -5,6 +5,7 @@ export default class Animate extends BaseCanvas {
   private fps: number = 0;
   private fpsInterval: number = 0;
   private last: number = 0;
+  protected isDraw: boolean = true;
 
   constructor() {
     super();
@@ -27,8 +28,10 @@ export default class Animate extends BaseCanvas {
       this.last = now - (elapsed % this.fpsInterval);
       this.animate();
     }
-    this.draw();
-    this.drawMark();
+    if (this.isDraw) {
+      this.draw();
+      this.drawMark();
+    }
     requestAnimationFrame(this.run.bind(this));
   }
 
