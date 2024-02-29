@@ -4,8 +4,8 @@
     </div>
   </template>
   <script lang="ts" setup>
-  import { onMounted, ref, Ref, watch } from 'vue';
-  import FractalImage from '.';
+  import { onMounted, ref, watch } from 'vue';
+import FractalImage from '.';
 
 const props = defineProps({
     width: {
@@ -15,11 +15,15 @@ const props = defineProps({
     height: {
         type: Number,
         required: true
+    },
+    sideNum: {
+        type: Number,
+        required: true
     }
 })
 
 const canvasRef = ref();
-const canvas = new FractalImage(props.width, props.height);
+const canvas = new FractalImage(props.width, props.height, props.sideNum);
 
 onMounted(() => {
     canvas.initCanvas(canvasRef.value).run();
@@ -35,6 +39,12 @@ watch(
   () => props.height,
   () => {
     canvas.setRect(props.width, props.height);
+  }
+);
+watch(
+  () => props.sideNum,
+  () => {
+    canvas.setSideNum(props.sideNum);
   }
 );
   </script>

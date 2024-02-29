@@ -65,12 +65,13 @@ export default class FractalImage extends Animate {
     color: '#0075c9',
     timeStep: 100,
   };
-  private static readonly sideNum: number = 6;
+  private sideNum: number = 6;
   private elementGroups: Element[][] = [];
   private currentIndex: number = 0;
   private current: number = 0;
-  constructor(width: number, height: number) {
+  constructor(width: number, height: number, sideNum: number) {
     super();
+    this.sideNum = sideNum;
     this.initRect(width, height);
     this.initData();
   }
@@ -82,7 +83,7 @@ export default class FractalImage extends Animate {
     for (let i = 0; i < FractalImage.option.deepNum; i++) {
         let eles: Element[] = [];
         if (i == 0) {
-            eles.push(new Element(this.width / 2, this.height / 2, Math.min(this.width, this.height) * 0.45, FractalImage.option.color, FractalImage.sideNum));
+            eles.push(new Element(this.width / 2, this.height / 2, Math.min(this.width, this.height) * 0.45, FractalImage.option.color, this.sideNum));
         } else {
             this.elementGroups[i - 1].forEach(item => eles.push(...item.children()));
         }
@@ -115,5 +116,12 @@ export default class FractalImage extends Animate {
   public setRect(width: number, height: number) {
     this.initRect(width, height);
     this.initData();
+  }
+
+  public setSideNum(sideNum: number) {
+    if (this.sideNum !== sideNum) {
+      this.sideNum = sideNum;
+      this.initData();
+    }
   }
 }
