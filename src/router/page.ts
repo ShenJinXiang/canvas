@@ -244,5 +244,11 @@ export default [
     path: 'animation/FractalImage1',
     name: 'FractalImage1',
     component: () => import('@/views/page/animation/FractalImage1.vue'),
+  },
+  {
+    title: '下雨动画',
+    path: 'background/RainAnimation',
+    name: 'RainAnimation',
+    component: () => import('@/views/page/background/RainAnimation.vue'),
   }
 ];
