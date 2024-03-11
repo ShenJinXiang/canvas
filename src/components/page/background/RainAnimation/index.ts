@@ -1,4 +1,5 @@
 import Animate from '@/lib/Animate';
+import { random } from '@/lib/Kit';
 
 interface IOption {
     backgroundColor: string;
@@ -33,10 +34,11 @@ class Element {
             return;
         }
         context.beginPath();
-        context.fillStyle = color;
+        context.strokeStyle = color;
         context.lineCap = 'round';
         context.moveTo(this.x, this.y);
         context.lineTo(this.x + this.length * this.vx, this.y + this.length * this.vy);
+        context.stroke();
     }
 
 }
@@ -54,14 +56,33 @@ export default class RainAnimation extends Animate {
     }
 
     initData() {
+        this.elements = [];
+        for (let x = 0; x < this.width; x++) {
+            for (let y = 0; y < this.height; y++) {
+                if (Math.round(Math.random() * 1000) == 1) {
+                    this.elements.push(new Element({
+                        x: x,
+                        y: y,
+                        vx: random(-1, 3),
+                        vy: random(8, 14),
+                        length: random(0, 1)
+                    }));
+                }
+            }
+        }
+    }
 
+    update() {
+        this.elements.forEach((item) => item.update(this.width, this.height));
     }
 
     draw() {
         if (!this.context) {
             return;
         }
+        this.clear(RainAnimation.option.backgroundColor);
         this.context.save();
+        this.elements.forEach((item) => item.draw(this.context, RainAnimation.option.rainColor));
         this.context.restore();
     }
 
