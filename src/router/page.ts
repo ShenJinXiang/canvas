@@ -250,5 +250,11 @@ export default [
     path: 'background/RainAnimation',
     name: 'RainAnimation',
     component: () => import('@/views/page/background/RainAnimation.vue'),
-  }
+  },
+  {
+    title: '旋转构建动画8',
+    path: 'animation/RotateConstructionAnimation8',
+    name: 'RotateConstructionAnimation8',
+    component: () => import('@/views/page/animation/RotateConstructionAnimation8.vue'),
+  },
 ];
