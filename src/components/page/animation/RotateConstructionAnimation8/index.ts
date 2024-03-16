@@ -8,6 +8,7 @@ interface IOption {
 }
 
 
+
 export default class RotateConstructionAnimation extends Animate {
   private static readonly OPTION: IOption = {
     backgroundColor: '#000',
