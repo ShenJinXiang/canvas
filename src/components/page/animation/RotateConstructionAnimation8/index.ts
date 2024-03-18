@@ -21,12 +21,13 @@ export default class RotateConstructionAnimation extends Animate {
   }
 
   initData() {
+    const radius = Math.min(this.width, this.height) * 0.45;
     this.elements = [];
     for (let i = 0; i < RotateConstructionAnimation.OPTION.polygonNumber; i++) {
       this.elements.push(new Polygon({
         ox: this.width / 2,
         oy: this.height / 2,
-        radius: 140,
+        radius: radius,
         rotate: PI / 2,
         sideNum: 5,
       }));
