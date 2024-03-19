@@ -35,6 +35,14 @@ export class Polygon {
     this.path = this.generatePath();
   }
 
+  getRadius() {
+    return this.radius;
+  }
+
+  setRotate(rotate: number) {
+      this.rotate = rotate;
+  }
+
   private generatePath(): Path2D {
     const path = new Path2D();
     for (let i = 0; i < this.sideNum; i++) {
