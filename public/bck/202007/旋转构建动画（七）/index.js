@@ -78,6 +78,7 @@
             drawer.count = 0;
             drawer.angleStep = 2 * Math.PI / option.sideNum / option.time;
             drawer.sideAngle = (option.sideNum - 2) * Math.PI / option.sideNum / 2;
+            console.log('sideAngle', drawer.sideAngle);
         },
         bindEvent() {
             window.addEventListener('resize', drawer.init, false);

@@ -44,6 +44,7 @@ export default class RotateConstructionAnimation extends Animate {
   private elements: RotatePolygon[] = [];
   private count: number = 0;
   private angleStep: number = 0;
+  private sideNumber: number = 5;
   private sideAngle: number = 0;
   constructor(width: number, height: number) {
     super();
@@ -53,8 +54,8 @@ export default class RotateConstructionAnimation extends Animate {
 
   initData() {
     this.count = 0;
-    this.angleStep = 2 * PI / RotateConstructionAnimation.OPTION.polygonNumber / RotateConstructionAnimation.OPTION.time;
-    this.sideAngle = (RotateConstructionAnimation.OPTION.polygonNumber - 2) * PI / RotateConstructionAnimation.OPTION.polygonNumber / 2;
+    this.angleStep = 2 * PI / this.sideNumber / RotateConstructionAnimation.OPTION.time;
+    this.sideAngle = (this.sideNumber - 2) * PI / this.sideNumber / 2;
     const radius = Math.min(this.width, this.height) * 0.45;
     this.elements = [];
     for (let i = 0; i < RotateConstructionAnimation.OPTION.polygonNumber; i++) {
@@ -70,18 +71,18 @@ export default class RotateConstructionAnimation extends Animate {
   }
 
   update() {
-    // const angle: number = this.count * this.angleStep;
-    // const bl = Math.sin(this.sideAngle) / Math.sin(Math.PI - this.sideAngle - angle);
-    // this.elements.forEach((item, index) => {
-    //   item.setRotate(index * angle + RotateConstructionAnimation.OPTION.beginAngle);
-    //   if (index > 0) {
-    //     item.setRadius(this.elements[index - 1].getRadius() * bl);
-    //   }
-    // });
-    // this.count++;
-    // if (this.count > RotateConstructionAnimation.OPTION.time) {
-    //     this.count = 0;
-    // }
+    const angle: number = this.count * this.angleStep;
+    const bl = Math.sin(this.sideAngle) / Math.sin(PI - this.sideAngle - angle);
+    this.elements.forEach((item, index) => {
+      item.setRotate(index * angle + RotateConstructionAnimation.OPTION.beginAngle);
+      if (index > 0) {
+        item.setRadius(this.elements[index - 1].getRadius() * bl);
+      }
+    });
+    this.count++;
+    if (this.count > RotateConstructionAnimation.OPTION.time) {
+        this.count = 0;
+    }
 
   }
 
