@@ -3,7 +3,7 @@
     <rotate-construction-animation :width="width" :height="height - 40" :element-number="controForm.elementNumber"
       @click="showContro = true"></rotate-construction-animation>
     <el-drawer v-model="showContro" title="设置" :direction="direction">
-      <el-form :module="controForm" label-width="120px">
+      <el-form :module="controForm" label-width="80px">
         <el-form-item label="数量" prop="elementNumber">
           <el-slider v-model="controForm.elementNumber" :min="3" :max="36" :step="1" />
         </el-form-item>

@@ -6,7 +6,6 @@ const PI = Math.PI;
 
 interface IOption {
   backgroundColor: string;
-  polygonNumber: number;
   time: number;
   beginAngle: number;
 }
@@ -37,18 +36,19 @@ class RotatePolygon extends Polygon {
 export default class RotateConstructionAnimation extends Animate {
   private static readonly OPTION: IOption = {
     backgroundColor: '#000',
-    polygonNumber: 40,
     time: 600,
     beginAngle: -PI / 2
   }
   private elements: RotatePolygon[] = [];
   private count: number = 0;
   private angleStep: number = 0;
-  private sideNumber: number = 5;
+  private sideNumber: number = 0;
   private sideAngle: number = 0;
-  constructor(width: number, height: number) {
+  private polygonNumber: number = 0;
+  constructor(width: number, height: number, sideNumber: number) {
     super();
     this.initRect(width, height);
+    this.sideNumber = sideNumber;
     this.initData();
   }
 
@@ -56,16 +56,18 @@ export default class RotateConstructionAnimation extends Animate {
     this.count = 0;
     this.angleStep = 2 * PI / this.sideNumber / RotateConstructionAnimation.OPTION.time;
     this.sideAngle = (this.sideNumber - 2) * PI / this.sideNumber / 2;
+    this.polygonNumber = this.sideNumber * 10;
     const radius = Math.min(this.width, this.height) * 0.45;
     this.elements = [];
-    for (let i = 0; i < RotateConstructionAnimation.OPTION.polygonNumber; i++) {
+    const colorSetp = 720 / this.polygonNumber;
+    for (let i = 0; i < this.polygonNumber; i++) {
       this.elements.push(new RotatePolygon({
         ox: this.width / 2,
         oy: this.height / 2,
         radius: radius,
         rotate: RotateConstructionAnimation.OPTION.beginAngle,
-        sideNum: 5,
-        style: 'hsla(' + (i * 15) + ', 100%, 60%, 1)'
+        sideNum: this.sideNumber,
+        style: 'hsla(' + (i * colorSetp) + ', 100%, 60%, 1)'
       }));
     }
   }
@@ -98,6 +100,11 @@ export default class RotateConstructionAnimation extends Animate {
 
   public setRect(width: number, height: number) {
     this.initRect(width, height);
+    this.initData();
+  }
+
+  public setSideNumber(sideNumber: number) {
+    this.sideNumber = sideNumber;
     this.initData();
   }
 }
