@@ -2,11 +2,13 @@ import BaseCanvas from "@/lib/BaseCanvas";
 
 interface IOption {
     backgroundColor: string;
+    showColor: string;
 }
 
 export default class Background extends BaseCanvas {
     private static readonly option: IOption = {
-        backgroundColor: '#f1f1f1'
+        backgroundColor: '#a00000',
+        showColor: '#fdc287',
     };
     constructor(width: number, height: number) {
         super();
