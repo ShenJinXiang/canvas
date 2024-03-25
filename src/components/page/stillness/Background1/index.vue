@@ -1,5 +1,36 @@
 <template>
+  <canvas ref="canvasRef"></canvas>
 </template>
 <script lang="ts" setup>
-import Background from './index'
+import { onMounted, ref, watch } from 'vue';
+import Background from './index';
+
+const props = defineProps({
+    width: {
+        type: Number,
+        required: true
+    },
+    height: {
+        type: Number,
+        required: true
+    }
+});
+
+const canvasRef = ref();
+const canvas = new Background(props.width, props.height);
+onMounted(() => {
+    canvas.initCanvas(canvasRef.value).draw();
+});
+watch(
+    () => props.width,
+    () => {
+        canvas.setRect(props.width, props.height);
+    }
+);
+watch(
+    () => props.height,
+    () => {
+        canvas.setRect(props.width, props.height);
+    }
+);
 </script>

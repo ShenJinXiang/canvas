@@ -1,5 +1,11 @@
 <template>
-    <div>静态背景图1</div>
+    <div>
+        <background :width="width" :height="height - 40"></background>
+    </div>
 </template>
 <script lang="ts" setup>
+import Background from '@/components/page/stillness/Background1/index.vue';
+import { useWindowSize } from '@vueuse/core';
+
+const { width, height } = useWindowSize();
 </script>
