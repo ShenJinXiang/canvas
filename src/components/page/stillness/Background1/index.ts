@@ -84,32 +84,32 @@ export default class Background extends BaseCanvas {
         this.initData();
     }
     initData() {
-        // const size = this.width * 0.025 < 30 ? 30 : this.width * 0.025;
-        // const yStep = size * 0.5;
-        // const xStep = size * 2;
-        // for (let yIndex = 0; yIndex * yStep < this.height + size; yIndex += 1) {
-        //     for (let xIndex = 0; xIndex * xStep < this.width + size; xIndex += 1) {
-        //         if (yIndex % 2 === 0) {
-        //             this.elements.push(
-        //                 new Element().data(xIndex * xStep, yIndex * yStep, size)
-        //             );
-        //         } else {
-        //             this.elements.push(
-        //                 new Element().data(xIndex * xStep + size, yIndex * yStep, size)
-        //             );
-        //         }
-        //     }
-        // }
-        this.elements = [
-            new Element().data(this.width / 2, this.height / 2, this.height * 0.3)
-        ];
+        const size = this.width * 0.025 < 30 ? 30 : this.width * 0.025;
+        const yStep = size * 0.6;
+        const xStep = size * 2;
+        for (let yIndex = 0; yIndex * yStep < this.height + size; yIndex += 1) {
+            for (let xIndex = 0; xIndex * xStep < this.width + size; xIndex += 1) {
+                if (yIndex % 2 === 0) {
+                    this.elements.push(
+                        new Element().data(xIndex * xStep, yIndex * yStep, size)
+                    );
+                } else {
+                    this.elements.push(
+                        new Element().data(xIndex * xStep + size, yIndex * yStep, size)
+                    );
+                }
+            }
+        }
+        // this.elements = [
+        //     new Element().data(this.width / 2, this.height / 2, this.height * 0.3)
+        // ];
         console.log(this.elements);
     }
     draw() {
         if (!this.context) {
             return;
         }
-        this.clear();
+        this.clear(Background.option.backgroundColor);
 
         this.context.save();
         console.log(this.elements);
