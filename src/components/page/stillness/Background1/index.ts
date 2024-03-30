@@ -81,9 +81,11 @@ export default class Background extends BaseCanvas {
     constructor(width: number, height: number) {
         super();
         this.initRect(width, height);
+        this.markCanvas.setStyle('rgba(250, 250, 250, 0.5)');
         this.initData();
     }
     initData() {
+        this.elements = [];
         const size = this.width * 0.025 < 30 ? 30 : this.width * 0.025;
         const yStep = size * 0.6;
         const xStep = size * 2;
@@ -100,10 +102,6 @@ export default class Background extends BaseCanvas {
                 }
             }
         }
-        // this.elements = [
-        //     new Element().data(this.width / 2, this.height / 2, this.height * 0.3)
-        // ];
-        console.log(this.elements);
     }
     draw() {
         if (!this.context) {
