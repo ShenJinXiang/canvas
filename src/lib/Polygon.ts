@@ -9,13 +9,12 @@ export interface PolygonOption {
 }
 
 export class Polygon {
-  private ox: number;
-  private oy: number;
-  private sideNum: number;
-  private radius: number;
-  private rotate: number;
-  private angleStep: number;
-  private path: Path2D;
+  protected ox: number;
+  protected oy: number;
+  protected sideNum: number;
+  protected radius: number;
+  protected rotate: number;
+  protected path: Path2D;
   constructor(options: PolygonOption) {
     this.ox = options.ox;
     this.oy = options.oy;
@@ -26,7 +25,6 @@ export class Polygon {
       this.sideNum = 3;
     }
 
-    this.angleStep = 2 * Math.PI / this.sideNum;
     this.path = this.generatePath();
   }
 
@@ -44,11 +42,12 @@ export class Polygon {
   }
 
   private generatePath(): Path2D {
+    const angleStep = 2 * Math.PI / this.sideNum;
     const path = new Path2D();
     for (let i = 0; i < this.sideNum; i++) {
         path.lineTo(
-            this.radius * Math.cos(i * this.angleStep),
-            this.radius * Math.sin(i * this.angleStep)
+            this.radius * Math.cos(i * angleStep),
+            this.radius * Math.sin(i * angleStep)
         );
     }
     path.closePath();
