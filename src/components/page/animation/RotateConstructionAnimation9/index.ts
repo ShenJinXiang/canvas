@@ -37,6 +37,8 @@ export default class RotateConstructionAnimation extends Animate {
             return;
         }
         this.context.save();
+        this.context.fillStyle = 'red';
+        this.context.fillRect(100, 100, this.width * 0.2, this.height * 0.2);
         this.context.restore();
     }
 
