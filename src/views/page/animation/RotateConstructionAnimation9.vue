@@ -9,7 +9,7 @@
       <el-drawer v-model="showContro" title="设置" :direction="direction">
           <el-form :module="controForm" label-width="80px">
               <el-form-item label="边数" prop="sideNumber">
-              <el-slider v-model="controForm.sideNumber" :min="3" :max="12" :step="1" />
+              <el-slider v-model="controForm.sideNumber" :min="3" :max="7" :step="1" />
               </el-form-item>
           </el-form>
       </el-drawer>
@@ -24,6 +24,6 @@ const { width: windowWidth, height: windowHeight } = useWindowSize();
 const showContro = ref(false);
 const direction = ref("rtl");
 const controForm = reactive({
-  sideNumber: 5
+  sideNumber: 4
 });
 </script>
