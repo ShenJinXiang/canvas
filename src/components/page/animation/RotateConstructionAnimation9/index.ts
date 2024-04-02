@@ -34,7 +34,7 @@ export default class RotateConstructionAnimation extends Animate {
         backgroundColor: '#000',
         minRadius: 5,
         radiusStep: 10,
-        angleStep: Math.PI / 1440
+        angleStep: Math.PI / 2400
     }
     constructor(width: number, height: number, sideNumber: number) {
         super();
@@ -47,9 +47,9 @@ export default class RotateConstructionAnimation extends Animate {
         this.elements = [];
         const size = Math.min(this.width, this.height);
         let radius = size / 2;
-        let angle = Math.PI / 720;
+        let angle = Math.PI / 1440;
         let s = 0;
-        const hueStep = 90 / (radius / RotateConstructionAnimation.option.radiusStep);
+        const hueStep = 60 / (radius / RotateConstructionAnimation.option.radiusStep);
         while(radius > RotateConstructionAnimation.option.minRadius) {
             this.elements.push(new Element({
                 ox: this.width / 2,
