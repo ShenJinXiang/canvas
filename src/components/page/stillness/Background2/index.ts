@@ -8,22 +8,37 @@ interface IOption {
 class Element {
     private x: number;
     private y: number;
+    private s: number;
     private size: number;
     constructor(x: number, y: number, size: number) {
         this.x = x;
         this.y = y;
         this.size = size;
+        this.s = this.size / (2 * 4 * Math.sqrt(2));
     }
-    draw(context: CanvasRenderingContext2D | null) {
+    draw(context: CanvasRenderingContext2D | null, showColor: string) {
         if (!context) {
             return;
         }
         context.save();
-        // context.translate(this.x, this.y);
         context.translate(this.x + this.size / 2, this.y + this.size / 2);
-        context.fillStyle = '#f8c687';
+        // context.strokeStyle = '#fff';
+        // context.strokeRect(-this.size / 2, -this.size / 2, this.size, this.size);
+        context.strokeStyle = showColor;
+        for (let i = 0; i < 4; i++) {
+            context.save();
+            context.beginPath();
+            context.lineWidth = this.s;
+            context.rotate(Math.PI / 4 + i * Math.PI / 2);
+            context.moveTo(0, 0);
+            context.lineTo(2 * this.s, 0);
+            context.lineTo(2 * this.s, -2 * this.s);
+            context.lineTo(4 * this.s, -2 * this.s);
+            context.lineTo(4 * this.s, 4 * this.s);
+            context.stroke();
+            context.restore();
+        }
         // context.fillRect(-this.size / 4, -this.size / 4, this.size / 2, this.size / 2);
-        context.fillRect(-this.size / 2, -this.size / 2, this.size, this.size);
         context.restore();
     }
 }
@@ -42,8 +57,17 @@ export default class Background extends BaseCanvas {
 
     initData() {
         this.elements = [];
+        let size = this.width / 10;
         for (let i = 0; i < 10; i++) {
-            this.elements.push(new Element(this.width / 2 - this.width / 20, this.height / 2 - this.width / 20, this.width / 10));
+            this.elements.push(new Element(0.5 * this.width - 1.5 * size, 0.5 * this.height - 1.5 * size, size));
+            this.elements.push(new Element(0.5 * this.width - 0.5 * size, 0.5 * this.height - 1.5 * size, size));
+            this.elements.push(new Element(0.5 * this.width + 0.5 * size, 0.5 * this.height - 1.5 * size, size));
+            this.elements.push(new Element(0.5 * this.width - 1.5 * size, 0.5 * this.height - 0.5 * size, size));
+            this.elements.push(new Element(0.5 * this.width - 0.5 * size, 0.5 * this.height - 0.5 * size, size));
+            this.elements.push(new Element(0.5 * this.width + 0.5 * size, 0.5 * this.height - 0.5 * size, size));
+            this.elements.push(new Element(0.5 * this.width - 1.5 * size, 0.5 * this.height + 0.5 * size, size));
+            this.elements.push(new Element(0.5 * this.width - 0.5 * size, 0.5 * this.height + 0.5 * size, size));
+            this.elements.push(new Element(0.5 * this.width + 0.5 * size, 0.5 * this.height + 0.5 * size, size));
         }
     }
 
@@ -55,7 +79,7 @@ export default class Background extends BaseCanvas {
         this.clear(Background.option.backgroundColor);
         // this.clear();
         this.elements.forEach((element) => {
-            element.draw(this.context);
+            element.draw(this.context, Background.option.showColor);
         });
     }
 }
