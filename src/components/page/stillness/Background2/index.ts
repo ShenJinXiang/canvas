@@ -9,12 +9,16 @@ class Element {
     private x: number;
     private y: number;
     private s: number;
+    private p: number;
+    private r: number;
     private size: number;
     constructor(x: number, y: number, size: number) {
         this.x = x;
         this.y = y;
         this.size = size;
         this.s = this.size / (2 * 4 * Math.sqrt(2));
+        this.p = this.s * 0.4;
+        this.r = this.p * 6.5;
     }
     draw(context: CanvasRenderingContext2D | null, showColor: string) {
         if (!context) {
@@ -22,8 +26,8 @@ class Element {
         }
         context.save();
         context.translate(this.x + this.size / 2, this.y + this.size / 2);
-        // context.strokeStyle = '#fff';
-        // context.strokeRect(-this.size / 2, -this.size / 2, this.size, this.size);
+        context.strokeStyle = '#fff';
+        context.strokeRect(-this.size / 2, -this.size / 2, this.size, this.size);
         context.strokeStyle = showColor;
         for (let i = 0; i < 4; i++) {
             context.save();
@@ -38,7 +42,15 @@ class Element {
             context.stroke();
             context.restore();
         }
-        // context.fillRect(-this.size / 4, -this.size / 4, this.size / 2, this.size / 2);
+
+        context.save();
+        context.beginPath();
+        context.translate(this.size / 2, this.size / 2);
+        context.lineWidth = this.p;
+        context.arc(0, 0, this.r, -Math.PI, -Math.PI / 2, false);
+        context.stroke();
+        context.restore();
+
         context.restore();
     }
 }
@@ -59,15 +71,15 @@ export default class Background extends BaseCanvas {
         this.elements = [];
         let size = this.width / 10;
         for (let i = 0; i < 10; i++) {
-            this.elements.push(new Element(0.5 * this.width - 1.5 * size, 0.5 * this.height - 1.5 * size, size));
-            this.elements.push(new Element(0.5 * this.width - 0.5 * size, 0.5 * this.height - 1.5 * size, size));
-            this.elements.push(new Element(0.5 * this.width + 0.5 * size, 0.5 * this.height - 1.5 * size, size));
-            this.elements.push(new Element(0.5 * this.width - 1.5 * size, 0.5 * this.height - 0.5 * size, size));
+            // this.elements.push(new Element(0.5 * this.width - 1.5 * size, 0.5 * this.height - 1.5 * size, size));
+            // this.elements.push(new Element(0.5 * this.width - 0.5 * size, 0.5 * this.height - 1.5 * size, size));
+            // this.elements.push(new Element(0.5 * this.width + 0.5 * size, 0.5 * this.height - 1.5 * size, size));
+            // this.elements.push(new Element(0.5 * this.width - 1.5 * size, 0.5 * this.height - 0.5 * size, size));
             this.elements.push(new Element(0.5 * this.width - 0.5 * size, 0.5 * this.height - 0.5 * size, size));
-            this.elements.push(new Element(0.5 * this.width + 0.5 * size, 0.5 * this.height - 0.5 * size, size));
-            this.elements.push(new Element(0.5 * this.width - 1.5 * size, 0.5 * this.height + 0.5 * size, size));
-            this.elements.push(new Element(0.5 * this.width - 0.5 * size, 0.5 * this.height + 0.5 * size, size));
-            this.elements.push(new Element(0.5 * this.width + 0.5 * size, 0.5 * this.height + 0.5 * size, size));
+            // this.elements.push(new Element(0.5 * this.width + 0.5 * size, 0.5 * this.height - 0.5 * size, size));
+            // this.elements.push(new Element(0.5 * this.width - 1.5 * size, 0.5 * this.height + 0.5 * size, size));
+            // this.elements.push(new Element(0.5 * this.width - 0.5 * size, 0.5 * this.height + 0.5 * size, size));
+            // this.elements.push(new Element(0.5 * this.width + 0.5 * size, 0.5 * this.height + 0.5 * size, size));
         }
     }
 
