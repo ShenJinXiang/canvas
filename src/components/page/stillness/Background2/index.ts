@@ -22,8 +22,6 @@ class Element1 {
         }
         context.save();
         context.translate(this.x + this.size / 2, this.y + this.size / 2);
-        // context.strokeStyle = '#fff';
-        // context.strokeRect(-this.size / 2, -this.size / 2, this.size, this.size);
         context.strokeStyle = showColor;
         for (let i = 0; i < 4; i++) {
             context.save();
@@ -116,20 +114,13 @@ export default class Background extends BaseCanvas {
     initData() {
         this.element1s = [];
         this.element2s = [];
-        let size = this.width / 10;
-        this.element1s.push(new Element1(0.5 * this.width - 1.5 * size, 0.5 * this.height - 1.5 * size, size));
-        this.element1s.push(new Element1(0.5 * this.width - 0.5 * size, 0.5 * this.height - 1.5 * size, size));
-        this.element1s.push(new Element1(0.5 * this.width + 0.5 * size, 0.5 * this.height - 1.5 * size, size));
-        this.element1s.push(new Element1(0.5 * this.width - 1.5 * size, 0.5 * this.height - 0.5 * size, size));
-        this.element1s.push(new Element1(0.5 * this.width - 0.5 * size, 0.5 * this.height - 0.5 * size, size));
-        this.element1s.push(new Element1(0.5 * this.width + 0.5 * size, 0.5 * this.height - 0.5 * size, size));
-        this.element1s.push(new Element1(0.5 * this.width - 1.5 * size, 0.5 * this.height + 0.5 * size, size));
-        this.element1s.push(new Element1(0.5 * this.width - 0.5 * size, 0.5 * this.height + 0.5 * size, size));
-        this.element1s.push(new Element1(0.5 * this.width + 0.5 * size, 0.5 * this.height + 0.5 * size, size));
-        this.element2s.push(new Element2(0.5 * this.width - 0.5 * size, 0.5 * this.height - 0.5 * size, 0.25 * size));
-        this.element2s.push(new Element2(0.5 * this.width + 0.5 * size, 0.5 * this.height - 0.5 * size, 0.25 * size));
-        this.element2s.push(new Element2(0.5 * this.width - 0.5 * size, 0.5 * this.height + 0.5 * size, 0.25 * size));
-        this.element2s.push(new Element2(0.5 * this.width + 0.5 * size, 0.5 * this.height + 0.5 * size, 0.25 * size));
+        let size = this.width / 20;
+        for (let i = 0; i * size < this.width + size; i++) {
+            for (let j = 0; j * size < this.height + size; j++) {
+                this.element1s.push(new Element1(i * size, j * size, size));
+                this.element2s.push(new Element2(i * size, j * size, 0.25 * size));
+            }
+        }
     }
 
     draw(): void {
@@ -138,7 +129,6 @@ export default class Background extends BaseCanvas {
             return;
         }
         this.clear(Background.option.backgroundColor);
-        // this.clear();
         this.element1s.forEach((element) => {element.draw(this.context, Background.option.showColor);});
         this.element2s.forEach((element) => {element.draw(this.context, Background.option.showColor);});
     }
