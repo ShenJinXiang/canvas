@@ -29,6 +29,7 @@ class Element1 {
             context.save();
             context.beginPath();
             context.lineWidth = this.s;
+            context.lineCap = 'square';
             context.rotate(Math.PI / 4 + i * Math.PI / 2);
             context.moveTo(0, 0);
             context.lineTo(2 * this.s, 0);
@@ -65,9 +66,6 @@ class Element2 {
         context.strokeStyle = showColor;
         context.translate(this.x, this.y);
         context.lineWidth = this.s;
-        // context.beginPath();
-        // context.arc(0, 0, this.r, 0, 2 * Math.PI, false);
-        // context.stroke();
         
         context.beginPath();
         context.moveTo(-this.r - this.s / 2, 0);
@@ -78,8 +76,6 @@ class Element2 {
         context.lineTo(this.r * Math.cos(Math.PI / 2 - this.angle1) + this.s, 4 * this.s);
         context.lineTo(this.r * Math.cos(Math.PI / 2 - this.angle1), 4 * this.s);
         context.arc(0, 0, this.r, Math.PI / 2 - this.angle1, this.angle2, true)
-        // context.lineTo(this.r * Math.cos(this.angle1), this.r * Math.sin(this.angle1));
-        // context.lineTo(this.r * Math.cos(Math.PI - this.angle1), this.r * Math.sin(Math.PI - this.angle1));
         context.arc(0, 0, this.r, Math.PI - this.angle2, Math.PI / 2 + this.angle1, true)
         context.lineTo(this.r * Math.cos(Math.PI / 2 + this.angle1), 4 * this.s);
         context.lineTo(this.r * Math.cos(Math.PI / 2 + this.angle1) - this.s, 4 * this.s);
