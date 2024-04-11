@@ -3,6 +3,7 @@ import BaseCanvas from "@/lib/BaseCanvas";
 interface IOption {
     backgroundColor: string;
     showColor: string;
+    minSize: number;
 }
 
 class Element1 {
@@ -102,6 +103,7 @@ export default class Background extends BaseCanvas {
     private static readonly option: IOption = {
         backgroundColor: '#8b0903',
         showColor: '#f8c687',
+        minSize: 40
     };
     private element1s: Element1[] = [];
     private element2s: Element2[] = [];
@@ -114,7 +116,8 @@ export default class Background extends BaseCanvas {
     initData() {
         this.element1s = [];
         this.element2s = [];
-        let size = this.width / 20;
+        let size = Math.min(this.width, this.height) / 10;
+        size = size < Background.option.minSize ? Background.option.minSize : size;
         for (let i = 0; i * size < this.width + size; i++) {
             for (let j = 0; j * size < this.height + size; j++) {
                 this.element1s.push(new Element1(i * size, j * size, size));
@@ -131,5 +134,11 @@ export default class Background extends BaseCanvas {
         this.clear(Background.option.backgroundColor);
         this.element1s.forEach((element) => {element.draw(this.context, Background.option.showColor);});
         this.element2s.forEach((element) => {element.draw(this.context, Background.option.showColor);});
+    }
+
+    public setRect(width: number, height: number) {
+        this.initRect(width, height);
+        this.initData();
+        this.draw();
     }
 }
