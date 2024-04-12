@@ -110,7 +110,6 @@ export default class Background extends BaseCanvas {
         this.clear(Background.option.backgroundColor);
 
         this.context.save();
-        console.log(this.elements);
         this.elements.forEach((item) => item.draw(this.context, Background.option.showColor, Background.option.backgroundColor));
         this.context.restore();
         this.drawMark();

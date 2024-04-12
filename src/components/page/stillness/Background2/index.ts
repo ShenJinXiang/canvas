@@ -110,6 +110,7 @@ export default class Background extends BaseCanvas {
     constructor(width: number, height: number) {
         super();
         this.initRect(width, height);
+        this.markCanvas.setStyle('rgba(250, 250, 250, 0.5)');
         this.initData();
     }
 
@@ -127,13 +128,13 @@ export default class Background extends BaseCanvas {
     }
 
     draw(): void {
-        this.clear();
         if (!this.context) {
             return;
         }
         this.clear(Background.option.backgroundColor);
         this.element1s.forEach((element) => {element.draw(this.context, Background.option.showColor);});
         this.element2s.forEach((element) => {element.draw(this.context, Background.option.showColor);});
+        this.drawMark();
     }
 
     public setRect(width: number, height: number) {
