@@ -275,4 +275,10 @@ export default [
     name: 'StaticBackground2',
     component: () => import('@/views/page/stillness/Background2.vue'),
   },
+  {
+    title: '心形动画3',
+    path: 'animation/CardioidAnimation3',
+    name: 'CardioidAnimation3',
+    component: () => import('@/views/page/animation/CardioidAnimation3.vue'),
+  },
 ];
