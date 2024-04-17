@@ -1,4 +1,5 @@
 import Animate from "@/lib/Animate";
+import { StrokeOption } from "@/lib/DrawOption";
 import Point from "@/lib/Point";
 
 interface IOption {
@@ -10,6 +11,41 @@ interface IOption {
   coordinateArrowLength: number;
   strokeStyle: string;
   strokeWidth: number;
+}
+
+class Element {
+  private minX: number;
+  private maxX: number;
+  private xStep: number;
+  private xScale: number;
+  private yScale: number;
+  private points: Point[];
+  constructor(minX: number, maxX: number, xStep: number, func: Function, xScale: number, yScale: number) {
+    this.minX = minX;
+    this.maxX = maxX;
+    this.xStep = xStep;
+    this.xScale = xScale;
+    this.yScale = yScale;
+    this.points = [];
+    for (let temp = this.minX; temp <= this.maxX; temp += this.xStep) {
+      this.points.push({x: temp, y: func(temp)});
+    }
+  }
+
+  draw(context: CanvasRenderingContext2D | null, { lineWidth = 1, strokeStyle = '#000' }: StrokeOption) {
+    if (!context) {
+      return;
+    }
+    context.save();
+    context.lineWidth = lineWidth;
+    context.strokeStyle = strokeStyle;
+    context.beginPath();
+    this.points.forEach((item) => {
+        context.lineTo(item.x * this.xScale, -item.y * this.yScale);
+    });
+    context.stroke();
+    context.restore();
+  }
 }
 
 export default class CardioidAnimation extends Animate {
@@ -37,8 +73,11 @@ export default class CardioidAnimation extends Animate {
       return;
     }
     this.clear(CardioidAnimation.OPTION.background);
-    this.context.save();
     this.drawCoordinate();
+    this.context.save();
+    this.context.translate(this.origin.x, this.origin.y);
+    const element = new Element(-100, 100, 0.01, (x: number) => x * x - 1, this.width / 10, this.width / 12);
+    element.draw(this.context, {lineWidth: CardioidAnimation.OPTION.strokeWidth, strokeStyle: CardioidAnimation.OPTION.strokeStyle});
     this.context.restore();
   }
   public setRect(width: number, height: number) {
