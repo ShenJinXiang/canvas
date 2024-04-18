@@ -60,13 +60,45 @@ export default class CardioidAnimation extends Animate {
     strokeWidth: 2,
   };
   private origin: Point = { x: 0, y: 0};
+  private xScale: number = 1;
+  private yScale: number = 1;
+  private elements: Element[] = [];
+  private current: number = 0;
+  private flag: number = 1;
   constructor(width: number, height: number) {
     super();
     this.initRect(width, height);
+    this.reset();
     this.initData();
   }
-  private initData() {
+  private reset() {
     this.origin = {x: this.width / 2, y: this.height * 0.6};
+    this.xScale = this.width / 10;
+    this.yScale = this.width / 12;
+  }
+  private initData() {
+    this.elements = [];
+    for (let b = -30; b < 30; b+=0.1) {
+      this.elements.push(new Element(
+          -100,
+          100,
+          0.01, 
+          (x: number) => Math.pow(x * x, 1 / 3) + 0.9 * Math.sqrt(3.3 - x * x) * Math.sin(b * Math.PI * x),
+          this.xScale,
+          this.yScale
+        )
+      )
+    }
+    this.current = Math.floor(this.elements.length / 2);
+    this.flag = 1;
+  }
+
+  update() {
+    this.current += this.flag;
+    if (this.current >= this.elements.length - 1 || this.current <= 0) {
+      this.flag = -this.flag;
+    }
+    console.log('length:', this.elements.length, ' current:', this.current, ' flag:', this.flag);
   }
   draw() {
     if (!this.context) {
@@ -76,13 +108,14 @@ export default class CardioidAnimation extends Animate {
     this.drawCoordinate();
     this.context.save();
     this.context.translate(this.origin.x, this.origin.y);
-    const element = new Element(-100, 100, 0.01, (x: number) => x * x - 1, this.width / 10, this.width / 12);
-    element.draw(this.context, {lineWidth: CardioidAnimation.OPTION.strokeWidth, strokeStyle: CardioidAnimation.OPTION.strokeStyle});
+    this.elements[this.current].draw(
+      this.context, 
+      {
+        lineWidth: CardioidAnimation.OPTION.strokeWidth,
+        strokeStyle: CardioidAnimation.OPTION.strokeStyle
+      }
+    );
     this.context.restore();
-  }
-  public setRect(width: number, height: number) {
-    this.initRect(width, height);
-    this.initData();
   }
   drawCoordinate() {
     if (!this.context) {
@@ -117,5 +150,9 @@ export default class CardioidAnimation extends Animate {
     this.context.closePath();
     this.context.fill();
     this.context.restore();
+  }
+  public setRect(width: number, height: number) {
+    this.initRect(width, height);
+    this.reset();
   }
 }
