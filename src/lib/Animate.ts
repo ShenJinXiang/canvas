@@ -16,12 +16,15 @@ export default class Animate extends BaseCanvas {
 
   animate(): void {
     this.update();
+    // this.draw();
+    // this.drawMark();
     // requestAnimationFrame(this.run.bind(this));
   }
   update(): void { }
   draw(): void { }
 
   run() {
+    // this.animate();
     const now = new Date().getTime();
     const elapsed = now - this.last;
     if (elapsed >= this.fpsInterval) {

@@ -78,10 +78,10 @@ export default class CardioidAnimation extends Animate {
   }
   private initData() {
     this.elements = [];
-    for (let b = -30; b < 30; b+=0.1) {
+    for (let b = -30; b < 30; b+=0.05) {
       this.elements.push(new Element(
-          -100,
-          100,
+          -3,
+          3,
           0.01, 
           (x: number) => Math.pow(x * x, 1 / 3) + 0.9 * Math.sqrt(3.3 - x * x) * Math.sin(b * Math.PI * x),
           this.xScale,
@@ -98,7 +98,6 @@ export default class CardioidAnimation extends Animate {
     if (this.current >= this.elements.length - 1 || this.current <= 0) {
       this.flag = -this.flag;
     }
-    console.log('length:', this.elements.length, ' current:', this.current, ' flag:', this.flag);
   }
   draw() {
     if (!this.context) {
