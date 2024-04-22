@@ -281,4 +281,10 @@ export default [
     name: 'CardioidAnimation3',
     component: () => import('@/views/page/animation/CardioidAnimation3.vue'),
   },
+  {
+    title: '分形图2',
+    path: 'animation/FractalImage2',
+    name: 'FractalImage2',
+    component: () => import('@/views/page/animation/FractalImage2.vue'),
+  },
 ];
