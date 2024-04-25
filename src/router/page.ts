@@ -287,4 +287,10 @@ export default [
     name: 'FractalImage2',
     component: () => import('@/views/page/animation/FractalImage2.vue'),
   },
+  {
+    title: '静态背景图3',
+    path: 'stillness/Background3',
+    name: 'StaticBackground3',
+    component: () => import('@/views/page/stillness/Background3.vue'),
+  },
 ];

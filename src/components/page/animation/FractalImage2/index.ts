@@ -102,7 +102,6 @@ export default class FractalImage extends Animate {
   initData() {
     this.currentDeep = 0;
     this.currentTime = 0;
-    // this.element = new Element(this.width / 2, this.height / 2, 400, 0, 100);
     this.initElementGroup();
   }
 
@@ -111,7 +110,7 @@ export default class FractalImage extends Animate {
     for (let i = 0; i < FractalImage.OPTION.deepNum; i++) {
       const eles: Element[] = [];
       if (i === 0) {
-        eles.push(new Element(this.width / 2, this.height / 2, this.width / 2.5, 0, FractalImage.OPTION.time));
+        eles.push(new Element(this.width / 2, this.height / 2, this.width / 2.2, 0, FractalImage.OPTION.time));
       } else {
         this.elementGroup[i - 1].forEach(item => eles.push(...item.children(FractalImage.OPTION.ratio)));
       }
