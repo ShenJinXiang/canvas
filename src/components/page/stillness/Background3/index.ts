@@ -1,5 +1,11 @@
 import BaseCanvas from "@/lib/BaseCanvas";
 
+interface IOption {
+  backgroundColor: string;
+  showColor: string;
+  minSize: number;
+}
+
 class Element {
   private x: number;
   private y: number;
@@ -9,9 +15,27 @@ class Element {
     this.y = y;
     this.size = size;
   }
+  draw(context: CanvasRenderingContext2D | null, showColor: string) {
+    if (!context) {
+      return;
+    }
+    const lineWidth = 10;
+    context.save();
+    context.translate(this.x, this.y);
+    context.lineWidth = lineWidth;
+    context.strokeStyle = showColor;
+    context.strokeRect(-0.5 * this.size + 0.5 * lineWidth, -0.5 * this.size + 0.5 * lineWidth, this.size - lineWidth, this.size - lineWidth);
+    context.restore();
+  }
 }
 
 export default class Background extends BaseCanvas {
+  private static readonly OPTION: IOption = {
+    backgroundColor: '#000',
+    showColor: '#f1f1f1',
+    minSize: 30
+  }
+  private elements: Element[] = [];
   constructor(width: number, height: number) {
     super();
     this.initRect(width, height);
@@ -19,7 +43,9 @@ export default class Background extends BaseCanvas {
   }
 
   initData() {
-
+    this.elements = [
+      new Element(0.5 * this.width, 0.5 * this.height, 100)
+    ]
   }
 
   draw() {
@@ -28,8 +54,7 @@ export default class Background extends BaseCanvas {
     }
     this.clear();
     this.context.save();
-    this.context.fillStyle = 'red';
-    this.context.fillRect(200, 200, 100, 80);
+    this.elements.forEach((item) => item.draw(this.context, Background.OPTION.showColor));
     this.context.restore();
   }
 
