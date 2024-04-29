@@ -15,29 +15,20 @@ class Element {
     this.x = x;
     this.y = y;
     this.size = size;
-    this.p = this.size / 24;
+    this.p = this.size / 23;
   }
   draw(context: CanvasRenderingContext2D | null, showColor: string) {
     if (!context) {
       return;
     }
-    const lineWidth = 10;
     context.save();
     context.translate(this.x, this.y);
-    // context.lineWidth = lineWidth;
     context.strokeStyle = showColor;
-    // context.strokeRect(-0.5 * this.size + 0.5 * lineWidth, -0.5 * this.size + 0.5 * lineWidth, this.size - lineWidth, this.size - lineWidth);
     context.lineWidth = this.p;
-
     for (let i = 0; i < 6; i++) {
       const s = (i * 2 + 0.5) * this.p;
       context.strokeRect(-s, -s, 2 * s, 2 * s);
     }
-    // context.strokeRect(-2.5 * this.p, -2.5 * this.p, 5 * this.p, 5 * this.p);
-
-    // context.strokeStyle = 'red';
-    // context.lineWidth = 1;
-    // context.strokeRect(-0.5 * this.size, -0.5 * this.size, this.size, this.size);
     context.restore();
   }
 }
@@ -46,7 +37,7 @@ export default class Background extends BaseCanvas {
   private static readonly OPTION: IOption = {
     backgroundColor: '#000',
     showColor: '#f1f1f1',
-    minSize: 30
+    minSize: 50
   }
   private elements: Element[] = [];
   constructor(width: number, height: number) {
@@ -56,9 +47,14 @@ export default class Background extends BaseCanvas {
   }
 
   initData() {
-    this.elements = [
-      new Element(0.5 * this.width, 0.5 * this.height, 100)
-    ]
+    this.elements = [];
+    let size = Math.min(this.width, this.height) / 12;
+    size = size < Background.OPTION.minSize ? Background.OPTION.minSize : size;
+    for (let i = 0; i * size < this.width + size; i++) {
+      for (let j = 0; j * size < this.height + size; j++) {
+        this.elements.push(new Element(i * size, j * size, size));
+      }
+    }
   }
 
   draw() {
@@ -68,6 +64,7 @@ export default class Background extends BaseCanvas {
     this.clear(Background.OPTION.backgroundColor);
     this.context.save();
     this.elements.forEach((item) => item.draw(this.context, Background.OPTION.showColor));
+    this.drawMark();
     this.context.restore();
   }
 
