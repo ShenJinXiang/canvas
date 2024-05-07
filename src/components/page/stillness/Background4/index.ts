@@ -6,6 +6,14 @@ interface IOption {
   minSize: number;
 }
 
+class Element {
+  private x: number;
+  private y: number;
+  private size: number;
+  constructor(x: number, y: number, size: number) {
+
+  }
+}
 
 export default class Background extends BaseCanvas {
   private static readonly OPTION: IOption = {
