@@ -29,7 +29,7 @@ class Element {
 
     context.strokeStyle = showColor;
     context.strokeRect(-0.5 * this.size, -0.5 * this.size, this.size, this.size);
-    context.moveTo(0, 0);
+    context.moveTo(-this.size / 2, -this.size / 2);
     context.lineTo(this.size / 2, this.size / 2);
     context.stroke();
     context.restore();
