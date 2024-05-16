@@ -15,9 +15,9 @@ class Element {
     this.x = x;
     this.y = y;
     this.size = size;
-    this.p = this.size / 7.5;
+    this.p = this.size / 8;
   }
-  draw(context: CanvasRenderingContext2D | null, showColor: string) {
+  draw(context: CanvasRenderingContext2D | null, showColor: string, backgroundColor: string) {
     if (!context) {
       return;
     }
@@ -25,13 +25,23 @@ class Element {
     context.translate(this.x, this.y);
     context.beginPath();
     context.fillStyle = showColor;
-    context.rotate(Math.PI / 4);
+    context.rotate(-3 * Math.PI / 4);
 
-    context.strokeStyle = showColor;
-    context.strokeRect(-0.5 * this.size, -0.5 * this.size, this.size, this.size);
-    context.moveTo(-this.size / 2, -this.size / 2);
-    context.lineTo(this.size / 2, this.size / 2);
-    context.stroke();
+    context.translate(-0.5 * this.size + 0.5 * this.p, -0.5 * this.size + 0.5 * this.p);
+    context.fillStyle = showColor;
+    context.fillRect(0, 0, 7 * this.p, 7 * this.p);
+    context.fillStyle = backgroundColor;
+    context.fillRect(0, 0, 6 * this.p, 6 * this.p);
+    context.fillStyle = showColor;
+    context.fillRect(0, 0, 5 * this.p, 5 * this.p);
+    context.fillStyle = backgroundColor;
+    context.fillRect(0, 0, 4 * this.p, 4 * this.p);
+    context.fillStyle = showColor;
+    context.fillRect(0, 0, 3 * this.p, 3 * this.p);
+    context.fillStyle = backgroundColor;
+    context.fillRect(0, 0, 2 * this.p, 2 * this.p);
+    context.fillStyle = showColor;
+    context.fillRect(0, 0, this.p, this.p);
     context.restore();
   }
 }
@@ -61,7 +71,7 @@ export default class Background extends BaseCanvas {
     }
     this.clear(Background.OPTION.backgroundColor);
     this.context.save();
-    this.elements.forEach(element => element.draw(this.context, Background.OPTION.showColor));
+    this.elements.forEach(element => element.draw(this.context, Background.OPTION.showColor, Background.OPTION.backgroundColor));
     this.context.restore();
     this.drawMark();
   }
