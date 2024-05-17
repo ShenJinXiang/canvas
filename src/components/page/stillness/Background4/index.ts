@@ -27,21 +27,24 @@ class Element {
     context.fillStyle = showColor;
     context.rotate(-3 * Math.PI / 4);
 
+    context.strokeStyle = showColor;
+    context.strokeRect(-0.5 * this.size, -0.5 * this.size, this.size, this.size);
+
     context.translate(-0.5 * this.size + 0.5 * this.p, -0.5 * this.size + 0.5 * this.p);
-    context.fillStyle = showColor;
-    context.fillRect(0, 0, 7 * this.p, 7 * this.p);
-    context.fillStyle = backgroundColor;
-    context.fillRect(0, 0, 6 * this.p, 6 * this.p);
-    context.fillStyle = showColor;
-    context.fillRect(0, 0, 5 * this.p, 5 * this.p);
-    context.fillStyle = backgroundColor;
-    context.fillRect(0, 0, 4 * this.p, 4 * this.p);
-    context.fillStyle = showColor;
-    context.fillRect(0, 0, 3 * this.p, 3 * this.p);
-    context.fillStyle = backgroundColor;
-    context.fillRect(0, 0, 2 * this.p, 2 * this.p);
-    context.fillStyle = showColor;
-    context.fillRect(0, 0, this.p, this.p);
+    context.lineWidth = this.p;
+    for (let i = 0; i < 8; i += 2) {
+      const n = i + 0.5;
+      context.beginPath();
+      context.moveTo(n * this.p, 0);
+      context.lineTo(n * this.p, n * this.p)
+      context.lineTo(0, n * this.p)
+      context.stroke();
+    }
+
+    // for (let i = 7; i >= 0; i -= 1) {
+    //   context.fillStyle = i % 2 === 0 ? backgroundColor : showColor;
+    //   context.fillRect(0, 0, i * this.p, i * this.p);
+    // }
     context.restore();
   }
 }
