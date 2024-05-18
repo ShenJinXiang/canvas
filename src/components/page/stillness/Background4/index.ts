@@ -26,9 +26,8 @@ class Element {
     context.beginPath();
     context.fillStyle = showColor;
     context.rotate(-3 * Math.PI / 4);
-
     context.strokeStyle = showColor;
-    context.strokeRect(-0.5 * this.size, -0.5 * this.size, this.size, this.size);
+    // context.strokeRect(-0.5 * this.size, -0.5 * this.size, this.size, this.size);
 
     context.translate(-0.5 * this.size + 0.5 * this.p, -0.5 * this.size + 0.5 * this.p);
     context.lineWidth = this.p;
@@ -63,9 +62,15 @@ export default class Background extends BaseCanvas {
   }
 
   initData() {
-    this.elements = [
-      new Element(0.5 * this.width, 0.5 * this.height, 100),
-    ];
+    this.elements = [];
+    let size = Math.min(this.width, this.height) / 12;
+    size = size < Background.OPTION.minSize ? Background.OPTION.minSize : size;
+    for (let i = 0; i * size < this.width + size; i++) {
+      for (let j = 0; j * size < this.height + size; j++) {
+        this.elements.push(new Element(i * size, j * size, size / Math.sqrt(2)));
+        this.elements.push(new Element((i + 0.5) * size, (j + 0.5) * size, size / Math.sqrt(2)));
+      }
+    }
   }
 
   draw() {
