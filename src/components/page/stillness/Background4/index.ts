@@ -15,7 +15,7 @@ class Element {
     this.x = x;
     this.y = y;
     this.size = size;
-    this.p = this.size / 8;
+    this.p = this.size / 12;
   }
   draw(context: CanvasRenderingContext2D | null, showColor: string, backgroundColor: string) {
     if (!context) {
@@ -31,7 +31,7 @@ class Element {
 
     context.translate(-0.5 * this.size + 0.5 * this.p, -0.5 * this.size + 0.5 * this.p);
     context.lineWidth = this.p;
-    for (let i = 0; i < 8; i += 2) {
+    for (let i = 0; i < 12; i += 2) {
       const n = i + 0.5;
       context.beginPath();
       context.moveTo(n * this.p, 0);
