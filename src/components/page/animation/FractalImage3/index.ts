@@ -7,6 +7,33 @@ interface IOption {
     ratio: number;
 }
 
+class Element {
+    private x: number;
+    private y: number;
+    private radius: number;
+    private time: number;
+    private r: number = 0;
+    private rStep: number = 0;
+    private current: number = 0;
+    private angleStep: number = 0;
+    private startAngle: number = 0;
+
+    constructor(x: number, y: number, radius: number, time: number) {
+        this.x = x;
+        this.y = y;
+        this.radius = radius;
+        this.time = time;
+    }
+    init() {
+        this.current = 0;
+        this.r = 0;
+        this.rStep = 0;
+        this.angleStep = 0;
+        this.startAngle = Math.PI;
+    }
+    
+}
+
 export default class FractalImage extends Animate {
     private static readonly OPTION: IOption = {
         backgroundColor: '#f1f1f1',
