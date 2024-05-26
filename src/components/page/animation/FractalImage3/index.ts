@@ -65,6 +65,18 @@ class Element {
     draw(ctx: CanvasRenderingContext2D|null, showColor: string) {
         fillTriangle(ctx, this.x, this.y, this.r, .5 * Math.PI + this.angle, showColor);
     }
+    children() {
+        let arr = [];
+        for (let i = 0; i < 3; i++) {
+            arr.push(new Element(
+                this.x + this.radius * Math.cos(-0.5 * Math.PI + 2 * i * Math.PI / 3 ),
+                this.y + this.radius * Math.sin(-0.5 * Math.PI + 2 * i * Math.PI / 3 ),
+                this.radius / 2,
+                this.time
+            ));
+        }
+        return arr;
+    }
     
 }
 
