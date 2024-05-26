@@ -62,6 +62,9 @@ class Element {
             this.angle = this.startAngle + this.current * this.angleStep;
         }
     }
+    draw(ctx: CanvasRenderingContext2D|null, showColor: string) {
+        fillTriangle(ctx, this.x, this.y, this.r, .5 * Math.PI + this.angle, showColor);
+    }
     
 }
 
