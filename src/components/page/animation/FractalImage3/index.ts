@@ -104,8 +104,7 @@ export default class FractalImage extends Animate {
 
         this.clear(FractalImage.OPTION.backgroundColor);
         this.context.save();
-        this.context.strokeStyle = FractalImage.OPTION.showColor;
-        this.context.strokeRect(100, 100, 200, 160);
+        fillTriangle(this.context, 0.5 * this.width, 0.65 * this.height , this.height * 0.6, -Math.PI / 2, FractalImage.OPTION.showColor);
         this.context.restore();
     }
 
