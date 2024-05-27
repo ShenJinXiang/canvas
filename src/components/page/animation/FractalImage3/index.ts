@@ -5,6 +5,8 @@ interface IOption {
     showColor: string;
     lineWidth: number;
     ratio: number;
+    deepNum: number;
+    timeStep: number;
 }
 
 function fillTriangle(ctx: CanvasRenderingContext2D | null, x: number, y: number, radius: number, angle: number, color: string) {
@@ -85,8 +87,11 @@ export default class FractalImage extends Animate {
         backgroundColor: '#f1f1f1',
         showColor: '#0075c9',
         lineWidth: 1,
-        ratio: 0.7
+        ratio: 0.7,
+        deepNum: 6,
+        timeStep: 100
     }
+    private elements: Element[][] = [];
     constructor(width: number, height: number) {
         super();
         this.initRect(width, height);
@@ -94,7 +99,21 @@ export default class FractalImage extends Animate {
     }
 
     private initData() {
-
+        this.elements = [];
+        for (let i = 0; i < FractalImage.OPTION.deepNum; i++) {
+            let eles: Element[] = [];
+            if (i === 0) {
+                eles.push(new Element(
+                    0.5 * this.width,
+                    0.65 * this.height,
+                    0.3 * this.height,
+                    FractalImage.OPTION.timeStep
+                ));
+            } else {
+                this.elements[i - 1].forEach(item => eles.push(...item.children()));
+            }
+            this.elements.push(eles);
+        }
     }
 
     draw(): void {
