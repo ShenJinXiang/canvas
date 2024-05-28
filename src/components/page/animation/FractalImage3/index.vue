@@ -20,7 +20,7 @@
   const canvas = new FractalImage(props.width, props.height);
   
   onMounted(() => {
-    canvas.initCanvas(canvasRef.value).run();
+    canvas.initCanvas(canvasRef.value).draw();
   });
   
   watch(
