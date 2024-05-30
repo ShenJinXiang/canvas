@@ -64,8 +64,8 @@ class Element {
             this.angle = this.startAngle + this.current * this.angleStep;
         }
     }
-    draw(ctx: CanvasRenderingContext2D|null, showColor: string) {
-        fillTriangle(ctx, this.x, this.y, this.r, .5 * Math.PI + this.angle, showColor);
+    draw(context: CanvasRenderingContext2D|null, showColor: string) {
+        fillTriangle(context, this.x, this.y, this.r, 0.5 * Math.PI + this.angle, showColor);
     }
     children() {
         let arr = [];
@@ -130,12 +130,11 @@ export default class FractalImage extends Animate {
                 item.forEach(ele => ele.setComplete());
             }
         });
-        // console.log('currentTime:' + this.currentTime + " currentDeep:" + this.currentDeep);
         this.currentTime++;
         if (this.currentTime >= FractalImage.OPTION.timeStep) {
             this.currentTime = 0;
             this.currentDeep++;
-            if (this.currentDeep >= FractalImage.OPTION.deepNum) {
+            if (this.currentDeep > FractalImage.OPTION.deepNum) {
                 this.currentDeep = 0;
                 this.elements.forEach(function (item) {
                     item.forEach(ele => ele.setStart())
@@ -150,15 +149,15 @@ export default class FractalImage extends Animate {
 
         this.clear(FractalImage.OPTION.backgroundColor);
         this.context.save();
-        // fillTriangle(this.context, 0.5 * this.width, 0.65 * this.height , this.height * 0.6, -Math.PI / 2, FractalImage.OPTION.showColor);
-        // this.elements.forEach((item, index) => {
-        //     if (this.currentDeep >= index) {
-        //         item.forEach(ele => ele.draw(this.context, FractalImage.OPTION.showColor));
-        //     }
-        // });
-        this.elements[1].forEach((item) => {
-            item.draw(this.context, FractalImage.OPTION.showColor);
+        fillTriangle(this.context, 0.5 * this.width, 0.65 * this.height , this.height * 0.6, -Math.PI / 2, FractalImage.OPTION.showColor);
+        this.elements.forEach((item, index) => {
+            if (this.currentDeep >= index) {
+                item.forEach(ele => ele.draw(this.context, FractalImage.OPTION.backgroundColor));
+            }
         });
+        // this.elements[1].forEach((item) => {
+        //     item.draw(this.context, FractalImage.OPTION.backgroundColor);
+        // });
         this.context.restore();
     }
 
