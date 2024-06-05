@@ -9,11 +9,15 @@ interface IOption {
 class Element {
     private x: number;
     private y: number;
+    private rotate: number;
     private size: number;
+    private l: number;
     constructor(x: number, y: number, size: number, rotate: number) {
         this.x = x;
         this.y = y;
         this.size = size;
+        this.rotate = size;
+        this.l = 0.5 * this.size;
     }
     draw(context: CanvasRenderingContext2D | null, showColor: string) {
         if (!context) {
@@ -22,8 +26,9 @@ class Element {
         context.save();
         context.translate(this.x, this.y);
         context.strokeStyle = showColor;
-        context.moveTo(-0.5 * this.size, -0.5 * this.size)
-        context.lineTo(this.size, this.size);
+        context.moveTo(-this.l * Math.cos(this.rotate), this.l * Math.sin(this.rotate));
+        context.lineTo(0, 0);
+        context.lineTo(this.l * Math.cos(this.rotate), this.l * Math.sin(this.rotate));
         context.stroke();
         context.restore();
     }
