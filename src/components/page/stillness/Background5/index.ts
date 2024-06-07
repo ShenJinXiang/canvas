@@ -48,12 +48,6 @@ class Element {
         this.joinLines(context, [this.points[0], this.points[3]]);
         this.joinLines(context, [this.points[1], this.points[4]]);
         this.joinLines(context, [this.points[2], this.points[5]]);
-        // context.translate(this.x, this.y);
-        // context.strokeStyle = showColor;
-        // context.moveTo(-this.l * Math.cos(this.rotate), this.l * Math.sin(this.rotate));
-        // context.lineTo(0, 0);
-        // context.lineTo(this.l * Math.cos(this.rotate), this.l * Math.sin(this.rotate));
-        // context.stroke();
         context.restore();
     }
 }
