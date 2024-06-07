@@ -25,8 +25,8 @@ class Element {
     }
     private initPoints() {
         this.points.push({x: this.x, y: this.y});
-        this.points.push({x: this.x - this.l * Math.cos(this.rotate), y: this.y + this.l * Math.sin(this.rotate)});
-        this.points.push({x: this.x + this.l * Math.cos(this.rotate), y: this.y + this.l * Math.sin(this.rotate)});
+        this.points.push({x: this.x - this.l, y: this.y + this.l / Math.tan(this.rotate)});
+        this.points.push({x: this.x + this.l, y: this.y + this.l / Math.tan(this.rotate)});
         this.points.push({x: this.points[0].x, y: this.points[0].y + this.l * 0.2});
         this.points.push({x: this.points[1].x, y: this.points[1].y + this.l * 0.2});
         this.points.push({x: this.points[2].x, y: this.points[2].y + this.l * 0.2});
@@ -47,7 +47,7 @@ class Element {
         this.joinLines(context, [this.points[4], this.points[3], this.points[5]]);
         this.joinLines(context, [this.points[0], this.points[3]]);
         this.joinLines(context, [this.points[1], this.points[4]]);
-        this.joinLines(context, [this.points[2], this.points[5]]);
+        // this.joinLines(context, [this.points[2], this.points[5]]);
         context.restore();
     }
 }
@@ -57,7 +57,7 @@ export default class Background extends BaseCanvas {
     private static readonly option: IOption = {
         backgroundColor: '#000',
         showColor: '#fff',
-        rotate: Math.PI / 6
+        rotate: Math.PI / 3
     };
     private elements: Element[] = [];
     constructor(width: number, height: number) {
@@ -67,9 +67,14 @@ export default class Background extends BaseCanvas {
         this.initData();
     }
     initData() {
-        this.elements = [
-            new Element(0.5 * this.width, 0.5 * this.height, 0.1 * this.width, Background.option.rotate)
-        ];
+        this.elements = [];
+        let size = Math.min(this.width, this.height) / 12;
+        let hSize = 0.5 * size / Math.tan(Background.option.rotate) + 0.1 * size;
+        for (let y = 0; y * hSize < this.height; y++ ) {
+            for (let x = 0; x * size < this.width; x++) {
+                this.elements.push(new Element(y % 2 === 0 ? x * size : (x + 0.5)  * size, y * hSize, size, Background.option.rotate));
+            }
+        }
     }
     draw() {
         if (!this.context) {
