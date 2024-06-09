@@ -7,6 +7,7 @@ interface IOption {
     showColor1: string;
     showColor2: string;
     rotate: number;
+    minSize: number;
 }
 
 class Element {
@@ -59,7 +60,8 @@ export default class Background extends BaseCanvas {
         backgroundColor: '#000',
         showColor1: '#fff',
         showColor2: '#696a64',
-        rotate: Math.PI / 3
+        rotate: Math.PI / 3,
+        minSize: 40
     };
     private elements: Element[] = [];
     constructor(width: number, height: number) {
@@ -70,10 +72,11 @@ export default class Background extends BaseCanvas {
     }
     initData() {
         this.elements = [];
-        let size = Math.min(this.width, this.height) / 12;
+        let size = this.width / 18;
+        size = size < Background.option.minSize ? Background.option.minSize : size;
         let hSize = 0.5 * size / Math.tan(Background.option.rotate) + 0.1 * size;
         for (let y = 0; y * hSize < this.height; y++ ) {
-            for (let x = 0; x * size < this.width; x++) {
+            for (let x = 0; x * size < this.width + size; x++) {
                 this.elements.push(new Element(y % 2 === 0 ? x * size : (x + 0.5)  * size, y * hSize, size, Background.option.rotate));
             }
         }
