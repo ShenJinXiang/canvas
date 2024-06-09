@@ -4,7 +4,8 @@ import Point from "@/lib/Point";
 
 interface IOption {
     backgroundColor: string;
-    showColor: string;
+    showColor1: string;
+    showColor2: string;
     rotate: number;
 }
 
@@ -38,15 +39,15 @@ class Element {
         points.forEach(p => context.lineTo(p.x, p.y));
         context.stroke();
     }
-    draw(context: CanvasRenderingContext2D | null, showColor: string) {
+    draw(context: CanvasRenderingContext2D | null, showColor1: string, showColor2: string) {
         if (!context) {
             return;
         }
         context.save();
-        this.joinLines(context, [this.points[1], this.points[0], this.points[2]]);
-        this.joinLines(context, [this.points[4], this.points[3], this.points[5]]);
-        this.joinLines(context, [this.points[0], this.points[3]]);
-        this.joinLines(context, [this.points[1], this.points[4]]);
+        this.joinLines(context, [this.points[1], this.points[0], this.points[2]], showColor1);
+        this.joinLines(context, [this.points[4], this.points[3], this.points[5]], showColor1);
+        this.joinLines(context, [this.points[0], this.points[3]], showColor2);
+        this.joinLines(context, [this.points[1], this.points[4]], showColor2);
         // this.joinLines(context, [this.points[2], this.points[5]]);
         context.restore();
     }
@@ -56,7 +57,8 @@ class Element {
 export default class Background extends BaseCanvas {
     private static readonly option: IOption = {
         backgroundColor: '#000',
-        showColor: '#fff',
+        showColor1: '#fff',
+        showColor2: '#696a64',
         rotate: Math.PI / 3
     };
     private elements: Element[] = [];
@@ -83,7 +85,7 @@ export default class Background extends BaseCanvas {
         this.clear(Background.option.backgroundColor);
 
         this.context.save();
-        this.elements.forEach(item => item.draw(this.context, Background.option.showColor));
+        this.elements.forEach(item => item.draw(this.context, Background.option.showColor1, Background.option.showColor2));
         this.context.restore();
         this.drawMark();
     }
