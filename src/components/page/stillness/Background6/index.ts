@@ -17,6 +17,18 @@ class Element {
         this.y = y;
         this.radius = radius;
     }
+
+    draw(context: CanvasRenderingContext2D | null, showColor: string) {
+        if (!context) {
+            return;
+        }
+        context.save();
+        context.translate(this.x, this.y);
+        context.strokeStyle = showColor;
+        context.arc(0, 0, this.radius, 0, 2 * Math.PI, false);
+        context.stroke();
+        context.restore();
+    }
 }
 
 export default class Background extends BaseCanvas {
@@ -33,7 +45,10 @@ export default class Background extends BaseCanvas {
         this.initData();
     }
     initData() {
-        this.elements = [];
+        const size = this.width / 10;
+        this.elements = [
+            new Element(0.5 * this.width, 0.5 * this.height, size / 2)
+        ];
     }
     draw() {
         if (!this.context) {
@@ -42,8 +57,7 @@ export default class Background extends BaseCanvas {
         this.clear(Background.option.backgroundColor);
 
         this.context.save();
-        this.context.strokeStyle = Background.option.showColor;
-        this.context.strokeRect(100, 100, 200, 120);
+        this.elements.forEach((item) => item.draw(this.context, Background.option.showColor));
         this.context.restore();
         this.drawMark();
     }
