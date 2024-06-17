@@ -25,7 +25,12 @@ class Element {
         context.save();
         context.translate(this.x, this.y);
         context.strokeStyle = showColor;
-        context.arc(0, 0, this.radius, 0, 2 * Math.PI, false);
+        context.beginPath();
+        const aStep = 2 * Math.PI / 6;
+        for (let i = 0; i < 6; i++) {
+            context.lineTo(this.radius * Math.cos(i * aStep), this.radius * Math.sin(i * aStep));
+        }
+        context.closePath();
         context.stroke();
         context.restore();
     }
