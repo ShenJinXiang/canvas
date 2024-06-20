@@ -1,5 +1,4 @@
 import BaseCanvas from "@/lib/BaseCanvas";
-import { StrokeOption } from "@/lib/DrawOption";
 import Point from "@/lib/Point";
 
 interface IOption {
@@ -12,10 +11,18 @@ class Element {
     private x: number;
     private y: number;
     private radius: number;
+    private points: Point[] = [];
+    private sRadius: number;
     constructor(x: number, y: number, radius: number) {
         this.x = x;
         this.y = y;
         this.radius = radius;
+        this.sRadius = this.radius * 0.05;
+        this.points = [];
+        const aStep = 2 * Math.PI / 6;
+        for (let i = 0; i < 6; i++) {
+            this.points.push({x: this.radius * Math.cos(i * aStep), y: this.radius * Math.sin(i * aStep)});
+        }
     }
 
     draw(context: CanvasRenderingContext2D | null, showColor: string) {
@@ -24,15 +31,26 @@ class Element {
         }
         context.save();
         context.translate(this.x, this.y);
+        this.drawLines(context, this.points, showColor);
+        context.fillStyle = showColor;
+        this.points.forEach((item, index) => {
+            if (index % 2 !== 0) {
+                return;
+            }
+            this.drawLines(context, [{x: 0, y: 0}, item], showColor);
+            context.beginPath();
+            context.arc(item.x, item.y, this.sRadius, 0, 2 * Math.PI, false);
+            context.fill();
+        });
+        context.restore();
+    }
+
+    private drawLines(context: CanvasRenderingContext2D, ps: Point[], showColor: string) {
         context.strokeStyle = showColor;
         context.beginPath();
-        const aStep = 2 * Math.PI / 6;
-        for (let i = 0; i < 6; i++) {
-            context.lineTo(this.radius * Math.cos(i * aStep), this.radius * Math.sin(i * aStep));
-        }
+        ps.forEach((item) => context.lineTo(item.x, item.y));
         context.closePath();
         context.stroke();
-        context.restore();
     }
 }
 
