@@ -68,10 +68,27 @@ export default class Background extends BaseCanvas {
         this.initData();
     }
     initData() {
-        const size = this.width / 10;
-        this.elements = [
-            new Element(0.5 * this.width, 0.5 * this.height, size / 2)
-        ];
+        const radius = this.width / 30;
+        const margin = 2 * radius;
+        const yStep = radius * Math.cos(Math.PI / 6);
+        const xStep = 3 * radius
+        // for (let y = -radius; y <= this.height + radius; y += 2 * radius) {
+        //     const startX = y % 2 == 0 ? -radius : -radius + radius + radius * Math.sin(Math.PI / 6);
+        //     console.log('startX', startX);
+        //     for (let x = startX; x <= this.width + radius; x += xStep) {
+        //         this.elements.push(new Element(x, y, radius));
+        //     }
+        // }
+
+        for (let y = 0; -margin + y * yStep < this.height + margin; y++) {
+            for (let x = 0; -margin + x * xStep < this.width + margin; x++) {
+                const startX = y % 2 == 0 ? -margin : -margin + radius + radius * Math.sin(Math.PI / 6);
+                this.elements.push(new Element(startX + x * xStep, -margin + y * yStep, radius));
+            }
+        }
+            // for (let x = -radius; x <= this.width + radius; x += xStep) {
+            //     this.elements.push(new Element(x, this.height / 2, radius));
+            // }
     }
     draw() {
         if (!this.context) {
