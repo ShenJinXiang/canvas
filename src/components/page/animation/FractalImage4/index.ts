@@ -7,6 +7,12 @@ interface IOption {
     lineWidth: number;
 }
 
+class Element {
+    constructor(sx: number, sy: number, len: number, angle: number) {
+
+    }
+}
+
 export default class FractalImage extends Animate {
 
     private static readonly OPTION: IOption = {
