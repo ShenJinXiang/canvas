@@ -7,10 +7,31 @@ interface IOption {
     lineWidth: number;
 }
 
-class Element {
-    constructor(sx: number, sy: number, len: number, angle: number) {
+enum ElementOriginType {
+    start, end
+}
 
+class Element {
+    private sx: number;
+    private sy: number;
+    private len: number;
+    private angle: number;
+    private originType: ElementOriginType;
+    private animation: boolean = false;
+    private animationTime: number = 0;
+    private counterclockwise: boolean = false;
+    
+    constructor(sx: number, sy: number, len: number, angle: number, originType: ElementOriginType, animation: boolean = false, animationTime: number = 100, counterclockwise: boolean = false) {
+        this.sx = sx;
+        this.sy = sy;
+        this.len = len;
+        this.angle = angle;
+        this.originType = originType;
+        this.animation = animation;
+        this.animationTime = animationTime;
+        this.counterclockwise = counterclockwise;
     }
+
 }
 
 export default class FractalImage extends Animate {
