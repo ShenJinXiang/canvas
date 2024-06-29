@@ -1,5 +1,6 @@
 import Animate from "@/lib/Animate";
 import Background from "../../stillness/Background1";
+import Point from "@/lib/Point";
 
 interface IOption {
     backgroundColor: string;
@@ -12,8 +13,7 @@ enum ElementOriginType {
 }
 
 class Element {
-    private sx: number;
-    private sy: number;
+    private origin: Point;
     private len: number;
     private angle: number;
     private originType: ElementOriginType;
@@ -21,9 +21,8 @@ class Element {
     private animationTime: number = 0;
     private counterclockwise: boolean = false;
     
-    constructor(sx: number, sy: number, len: number, angle: number, originType: ElementOriginType, animation: boolean = false, animationTime: number = 100, counterclockwise: boolean = false) {
-        this.sx = sx;
-        this.sy = sy;
+    constructor(origin: Point, len: number, angle: number, originType: ElementOriginType, animation: boolean = false, animationTime: number = 100, counterclockwise: boolean = false) {
+        this.origin = origin;
         this.len = len;
         this.angle = angle;
         this.originType = originType;
