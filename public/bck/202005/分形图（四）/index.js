@@ -175,6 +175,7 @@
                 }
                 drawer.elements.push(eles);
             }
+            console.log(drawer.elements);
         },
         getMarkCanvas(fillStyle) {
             let markCanvas = document.createElement('canvas');

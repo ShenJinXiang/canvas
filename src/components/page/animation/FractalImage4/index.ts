@@ -22,6 +22,8 @@ class Element {
     private animationTime: number = 0;
     private counterclockwise: boolean = false;
     private endPoint: Point;
+    private tp1: Point;
+    private tp2: Point;
     
     constructor(origin: Point, len: number, angle: number, originType: ElementOriginType, animation: boolean = false, animationTime: number = 100, counterclockwise: boolean = false) {
         this.origin = origin;
@@ -32,10 +34,25 @@ class Element {
         this.animationTime = animationTime;
         this.counterclockwise = counterclockwise;
 
-        this.endPoint = {
-            x: this.origin.x + this.len * Math.cos(this.angle),
-            y: this.origin.y + this.len * Math.sin(this.angle)
+        if (this.originType === ElementOriginType.start) {
+            this.endPoint = {
+                x: this.origin.x + this.len * Math.cos(this.angle),
+                y: this.origin.y + this.len * Math.sin(this.angle)
+            }
+        } else {
+            this.endPoint = {
+                x: this.origin.x - this.len * Math.cos(this.angle),
+                y: this.origin.y - this.len * Math.sin(this.angle)
+            }
         }
+        this.tp1 = {
+            x: this.origin.x + (this.endPoint.x - this.origin.x) / 3,
+            y: this.origin.y + (this.endPoint.y - this.origin.y) / 3
+        };
+        this.tp2 = {
+            x: this.origin.x + 2 * (this.endPoint.x - this.origin.x) / 3,
+            y: this.origin.y + 2 * (this.endPoint.y - this.origin.y) / 3
+        };
 
     }
 
@@ -43,7 +60,6 @@ class Element {
         if (!context) {
             return;
         }
-        debugger;
         context.save();
         context.strokeStyle = showColor;
         context.beginPath();
@@ -51,6 +67,25 @@ class Element {
         context.lineTo(this.endPoint.x, this.endPoint.y);
         context.stroke();
         context.restore();
+    }
+
+    children() {
+        const len: number = this.len / 3;
+        if (this.originType === ElementOriginType.start) {
+            return [
+                new Element(this.origin, len, this.angle, ElementOriginType.start, false, this.animationTime),
+                new Element(this.tp1, len, this.angle - Math.PI / 3, ElementOriginType.start, true, this.animationTime, false),
+                new Element(this.tp2, len, this.angle + Math.PI / 3, ElementOriginType.end, true, this.animationTime, true),
+                new Element(this.endPoint, len, this.angle, ElementOriginType.end, false, this.animationTime)
+            ];
+        } else {
+            return [
+                new Element(this.origin, len, this.angle, ElementOriginType.end, false, this.animationTime),
+                new Element(this.tp1, len, this.angle + Math.PI / 3, ElementOriginType.end, true, this.animationTime, false),
+                new Element(this.tp2, len, this.angle - Math.PI / 3, ElementOriginType.start, true, this.animationTime, true),
+                new Element(this.endPoint, len, this.angle, ElementOriginType.start, false, this.animationTime)
+            ];
+        }
     }
 
 }
@@ -88,7 +123,8 @@ export default class FractalImage extends Animate {
                 2 * this.radius * Math.sin(Math.PI / 3),
                 (2 * i + 1) * Math.PI / 3,
                 ElementOriginType.start,
-                false
+                false,
+                FractalImage.OPTION.timeStep
             ));
         }
         console.log(this.elementGroup);
