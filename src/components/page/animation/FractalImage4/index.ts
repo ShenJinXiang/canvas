@@ -31,7 +31,12 @@ class Element {
     private endPoint: Point;
     private tp1: Point;
     private tp2: Point;
-    
+    private angleStep: number = 0;
+    private startAngle: number = 0;
+    private dPoint: Point = {x: 0, y: 0};
+    private dAngle: number = 0;
+    private current: number = 0;
+     
     constructor(origin: Point, len: number, angle: number, originType: ElementOriginType, animation: boolean = false, counterclockwise: boolean = false) {
         this.origin = origin;
         this.len = len;
@@ -60,6 +65,60 @@ class Element {
             y: this.origin.y + 2 * (this.endPoint.y - this.origin.y) / 3
         };
 
+        if (this.animation) {
+            this.counterclockwise = counterclockwise;
+            if (this.counterclockwise) {
+                this.startAngle = this.angle - Math.PI / 3;
+                this.angleStep = Math.PI / (3 * OPTION.timeStep);
+            } else {
+                this.startAngle = this.angle + Math.PI / 3;
+                this.angleStep = -Math.PI / (3 * OPTION.timeStep);
+            }
+            this.dAngle = this.startAngle;
+            this.dxy();
+        } else {
+            this.dPoint = { x: this.endPoint.x, y: this.endPoint.y };
+        }
+        this.current = 0;
+
+    }
+
+    start() {
+        this.current = 0;
+        if (this.animation) {
+            this.dAngle = this.startAngle;
+            this.dxy();
+        }
+    }
+    complete() {
+        this.current = OPTION.timeStep;
+        if (this.animation) {
+            this.dAngle = this.angle;
+            this.dPoint = { x: this.endPoint.x, y: this.endPoint.y };
+        }
+    }
+    update() {
+        if (this.current < OPTION.timeStep) {
+            this.current++;
+            if (this.animation) {
+                this.dAngle = this.startAngle + this.angleStep * this.current;
+                this.dxy();
+            }
+        }
+    }
+
+    private dxy() {
+        if (this.originType === ElementOriginType.start) {
+            this.dPoint = {
+                x: this.origin.x + this.len * Math.cos(this.dAngle),
+                y: this.origin.y + this.len * Math.sin(this.dAngle),
+            }
+        } else {
+            this.dPoint = {
+                x: this.origin.x - this.len * Math.cos(this.dAngle),
+                y: this.origin.y - this.len * Math.sin(this.dAngle),
+            }
+        }
     }
 
     draw(context: CanvasRenderingContext2D | null, showColor: string) {
