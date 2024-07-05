@@ -159,7 +159,9 @@ export default class FractalImage extends Animate {
 
     private elementGroup: Element[][] = [];
     private currentDeep: number = 0;
+    private currentTime: number = 0;
     private radius: number = 0;
+
     constructor(width: number, height: number) {
         super();
         this.initRect(width, height);
@@ -171,20 +173,47 @@ export default class FractalImage extends Animate {
         this.initElementGroup();
     }
     initElementGroup() {
-        this.elementGroup = [[]];
-        for (let i = 0; i < 3; i++) {
-            this.elementGroup[0].push(new Element(
-                {
-                    x: 0.5 * this.width + this.radius * Math.cos(-Math.PI / 2 + 2 * i * Math.PI / 3),
-                    y: 0.5 * this.height + this.radius * Math.sin(-Math.PI / 2 + 2 * i * Math.PI / 3)
-                },
-                2 * this.radius * Math.sin(Math.PI / 3),
-                (2 * i + 1) * Math.PI / 3,
-                ElementOriginType.start,
-                false
-            ));
+        console.log('deepnum: ', OPTION.deepNum);
+        this.elementGroup = [];
+        for (let deep = 0; deep < OPTION.deepNum; deep++) {
+            console.log('num:', deep);
+            const elements: Element[] = [];
+            if (deep === 0) {
+                for (let i = 0; i < 3; i++) {
+                    elements.push(new Element(
+                        {
+                            x: 0.5 * this.width + this.radius * Math.cos(-Math.PI / 2 + 2 * i * Math.PI / 3),
+                            y: 0.5 * this.height + this.radius * Math.sin(-Math.PI / 2 + 2 * i * Math.PI / 3)
+                        },
+                        2 * this.radius * Math.sin(Math.PI / 3),
+                        (2 * i + 1) * Math.PI / 3,
+                        ElementOriginType.start,
+                        false
+                    ));
+                }
+            } else {
+                this.elementGroup[deep - 1].forEach(eles => elements.push(...eles.children()));
+            }
+            this.elementGroup.push(elements);
         }
-        console.log(this.elementGroup);
+    }
+
+    update() {
+        this.elementGroup[this.currentDeep].forEach(item => {
+            item.update();
+        });
+        this.currentTime++;
+        if (this.currentTime >= OPTION.timeStep) {
+            this.currentTime = 0;
+            this.currentDeep++;
+            if (this.currentDeep >= OPTION.deepNum) {
+                this.currentDeep = 0;
+                this.elementGroup.forEach(item => {
+                    item.forEach(ele => ele.start())
+                });
+            }
+        }
+
     }
 
     draw() {
