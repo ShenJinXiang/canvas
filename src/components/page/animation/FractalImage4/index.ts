@@ -13,7 +13,7 @@ const OPTION: IOption = {
     backgroundColor: '#fff',
     showColor: '#084',
     lineWidth: 1,
-    timeStep: 100,
+    timeStep: 80,
     deepNum: 6
 };
 
@@ -129,7 +129,8 @@ class Element {
         context.strokeStyle = showColor;
         context.beginPath();
         context.moveTo(this.origin.x, this.origin.y);
-        context.lineTo(this.endPoint.x, this.endPoint.y);
+        // context.lineTo(this.endPoint.x, this.endPoint.y);
+        context.lineTo(this.dPoint.x, this.dPoint.y);
         context.stroke();
         context.restore();
     }
@@ -146,8 +147,8 @@ class Element {
         } else {
             return [
                 new Element(this.origin, len, this.angle, ElementOriginType.end, false),
-                new Element(this.tp1, len, this.angle + Math.PI / 3, ElementOriginType.end, true, false),
-                new Element(this.tp2, len, this.angle - Math.PI / 3, ElementOriginType.start, true, true),
+                new Element(this.tp1, len, this.angle + Math.PI / 3, ElementOriginType.end, true, true),
+                new Element(this.tp2, len, this.angle - Math.PI / 3, ElementOriginType.start, true, false),
                 new Element(this.endPoint, len, this.angle, ElementOriginType.start, false)
             ];
         }
