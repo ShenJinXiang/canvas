@@ -323,4 +323,10 @@ export default [
     name: 'FractalImage4',
     component: () => import('@/views/page/animation/FractalImage4.vue'),
   },
+  {
+    title: '旋转构建动画10',
+    path: 'animation/RotateConstructionAnimation10',
+    name: 'RotateConstructionAnimation10',
+    component: () => import('@/views/page/animation/RotateConstructionAnimation10.vue'),
+  },
 ];
