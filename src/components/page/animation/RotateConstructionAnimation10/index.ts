@@ -1,5 +1,15 @@
 import Animate from "@/lib/Animate";
 
+interface IOption {
+    backgroundColor: string;
+    showColor: string;
+}
+
+const OPTION: IOption = {
+    backgroundColor: '#000',
+    showColor: '#084'
+}
+
 export default class RotateConstructionAnimation extends Animate {
     constructor(width: number, height: number) {
         super();
@@ -15,6 +25,7 @@ export default class RotateConstructionAnimation extends Animate {
         if (!this.context) {
             return;
         }
+        this.clear(OPTION.backgroundColor);
         this.context.save();
         this.context.fillStyle = "red";
         this.context.fillRect(200, 200, 400, 230);
