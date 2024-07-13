@@ -10,6 +10,12 @@ const OPTION: IOption = {
     showColor: '#084'
 }
 
+class Element {
+    constructor() {
+
+    }
+}
+
 export default class RotateConstructionAnimation extends Animate {
     constructor(width: number, height: number) {
         super();
