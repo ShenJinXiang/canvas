@@ -16,14 +16,12 @@ class Element {
     private angle: number = 0;
     private radius: number = 0;
     private angleStep: number;
-    private counterclockwise: boolean;
     private point: Point;
-    constructor(txt: string, radius: number, angleStep: number, counterclockwise: boolean = false) {
+    constructor(txt: string, radius: number, angleStep: number) {
         this.txt = txt;
         this.radius = radius;
         this.angle = 0;
         this.angleStep = angleStep;
-        this.counterclockwise = counterclockwise;
         this.point = this.position();
     }
 
@@ -40,22 +38,27 @@ class Element {
 
     }
 
-    draw(context: CanvasRenderingContext2D | null) {
+    update() {
+        this.angle += this.angleStep;
+        this.point = this.position();
+    }
+
+    draw(context: CanvasRenderingContext2D | null, ele: Element) {
         if (!context) {
             return;
         }
         context.save();
         context.beginPath();
         context.strokeStyle = OPTION.showColor;
-        context.moveTo(this.p1.x, this.p1.y);
-        context.lineTo(this.p2.x, this.p2.y);
+        context.moveTo(this.point.x, this.point.y);
+        context.lineTo(ele.point.x, ele.point.y);
         context.stroke();
         context.restore();
     }
 }
 
 export default class RotateConstructionAnimation extends Animate {
-    private ele: Element = new Element();
+    private elements: Element[] = [];
     constructor(width: number, height: number) {
         super();
         this.initRect(width, height);
@@ -63,18 +66,26 @@ export default class RotateConstructionAnimation extends Animate {
     }
 
     private initData() {
+        const radius = Math.min(this.width, this.height) * 0.4;
+        this.elements = [
+            new Element('A', radius, Math.PI / 180),
+            new Element('B', radius, -Math.PI / 180),
+        ];
+    }
 
-
+    update(): void {
+        this.elements.forEach((item) => item.update());
     }
 
     draw(): void {
         if (!this.context) {
             return;
         }
-        this.clear(OPTION.backgroundColor);
+        // this.clear(OPTION.backgroundColor);
         this.context.save();
-        this.context.fillStyle = "red";
-        this.context.fillRect(200, 200, 400, 230);
+        // this.context.fillStyle = "red";
+        // this.context.fillRect(200, 200, 400, 230);
+        this.elements[0].draw(this.context, this.elements[1]);
         this.context.restore();
     }
 
