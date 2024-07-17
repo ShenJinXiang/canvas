@@ -68,8 +68,8 @@ export default class RotateConstructionAnimation extends Animate {
     private initData() {
         const radius = Math.min(this.width, this.height) * 0.4;
         this.elements = [
-            new Element('A', radius, Math.PI / 180),
-            new Element('B', radius, -Math.PI / 180),
+            new Element('A', radius, Math.PI / 96),
+            new Element('B', radius, Math.PI / 40),
         ];
     }
 
@@ -85,6 +85,7 @@ export default class RotateConstructionAnimation extends Animate {
         this.context.save();
         // this.context.fillStyle = "red";
         // this.context.fillRect(200, 200, 400, 230);
+        this.context.translate(0.5 * this.width, 0.5 * this.height);
         this.elements[0].draw(this.context, this.elements[1]);
         this.context.restore();
     }
