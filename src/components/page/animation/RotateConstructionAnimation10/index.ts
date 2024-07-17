@@ -8,7 +8,7 @@ interface IOption {
 
 const OPTION: IOption = {
     backgroundColor: '#000',
-    showColor: '#084'
+    showColor: '#fdc287'
 }
 
 class Element {
@@ -49,6 +49,7 @@ class Element {
         }
         context.save();
         context.beginPath();
+        context.lineWidth = 1;
         context.strokeStyle = OPTION.showColor;
         context.moveTo(this.point.x, this.point.y);
         context.lineTo(ele.point.x, ele.point.y);
@@ -59,6 +60,7 @@ class Element {
 
 export default class RotateConstructionAnimation extends Animate {
     private elements: Element[] = [];
+    private radius: number = 0;
     constructor(width: number, height: number) {
         super();
         this.initRect(width, height);
@@ -66,10 +68,10 @@ export default class RotateConstructionAnimation extends Animate {
     }
 
     private initData() {
-        const radius = Math.min(this.width, this.height) * 0.4;
+        this.radius = Math.min(this.width, this.height) * 0.4;
         this.elements = [
-            new Element('A', radius, Math.PI / 96),
-            new Element('B', radius, Math.PI / 40),
+            new Element('A', this.radius, Math.PI / 96),
+            new Element('B', this.radius, Math.PI / 40),
         ];
     }
 
@@ -86,8 +88,20 @@ export default class RotateConstructionAnimation extends Animate {
         // this.context.fillStyle = "red";
         // this.context.fillRect(200, 200, 400, 230);
         this.context.translate(0.5 * this.width, 0.5 * this.height);
+        this.drawArc();
         this.elements[0].draw(this.context, this.elements[1]);
         this.context.restore();
+    }
+
+    drawArc() {
+        if (!this.context) {
+            return;
+        }
+        this.context.beginPath();
+        this.context.strokeStyle = OPTION.showColor;
+        this.context.lineWidth = 2;
+        this.context.arc(0, 0, this.radius, 0, 2 * Math.PI, false);
+        this.context.stroke();
     }
 
     public setRect(width: number, height: number) {
