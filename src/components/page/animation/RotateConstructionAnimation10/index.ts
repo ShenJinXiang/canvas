@@ -4,11 +4,13 @@ import Point from "@/lib/Point";
 interface IOption {
     backgroundColor: string;
     showColor: string;
+    textColor: string;
 }
 
 const OPTION: IOption = {
     backgroundColor: '#000',
-    showColor: '#fdc287'
+    showColor: '#fdc287',
+    textColor: '#fff'
 }
 
 class Element {
@@ -43,17 +45,26 @@ class Element {
         this.point = this.position();
     }
 
-    draw(context: CanvasRenderingContext2D | null, ele: Element) {
+    // draw(context: CanvasRenderingContext2D | null, ele: Element) {
+    //     if (!context) {
+    //         return;
+    //     }
+    //     context.save();
+    //     context.beginPath();
+    //     context.lineWidth = 1;
+    //     context.strokeStyle = OPTION.showColor;
+    //     context.moveTo(this.point.x, this.point.y);
+    //     context.lineTo(ele.point.x, ele.point.y);
+    //     context.stroke();
+    //     context.restore();
+    // }
+    draw(context: CanvasRenderingContext2D | null) {
         if (!context) {
             return;
         }
         context.save();
-        context.beginPath();
-        context.lineWidth = 1;
-        context.strokeStyle = OPTION.showColor;
-        context.moveTo(this.point.x, this.point.y);
-        context.lineTo(ele.point.x, ele.point.y);
-        context.stroke();
+        context.fillStyle = OPTION.textColor;
+        context.fillText(this.txt, this.point.x - 20, this.point.y);
         context.restore();
     }
 }
@@ -83,13 +94,14 @@ export default class RotateConstructionAnimation extends Animate {
         if (!this.context) {
             return;
         }
-        // this.clear(OPTION.backgroundColor);
+        this.clear(OPTION.backgroundColor);
         this.context.save();
         // this.context.fillStyle = "red";
         // this.context.fillRect(200, 200, 400, 230);
         this.context.translate(0.5 * this.width, 0.5 * this.height);
         this.drawArc();
-        this.elements[0].draw(this.context, this.elements[1]);
+        this.elements.forEach((item) => item.draw(this.context));
+        // this.elements[0].draw(this.context, this.elements[1]);
         this.context.restore();
     }
 
