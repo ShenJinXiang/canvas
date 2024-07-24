@@ -5,12 +5,14 @@ interface IOption {
     backgroundColor: string;
     showColor: string;
     textColor: string;
+    lineLength: number;
 }
 
 const OPTION: IOption = {
     backgroundColor: '#000',
     showColor: '#fdc287',
-    textColor: '#fff'
+    textColor: '#fff',
+    lineLength: 500
 }
 
 class Element {
@@ -19,12 +21,16 @@ class Element {
     private radius: number = 0;
     private angleStep: number;
     private point: Point;
+    private pointRadius: number = 2;
+    private fontSize: number = 10;
     constructor(txt: string, radius: number, angleStep: number) {
         this.txt = txt;
         this.radius = radius;
         this.angle = 0;
         this.angleStep = angleStep;
         this.point = this.position();
+        this.pointRadius = this.radius * 0.02;
+        this.fontSize = this.radius * 0.1;
     }
 
     reset() {
@@ -64,7 +70,12 @@ class Element {
         }
         context.save();
         context.fillStyle = OPTION.textColor;
-        context.fillText(this.txt, this.point.x - 20, this.point.y);
+        context.font = `${this.fontSize}px bold`;
+        context.fillText(this.txt, this.point.x - this.fontSize, this.point.y);
+
+        context.beginPath();
+        context.arc(this.point.x, this.point.y, this.pointRadius, 0, 2 * Math.PI, false);
+        context.fill();
         context.restore();
     }
 }
@@ -81,8 +92,8 @@ export default class RotateConstructionAnimation extends Animate {
     private initData() {
         this.radius = Math.min(this.width, this.height) * 0.4;
         this.elements = [
-            new Element('A', this.radius, Math.PI / 96),
-            new Element('B', this.radius, Math.PI / 40),
+            new Element('A', this.radius, Math.PI / 164),
+            new Element('B', this.radius, Math.PI / 120),
         ];
     }
 
