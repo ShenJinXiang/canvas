@@ -29,8 +29,8 @@ class Element {
         this.angle = 0;
         this.angleStep = angleStep;
         this.point = this.position();
-        this.pointRadius = this.radius * 0.02;
-        this.fontSize = this.radius * 0.1;
+        this.pointRadius = this.radius * 0.01;
+        this.fontSize = this.radius * 0.05;
     }
 
     reset() {
@@ -80,6 +80,26 @@ class Element {
     }
 }
 
+class Line {
+    private start: Point;
+    private end: Point;
+    constructor(start: Point, end: Point) {
+        this.start = start;
+        this.end = end;
+    }
+    draw(context: CanvasRenderingContext2D | null) {
+        if (!context) {
+            return;
+        }
+        context.save();
+        context.beginPath();
+        context.moveTo(this.start.x, this.start.y);
+        context.lineTo(this.end.x, this.end.y);
+        context.stroke();
+        context.restore();
+    }
+}
+
 export default class RotateConstructionAnimation extends Animate {
     private elements: Element[] = [];
     private radius: number = 0;
@@ -92,8 +112,8 @@ export default class RotateConstructionAnimation extends Animate {
     private initData() {
         this.radius = Math.min(this.width, this.height) * 0.4;
         this.elements = [
-            new Element('A', this.radius, Math.PI / 164),
-            new Element('B', this.radius, Math.PI / 120),
+            new Element('A', this.radius, Math.PI / 360),
+            new Element('B', this.radius, Math.PI / 300),
         ];
     }
 
