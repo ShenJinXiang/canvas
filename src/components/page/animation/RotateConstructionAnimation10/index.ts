@@ -92,6 +92,7 @@ class Line {
             return;
         }
         context.save();
+        context.strokeStyle = OPTION.showColor;
         context.beginPath();
         context.moveTo(this.start.x, this.start.y);
         context.lineTo(this.end.x, this.end.y);
@@ -103,6 +104,8 @@ class Line {
 export default class RotateConstructionAnimation extends Animate {
     private elements: Element[] = [];
     private radius: number = 0;
+    private lines: Line[] = [];
+    private count = 0;
     constructor(width: number, height: number) {
         super();
         this.initRect(width, height);
@@ -110,6 +113,7 @@ export default class RotateConstructionAnimation extends Animate {
     }
 
     private initData() {
+        this.lines = [];
         this.radius = Math.min(this.width, this.height) * 0.4;
         this.elements = [
             new Element('A', this.radius, Math.PI / 360),
@@ -119,6 +123,15 @@ export default class RotateConstructionAnimation extends Animate {
 
     update(): void {
         this.elements.forEach((item) => item.update());
+        this.count++;
+        if (this.count >= 10) {
+            this.lines.push(new Line(this.elements[0].position(), this.elements[1].position()));
+            this.count = 0;
+        }
+        if (this.lines.length > 100) {
+            this.lines.shift();
+        }
+        console.log(this.lines.length);
     }
 
     draw(): void {
@@ -130,6 +143,7 @@ export default class RotateConstructionAnimation extends Animate {
         // this.context.fillStyle = "red";
         // this.context.fillRect(200, 200, 400, 230);
         this.context.translate(0.5 * this.width, 0.5 * this.height);
+        this.lines.forEach((item) => item.draw(this.context));
         this.drawArc();
         this.elements.forEach((item) => item.draw(this.context));
         // this.elements[0].draw(this.context, this.elements[1]);
