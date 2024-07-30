@@ -10,9 +10,10 @@ interface IOption {
 
 const OPTION: IOption = {
     backgroundColor: '#000',
-    showColor: '#fdc287',
+    // showColor: '#fdc287',
+    showColor: '#088',
     textColor: '#fff',
-    lineLength: 500
+    lineLength: 5000
 }
 
 class Element {
@@ -51,19 +52,6 @@ class Element {
         this.point = this.position();
     }
 
-    // draw(context: CanvasRenderingContext2D | null, ele: Element) {
-    //     if (!context) {
-    //         return;
-    //     }
-    //     context.save();
-    //     context.beginPath();
-    //     context.lineWidth = 1;
-    //     context.strokeStyle = OPTION.showColor;
-    //     context.moveTo(this.point.x, this.point.y);
-    //     context.lineTo(ele.point.x, ele.point.y);
-    //     context.stroke();
-    //     context.restore();
-    // }
     draw(context: CanvasRenderingContext2D | null) {
         if (!context) {
             return;
@@ -102,7 +90,8 @@ class Line {
 }
 
 export default class RotateConstructionAnimation extends Animate {
-    private elements: Element[] = [];
+    private a: Element = new Element('A', 0, Math.PI / 240);
+    private b: Element = new Element('B', 0, Math.PI / 240);
     private radius: number = 0;
     private lines: Line[] = [];
     private count = 0;
@@ -115,23 +104,21 @@ export default class RotateConstructionAnimation extends Animate {
     private initData() {
         this.lines = [];
         this.radius = Math.min(this.width, this.height) * 0.4;
-        this.elements = [
-            new Element('A', this.radius, Math.PI / 360),
-            new Element('B', this.radius, Math.PI / 300),
-        ];
+        this.a = new Element('A', this.radius, Math.PI / 240);
+        this.b = new Element('B', this.radius, Math.PI / 300);
     }
 
     update(): void {
-        this.elements.forEach((item) => item.update());
+        this.a.update();
+        this.b.update();
         this.count++;
         if (this.count >= 10) {
-            this.lines.push(new Line(this.elements[0].position(), this.elements[1].position()));
+            this.lines.push(new Line(this.a.position(), this.b.position()));
             this.count = 0;
         }
-        if (this.lines.length > 100) {
+        if (this.lines.length > OPTION.lineLength) {
             this.lines.shift();
         }
-        console.log(this.lines.length);
     }
 
     draw(): void {
@@ -145,8 +132,8 @@ export default class RotateConstructionAnimation extends Animate {
         this.context.translate(0.5 * this.width, 0.5 * this.height);
         this.lines.forEach((item) => item.draw(this.context));
         this.drawArc();
-        this.elements.forEach((item) => item.draw(this.context));
-        // this.elements[0].draw(this.context, this.elements[1]);
+        this.a.draw(this.context);
+        this.b.draw(this.context);
         this.context.restore();
     }
 
