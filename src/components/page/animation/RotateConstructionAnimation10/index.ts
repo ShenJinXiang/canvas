@@ -10,8 +10,8 @@ interface IOption {
 
 const OPTION: IOption = {
     backgroundColor: '#000',
-    // showColor: '#fdc287',
-    showColor: '#088',
+    // showColor: '#088',
+    showColor: 'rgba(0, 80, 200, 0.5)',
     textColor: '#fff',
     lineLength: 5000
 }
