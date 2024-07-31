@@ -13,11 +13,15 @@ const props = defineProps({
     height: {
         type: Number,
         required: true
+    },
+    speedRatio: {
+        type: Number,
+        required: true
     }
 });
   
 const canvasRef = ref();
-  const canvas = new RotateConstructionAnimation(props.width, props.height);
+  const canvas = new RotateConstructionAnimation(props.width, props.height, props.speedRatio);
   
   onMounted(() => {
     canvas.initCanvas(canvasRef.value).run();
@@ -33,6 +37,12 @@ const canvasRef = ref();
     () => props.height,
     () => {
       canvas.setRect(props.width, props.height);
+    }
+  );
+  watch(
+    () => props.speedRatio,
+    () => {
+      canvas.setSpeedRatio(props.speedRatio);
     }
   );
 </script>

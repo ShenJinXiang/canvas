@@ -1,6 +1,6 @@
 <template>
     <div class="rotate-construction-animation-10">
-        <rotate-construction-animation :width="windowWidth" :height="windowHeight - 40" @click="showContro = true"></rotate-construction-animation>
+        <rotate-construction-animation :width="windowWidth" :height="windowHeight - 40" :speed-ratio="controForm.speedRatio" @click="showContro = true"></rotate-construction-animation>
         <span class="info-txt">{{ controForm.speedRatio.toFixed(2) }}</span>
         <el-drawer v-model="showContro" title="设置" :direction="direction">
           <el-form :module="controForm" label-width="80px">

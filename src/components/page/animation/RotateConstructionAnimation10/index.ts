@@ -93,19 +93,22 @@ export default class RotateConstructionAnimation extends Animate {
     private a: Element = new Element('A', 0, Math.PI / 240);
     private b: Element = new Element('B', 0, Math.PI / 240);
     private radius: number = 0;
+    private speedRatio: number = 0;
     private lines: Line[] = [];
     private count = 0;
-    constructor(width: number, height: number) {
+    constructor(width: number, height: number, speedRatio: number) {
         super();
         this.initRect(width, height);
+        this.speedRatio = speedRatio;
         this.initData();
     }
 
     private initData() {
+        const baseSpeed = Math.PI / 300;
         this.lines = [];
         this.radius = Math.min(this.width, this.height) * 0.4;
-        this.a = new Element('A', this.radius, Math.PI / 240);
-        this.b = new Element('B', this.radius, Math.PI / 300);
+        this.a = new Element('A', this.radius, baseSpeed);
+        this.b = new Element('B', this.radius, baseSpeed * this.speedRatio);
     }
 
     update(): void {
@@ -150,6 +153,11 @@ export default class RotateConstructionAnimation extends Animate {
 
     public setRect(width: number, height: number) {
         this.initRect(width, height);
+        this.initData();
+    }
+
+    public setSpeedRatio(speedRatio: number) {
+        this.speedRatio = speedRatio;
         this.initData();
     }
 }
