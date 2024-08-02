@@ -329,4 +329,10 @@ export default [
     name: 'RotateConstructionAnimation10',
     component: () => import('@/views/page/animation/RotateConstructionAnimation10.vue'),
   },
+  {
+    title: '静态背景图7',
+    path: 'stillness/Background7',
+    name: 'StaticBackground7',
+    component: () => import('@/views/page/stillness/Background7.vue'),
+  }
 ];
