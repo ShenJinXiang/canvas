@@ -6,6 +6,28 @@ interface IOption {
     minSize: number;
 }
 
+class Element {
+    private x: number;
+    private y: number;
+    private radius: number;
+    constructor(x: number, y: number, radius: number) {
+        this.x = x;
+        this.y = y;
+        this.radius = radius;
+    }
+    draw(context: CanvasRenderingContext2D | null, showColor: string) {
+        if (!context) {
+            return;
+        }
+        context.save();
+        context.beginPath();
+        context.strokeStyle = showColor;
+        context.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
+        context.stroke();
+        context.restore();
+    }
+}
+
 export default class Background extends BaseCanvas {
     private static readonly option: IOption = {
         backgroundColor: '#000',
