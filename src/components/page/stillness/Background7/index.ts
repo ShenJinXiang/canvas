@@ -1,4 +1,5 @@
 import BaseCanvas from "@/lib/BaseCanvas";
+import Line from "@/lib/Line";
 import Point from "@/lib/Point";
 
 interface IOption {
@@ -12,10 +13,14 @@ class Element {
     private y: number;
     private radius: number;
     private points: Point[] = [];
+    private lines: Line[] = [];
     constructor(x: number, y: number, radius: number) {
         this.x = x;
         this.y = y;
         this.radius = radius;
+        this.initData();
+    }
+    private initData() {
         const angleStep = Math.PI / 3;
         const startAngle = -Math.PI / 2;
         for (let i = 0; i < 6; i++) {
@@ -24,6 +29,15 @@ class Element {
                 y: this.radius * Math.sin(angleStep * i + startAngle)
             });
         }
+        this.lines = [
+            new Line(0, 0, this.points[1].x, this.points[1].y),
+            new Line(0, 0, this.points[3].x, this.points[3].y),
+            new Line(0, 0, this.points[5].x, this.points[5].y),
+            new Line(this.points[1].x, this.points[1].y, this.points[3].x, this.points[3].y),
+            new Line(this.points[3].x, this.points[3].y, this.points[5].x, this.points[5].y),
+            new Line(this.points[5].x, this.points[5].y, this.points[1].x, this.points[1].y)
+        ];
+
     }
     draw(context: CanvasRenderingContext2D | null, showColor: string) {
         if (!context) {
@@ -31,11 +45,21 @@ class Element {
         }
         context.save();
         context.translate(this.x, this.y);
+
         context.beginPath();
         context.strokeStyle = showColor;
+        context.lineWidth = 2;
         this.points.forEach((p) => context.lineTo(p.x, p.y));
         context.closePath();
         context.stroke();
+
+        this.lines.forEach(l => l.stroke(context, {strokeStyle: showColor}));
+        
+        context.beginPath();
+        context.fillStyle = showColor;
+        context.arc(0, 0, 2, 0, 2 * Math.PI, false);
+        context.fill();
+
         context.restore();
     }
 }
