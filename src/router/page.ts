@@ -334,5 +334,11 @@ export default [
     path: 'stillness/Background7',
     name: 'StaticBackground7',
     component: () => import('@/views/page/stillness/Background7.vue'),
+  },
+  {
+    title: '彩虹糖动画',
+    path: 'animation/RainbowCandyAnimation',
+    name: 'RainbowCandyAnimation',
+    component: () => import('@/views/page/animation/RainbowCandyAnimation.vue'),
   }
 ];
