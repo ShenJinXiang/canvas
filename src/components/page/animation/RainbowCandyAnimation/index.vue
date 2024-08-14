@@ -19,7 +19,8 @@ const canvasRef = ref();
 const rainbowCandyAnimation = new RainbowCandyAnimation(props.width, props.height);
 
 onMounted(() => {
-  rainbowCandyAnimation.initCanvas(canvasRef.value).run();
+  // rainbowCandyAnimation.initCanvas(canvasRef.value).run();
+  rainbowCandyAnimation.initCanvas(canvasRef.value).draw();
 });
 
 watch(
