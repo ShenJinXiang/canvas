@@ -49,13 +49,15 @@ export default class RainbowCandyAnimation extends Animate {
 
   private initData() {
     this.radius = this.width * 0.002;
+    this.radius = this.radius <=3 ? 3 : this.radius;
+    const eleInterval = this.radius / 3;
     this.amplitude = this.height * 0.35;
     this.elements = [];
     let x: number = this.width / 2;
     let len: number = 0;
     let angle: number = 0;
     let count: number = 0;
-    let cstep: number = 720 / (this.width / (this.radius * 2 + 1));
+    let cstep: number = 720 / (this.width / (this.radius * 2 + eleInterval));
     while(len < this.width / 2) {
       if (len === 0) {
           this.elements.push(new Element(
@@ -73,7 +75,6 @@ export default class RainbowCandyAnimation extends Animate {
               this.radius,
               this.amplitude,
               angle + count * 0.001,
-              // 0,
               'hsla(' + (count * cstep) + ', 100%, 60%, 1)'
           ));
           this.elements.push(new Element(
@@ -82,17 +83,17 @@ export default class RainbowCandyAnimation extends Animate {
               this.radius,
               this.amplitude,
               angle - count * 0.001,
-              // 0,
               'hsla(' + (count * cstep) + ', 100%, 60%, 1)'
           ));
       }
-      len += 2 * this.radius + 1;
+      len += 2 * this.radius + eleInterval;
       count++;
     }
-    console.log(this.elements);
-
   }
 
+  update() {
+    this.elements.forEach((item) => item.update());
+  }
   draw() {
     if (!this.context) {
       return;
