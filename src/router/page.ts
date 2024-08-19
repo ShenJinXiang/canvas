@@ -340,5 +340,11 @@ export default [
     path: 'animation/RainbowCandyAnimation',
     name: 'RainbowCandyAnimation',
     component: () => import('@/views/page/animation/RainbowCandyAnimation.vue'),
+  },
+  {
+    title: '静态背景图8',
+    path: 'stillness/Background8',
+    name: 'StaticBackground8',
+    component: () => import('@/views/page/stillness/Background8.vue'),
   }
 ];
