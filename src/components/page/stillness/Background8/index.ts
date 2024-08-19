@@ -1,4 +1,5 @@
 import BaseCanvas from "@/lib/BaseCanvas";
+import Point from "@/lib/Point";
 
 interface IOption {
     backgroundColor: string;
@@ -10,6 +11,7 @@ class Element {
     private x: number;
     private y: number;
     private radius: number;
+    private points: Point[] = [];
     constructor(x: number, y: number, radius: number) {
         this.x = x;
         this.y = y;
@@ -17,6 +19,14 @@ class Element {
         this.initData();
     }
     private initData() {
+        const angleStep = Math.PI / 3;
+        const startAngle = -Math.PI / 2;
+        for (let i = 0; i < 6; i++) {
+            this.points.push({
+                x: this.radius * Math.cos(angleStep * i + startAngle),
+                y: this.radius * Math.sin(angleStep * i + startAngle)
+            });
+        }
     }
     draw(context: CanvasRenderingContext2D | null, showColor: string) {
         if (!context) {
@@ -24,7 +34,14 @@ class Element {
         }
         context.save();
         context.translate(this.x, this.y);
+        this.drawLine(context, this.points, showColor);
         context.restore();
+    }
+    drawLine(context: CanvasRenderingContext2D, points: Point[], showColor: string) {
+        context.strokeStyle = showColor;
+        const path = new Path2D();
+        points.forEach(p => path.lineTo(p.x, p.y));
+        context.stroke(path);
     }
 }
 
