@@ -12,6 +12,7 @@ class Element {
     private y: number;
     private radius: number;
     private points: Point[] = [];
+    private dPoints: Point[] = [];
     constructor(x: number, y: number, radius: number) {
         this.x = x;
         this.y = y;
@@ -27,6 +28,11 @@ class Element {
                 y: this.radius * Math.sin(angleStep * i + startAngle)
             });
         }
+        const r = this.radius * 0.25;
+        this.dPoints.push({ x: r * Math.cos(startAngle), y: r * Math.sin(startAngle) });
+        this.dPoints.push({ x: this.dPoints[0].x + 2 * r * Math.cos(Math.PI / 6), y: this.dPoints[0].y + 2 * r * Math.sin(Math.PI / 6)});
+        this.dPoints.push({ x: this.dPoints[1].x + 2 * r * Math.cos(Math.PI / 2), y: this.dPoints[1].y + 2 * r * Math.sin(Math.PI / 2)});
+        this.dPoints.push({ x: this.dPoints[2].x + 3 * r * Math.cos(5 * Math.PI / 6), y: this.dPoints[2].y + 3 * r * Math.sin(5 * Math.PI / 6)});
     }
     draw(context: CanvasRenderingContext2D | null, showColor: string) {
         if (!context) {
@@ -35,6 +41,11 @@ class Element {
         context.save();
         context.translate(this.x, this.y);
         this.drawLine(context, this.points, showColor);
+        const angleStep = Math.PI / 3;
+        for (let i = 0; i < 6; i++) {
+            context.rotate(angleStep);
+            this.drawLine(context, this.dPoints, showColor);
+        }
         context.restore();
     }
     drawLine(context: CanvasRenderingContext2D, points: Point[], showColor: string) {
