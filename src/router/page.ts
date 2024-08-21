@@ -346,5 +346,11 @@ export default [
     path: 'stillness/Background8',
     name: 'StaticBackground8',
     component: () => import('@/views/page/stillness/Background8.vue'),
-  }
+  },
+  {
+    title: '∞符号动画',
+    path: 'animation/DynamicSymbolsAnimation',
+    name: 'DynamicSymbolsAnimation',
+    component: () => import('@/views/page/animation/DynamicSymbolsAnimation.vue'),
+  },
 ];
