@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Bezier Curve Example</title>
+    <style>
+        body { margin: 0; }
+        #myCanvas { border: 1px solid black; }
+    </style>
+</head>
+<body>
+    <canvas id="myCanvas" width="600" height="400"></canvas>
+    <script>
+        function getBezierPoints(start, control1, control2, end, segments) {
+            // 计算曲线上等间距的点
+            const points = [];
+            for (let i = 0; i <= segments; i++) {
+                const t = i / segments;
+                const x = Math.pow(1 - t, 3) * start.x + 3 * Math.pow(1 - t, 2) * t * control1.x + 3 * (1 - t) * Math.pow(t, 2) * control2.x + Math.pow(t, 3) * end.x;
+                const y = Math.pow(1 - t, 3) * start.y + 3 * Math.pow(1 - t, 2) * t * control1.y + 3 * (1 - t) * Math.pow(t, 2) * control2.y + Math.pow(t, 3) * end.y;
+                points.push({ x, y });
+            }
+            return points;
+        }
+
+        // 定义起始点、两个控制点和终点
+        const start = { x: 50, y: 50 };
+        const control1 = { x: 100, y: 250 };
+        const control2 = { x: 250, y: 250 };
+        const end = { x: 300, y: 50 };
+
+        // 绘制贝塞尔曲线
+        function drawBezierCurve(ctx, start, control1, control2, end) {
+            ctx.beginPath();
+            ctx.moveTo(start.x, start.y);
+            ctx.bezierCurveTo(control1.x, control1.y, control2.x, control2.y, end.x, end.y);
+            ctx.stroke();
+        }
+
+        // 获取等间距的点
+        const segments = 100; // 每个段的数量，越多则越平滑
+        const bezierPoints = getBezierPoints(start, control1, control2, end, segments);
+
+        // 使用Canvas API绘制贝塞尔曲线
+        function draw() {
+            const canvas = document.getElementById('myCanvas');
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            drawBezierCurve(ctx, start, control1, control2, end);
+
+            // 可选：绘制等间距的点
+            bezierPoints.forEach(point => {
+                ctx.beginPath();
+                ctx.arc(point.x, point.y + 50, 3, 0, 2 * Math.PI);
+                ctx.fillStyle = 'red';
+                ctx.fill();
+            });
+        }
+
+        // 页面加载完成后执行绘制函数
+        window.onload = draw;
+    </script>
+</body>
+</html>
