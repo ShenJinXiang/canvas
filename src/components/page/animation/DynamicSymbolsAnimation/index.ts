@@ -1,9 +1,10 @@
 import Animate from "@/lib/Animate";
+import Point from "@/lib/Point";
 
 interface IOption {
   showColor: string;
-  xRatio: number;
-  yRatio: number;
+  xRatio: number; // 横向比例
+  yRatio: number; // 纵向比例
 }
 
 const OPTION: IOption = {
@@ -18,6 +19,10 @@ export default class DynamicSymbolsAnimation extends Animate {
   private contropointx: number = 0;
   private contropointy: number = 0;
   private lineWidth: number = 1;
+  private startPoint: Point = {x: 0, y: 0};
+  private endPoint: Point = {x: 0, y: 0};
+  private controPoint1: Point = {x: 0, y: 0};
+  private controPoint2: Point = {x: 0, y: 0};
 
   constructor(width: number, height: number) {
     super();
@@ -32,6 +37,10 @@ export default class DynamicSymbolsAnimation extends Animate {
     this.contropointy = this.endpointy * OPTION.yRatio;
     this.lineWidth = this.width * 0.005;
     this.lineWidth = this.lineWidth < 2 ? this.lineWidth = 2 : this.lineWidth;
+    this.startPoint = {x: this.endpointx, y: this.endpointy};
+    this.endPoint = {x: this.endpointx, y: -this.endpointy};
+    this.controPoint1 = {x: this.contropointx, y: this.contropointy};
+    this.controPoint2 = {x: this.contropointx, y: -this.contropointy};
   }
 
   draw() {
@@ -60,12 +69,15 @@ export default class DynamicSymbolsAnimation extends Animate {
       this.context.strokeStyle = OPTION.showColor;
       this.context.lineWidth = this.lineWidth;
       this.context.moveTo(0, 0);
-      this.context.lineTo(this.endpointx, this.endpointy);
-      this.context.bezierCurveTo(this.contropointx, this.contropointy, this.contropointx, -this.contropointy, this.endpointx, -this.endpointy);
+      this.context.lineTo(this.startPoint.x, this.startPoint.y);
+      this.context.bezierCurveTo(this.controPoint1.x, this.controPoint1.y, this.controPoint2.x, this.controPoint2.y, this.endPoint.x, this.endPoint.y);
       this.context.lineTo(0, 0);
       this.context.stroke();
       this.context.restore();
     }
+    const p1 = this.bezierPoint(this.startPoint, this.controPoint1, this.controPoint2, this.endPoint, 0.5);
+    this.context.arc(p1.x, p1.y, 10, 0, Math.PI * 2, false);
+    this.context.stroke();
     this.context.restore();
   }
 
@@ -88,6 +100,12 @@ export default class DynamicSymbolsAnimation extends Animate {
     grad.addColorStop(1, '#5ffbf1');
     this.context.fillStyle = grad;
     this.context.fillRect(0, 0, this.width, this.height);
+  }
+
+  private bezierPoint( startPoint: Point, controPoint1: Point, controPoint2: Point, endPoint: Point, t : number): Point {
+        const x = Math.pow(1 - t, 3) * startPoint.x + 3 * Math.pow(1 - t, 2) * t * controPoint1.x + 3 * (1 - t) * Math.pow(t, 2) * controPoint2.x + Math.pow(t, 3) * endPoint.x;
+        const y = Math.pow(1 - t, 3) * startPoint.y + 3 * Math.pow(1 - t, 2) * t * controPoint1.y + 3 * (1 - t) * Math.pow(t, 2) * controPoint2.y + Math.pow(t, 3) * endPoint.y;
+    return {x, y};
   }
 
   public setRect(width: number, height: number) {
