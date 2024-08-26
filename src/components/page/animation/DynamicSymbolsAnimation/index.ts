@@ -23,6 +23,7 @@ export default class DynamicSymbolsAnimation extends Animate {
   private endPoint: Point = {x: 0, y: 0};
   private controPoint1: Point = {x: 0, y: 0};
   private controPoint2: Point = {x: 0, y: 0};
+  private particles: Point[] = [];
 
   constructor(width: number, height: number) {
     super();
@@ -41,6 +42,7 @@ export default class DynamicSymbolsAnimation extends Animate {
     this.endPoint = {x: this.endpointx, y: -this.endpointy};
     this.controPoint1 = {x: this.contropointx, y: this.contropointy};
     this.controPoint2 = {x: this.contropointx, y: -this.contropointy};
+    this.initParticles();
   }
 
   draw() {
@@ -51,6 +53,7 @@ export default class DynamicSymbolsAnimation extends Animate {
     this.context.save();
     this.drawBackground();
     this.drawBaseline();
+    this.drawParticles();
     this.context.restore();
   }
 
@@ -75,10 +78,68 @@ export default class DynamicSymbolsAnimation extends Animate {
       this.context.stroke();
       this.context.restore();
     }
-    const p1 = this.bezierPoint(this.startPoint, this.controPoint1, this.controPoint2, this.endPoint, 0.5);
-    this.context.arc(p1.x, p1.y, 10, 0, Math.PI * 2, false);
+    this.context.beginPath();
+    this.context.strokeStyle = '#000';
+    this.context.moveTo(this.startPoint.x, this.startPoint.y);
+    this.context.lineTo(this.endPoint.x, this.endPoint.y);
     this.context.stroke();
     this.context.restore();
+  }
+
+  drawParticles() {
+    if (!this.context) {
+      return;
+    }
+    this.context.save();
+    this.context.translate(this.width / 2, this.height / 2);
+    this.particles.forEach(element => {
+      if (!this.context) {
+        return;
+      }
+      this.context.beginPath();
+      this.context.strokeStyle = OPTION.showColor;
+      this.context.arc(element.x, element.y, 10, 0, 2 * Math.PI, false);
+      this.context.stroke();
+      
+    });
+    this.context.restore();
+  }
+
+  private initParticles() {
+    this.particles = [];
+    const step = this.lineWidth / 2;
+    const lineLength = this.distance(0, 0, this.startPoint.x, this.startPoint.y);
+    const lineAngle = Math.atan(this.startPoint.y / this.startPoint.x);
+    for (let len = 0; len <= lineLength; len += step) {
+      this.particles.push({
+        x: len * Math.cos(lineAngle),
+        y: len * Math.sin(lineAngle)
+      });
+    }
+    const arr = [];
+    for (let i = 0; i < 100; i++) {
+      const p = this.bezierPoint(this.startPoint, this.controPoint1, this.controPoint2, this.endPoint, i * 0.5 / 100);
+      this.particles.push(p);
+      arr.push(p);
+    }
+    for (let i = 1; i < arr.length; i++) {
+      console.log('i', this.distance(arr[i].x, arr[i].y, arr[i - 1].x, arr[i - 1].y));
+    }
+    // let t = 0;
+    // let num = 0;
+    // while(t <= 0.5) {
+      // num += 1;
+      // console.log('t', t, 'num', num);
+      // if (num >= 34) {
+      //   debugger;
+      // }
+      // t = this.bezierTByLen(this.startPoint, step, t, t + 0.05, 0);
+      // this.particles.push(this.bezierPoint(this.startPoint, this.controPoint1, this.controPoint2, this.endPoint, t));
+    // }
+  }
+
+  private distance(x1: number, y1: number, x2: number, y2: number) {
+    return Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2));
   }
 
   private drawBackground() {
@@ -101,6 +162,48 @@ export default class DynamicSymbolsAnimation extends Animate {
     this.context.fillStyle = grad;
     this.context.fillRect(0, 0, this.width, this.height);
   }
+
+  // private bezierTByLen(basePoint: Point, len: number, minT: number, maxT: number, num: number): number {
+  //   num += 1;
+  //   const t = (maxT + minT) / 2;
+  //   console.log('num：', num, 'minT:', minT, 'maxT:', maxT, 't:', t);
+  //   // 0.003170424221263341 
+  //   if (t - minT < Math.pow(10, -16)) {
+  //     return t;
+  //   }
+  //   const p = this.bezierPoint(this.startPoint, this.controPoint1, this.controPoint2, this.endPoint, t);
+  //   const d = this.distance(basePoint.x, basePoint.y, p.x, p.y);
+  //   const minLen = Math.max(len * 0.1, 1);
+  //   if (Math.abs(d - len) <= minLen || num > 80) {
+  //     return t;
+  //   }
+  //   if (d > len) {
+  //     return this.bezierTByLen(basePoint, len, minT, t, num);
+  //   } else {
+  //     return this.bezierTByLen(basePoint, len, t, maxT, num);
+  //   }
+  // }
+
+  // private bezierTByLen(basePoint: Point, baset: number, len: number, dt: number, ddt: number): number {
+  //   const t = baset + dt;
+  //   const p = this.bezierPoint(this.startPoint, this.controPoint1, this.controPoint2, this.endPoint, t);
+  //   const d = this.distance(basePoint.x, basePoint.y, p.x, p.y);
+  //   const minLen = len * 0.1;
+  //   if (Math.abs(d - len) <= minLen) {
+  //     return t;
+  //   }
+  //   if (Math.abs(d - len) > len) {
+  //     ddt = ddt
+  //   } else {
+  //     ddt = ddt * 0.8;
+  //   }
+  //   if (d > len) {
+  //     dt = dt - ddt;
+  //   } else {
+  //     dt = dt + ddt;
+  //   }
+  //   return this.bezierTByLen(basePoint, baset, len, dt, ddt);
+  // }
 
   private bezierPoint( startPoint: Point, controPoint1: Point, controPoint2: Point, endPoint: Point, t : number): Point {
         const x = Math.pow(1 - t, 3) * startPoint.x + 3 * Math.pow(1 - t, 2) * t * controPoint1.x + 3 * (1 - t) * Math.pow(t, 2) * controPoint2.x + Math.pow(t, 3) * endPoint.x;
