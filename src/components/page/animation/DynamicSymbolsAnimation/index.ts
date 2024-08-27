@@ -116,26 +116,13 @@ export default class DynamicSymbolsAnimation extends Animate {
         y: len * Math.sin(lineAngle)
       });
     }
-    const arr = [];
-    for (let i = 0; i < 100; i++) {
-      const p = this.bezierPoint(this.startPoint, this.controPoint1, this.controPoint2, this.endPoint, i * 0.5 / 100);
-      this.particles.push(p);
-      arr.push(p);
-    }
+    debugger;
+    const arr = this.bezierParticles(step);
+    this.particles.push(...arr);
     for (let i = 1; i < arr.length; i++) {
       console.log('i', this.distance(arr[i].x, arr[i].y, arr[i - 1].x, arr[i - 1].y));
     }
-    // let t = 0;
-    // let num = 0;
-    // while(t <= 0.5) {
-      // num += 1;
-      // console.log('t', t, 'num', num);
-      // if (num >= 34) {
-      //   debugger;
-      // }
-      // t = this.bezierTByLen(this.startPoint, step, t, t + 0.05, 0);
-      // this.particles.push(this.bezierPoint(this.startPoint, this.controPoint1, this.controPoint2, this.endPoint, t));
-    // }
+
   }
 
   private distance(x1: number, y1: number, x2: number, y2: number) {
@@ -163,53 +150,50 @@ export default class DynamicSymbolsAnimation extends Animate {
     this.context.fillRect(0, 0, this.width, this.height);
   }
 
-  // private bezierTByLen(basePoint: Point, len: number, minT: number, maxT: number, num: number): number {
-  //   num += 1;
-  //   const t = (maxT + minT) / 2;
-  //   console.log('num：', num, 'minT:', minT, 'maxT:', maxT, 't:', t);
-  //   // 0.003170424221263341 
-  //   if (t - minT < Math.pow(10, -16)) {
-  //     return t;
-  //   }
-  //   const p = this.bezierPoint(this.startPoint, this.controPoint1, this.controPoint2, this.endPoint, t);
-  //   const d = this.distance(basePoint.x, basePoint.y, p.x, p.y);
-  //   const minLen = Math.max(len * 0.1, 1);
-  //   if (Math.abs(d - len) <= minLen || num > 80) {
-  //     return t;
-  //   }
-  //   if (d > len) {
-  //     return this.bezierTByLen(basePoint, len, minT, t, num);
-  //   } else {
-  //     return this.bezierTByLen(basePoint, len, t, maxT, num);
-  //   }
-  // }
-
-  // private bezierTByLen(basePoint: Point, baset: number, len: number, dt: number, ddt: number): number {
-  //   const t = baset + dt;
-  //   const p = this.bezierPoint(this.startPoint, this.controPoint1, this.controPoint2, this.endPoint, t);
-  //   const d = this.distance(basePoint.x, basePoint.y, p.x, p.y);
-  //   const minLen = len * 0.1;
-  //   if (Math.abs(d - len) <= minLen) {
-  //     return t;
-  //   }
-  //   if (Math.abs(d - len) > len) {
-  //     ddt = ddt
-  //   } else {
-  //     ddt = ddt * 0.8;
-  //   }
-  //   if (d > len) {
-  //     dt = dt - ddt;
-  //   } else {
-  //     dt = dt + ddt;
-  //   }
-  //   return this.bezierTByLen(basePoint, baset, len, dt, ddt);
-  // }
-
-  private bezierPoint( startPoint: Point, controPoint1: Point, controPoint2: Point, endPoint: Point, t : number): Point {
-        const x = Math.pow(1 - t, 3) * startPoint.x + 3 * Math.pow(1 - t, 2) * t * controPoint1.x + 3 * (1 - t) * Math.pow(t, 2) * controPoint2.x + Math.pow(t, 3) * endPoint.x;
-        const y = Math.pow(1 - t, 3) * startPoint.y + 3 * Math.pow(1 - t, 2) * t * controPoint1.y + 3 * (1 - t) * Math.pow(t, 2) * controPoint2.y + Math.pow(t, 3) * endPoint.y;
+  private bezierPoint( startPoint: Point, controlPoint1: Point, controlPoint2: Point, endPoint: Point, t : number): Point {
+        const x = Math.pow(1 - t, 3) * startPoint.x + 3 * Math.pow(1 - t, 2) * t * controlPoint1.x + 3 * (1 - t) * Math.pow(t, 2) * controlPoint2.x + Math.pow(t, 3) * endPoint.x;
+        const y = Math.pow(1 - t, 3) * startPoint.y + 3 * Math.pow(1 - t, 2) * t * controlPoint1.y + 3 * (1 - t) * Math.pow(t, 2) * controlPoint2.y + Math.pow(t, 3) * endPoint.y;
     return {x, y};
   }
+  private bezierLengthArr: number[] = [];
+  
+  private bezierLength(startPoint: Point, controlPoint1: Point, controlPoint2: Point, endPoint: Point, totalStep: number, steps: number) {
+    this.bezierLengthArr = [];
+    let totalLength = 0;
+    this.bezierLengthArr.push(totalLength);
+    let lastPoint = this.bezierPoint(startPoint, controlPoint1, controlPoint2, endPoint, 0);
+    for (let i = 1; i <= steps; i++) {
+        const t = i / totalStep;
+        const currentPoint = this.bezierPoint(startPoint, controlPoint1, controlPoint2, endPoint, t);
+        totalLength += this.distance(currentPoint.x, currentPoint.y, lastPoint.x, lastPoint.y);
+        this.bezierLengthArr.push(totalLength);
+        lastPoint = currentPoint;
+    }
+    return totalLength;
+  }
+
+  private bezierParticles(stepLength: number): Point[] {
+    const totalStep = this.width * 2;
+    const length = this.bezierLength(this.startPoint, this.controPoint1, this.controPoint2, this.endPoint, totalStep, totalStep);
+
+    let points: Point[] = [this.bezierPoint(this.startPoint, this.controPoint1, this.controPoint2, this.endPoint, 0)];
+    let currentLength: number = 0;
+    let lastPoint: Point = points[0];
+    do {
+      let currentStep: number = 1;
+      while(currentLength + stepLength > this.bezierLengthArr[currentStep]) {
+        currentStep++;
+      }
+      const t = currentStep / totalStep;
+      const nextPoint: Point = this.bezierPoint(this.startPoint, this.controPoint1, this.controPoint2, this.endPoint, t);
+      points.push(nextPoint);
+      currentLength += this.distance(nextPoint.x, nextPoint.y, lastPoint.x, lastPoint.y);
+      lastPoint = nextPoint;
+    } while(currentLength < length);
+    return points;
+  }
+
+
 
   public setRect(width: number, height: number) {
     this.initRect(width, height);
