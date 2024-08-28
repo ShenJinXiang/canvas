@@ -12,17 +12,96 @@ const OPTION: IOption = {
   xRatio: 0.7,
   yRatio: 5
 };
+
+function distance(p1: Point, p2: Point) {
+  return Math.sqrt(Math.pow(p1.x - p2.x, 2) + Math.pow(p1.y - p2.y, 2));
+}
+class BezierLine {
+  private start: Point; 
+  private control1: Point; 
+  private control2: Point;
+  private end: Point;
+  private lenArr: number[] = [];
+  constructor(start: Point, control1: Point, control2: Point, end: Point) {
+    this.start = start;
+    this.control1 = control1;
+    this.control2 = control2;
+    this.end = end;
+  }
+
+  public point(t : number): Point {
+        const x = Math.pow(1 - t, 3) * this.start.x + 3 * Math.pow(1 - t, 2) * t * this.control1.x + 3 * (1 - t) * Math.pow(t, 2) * this.control2.x + Math.pow(t, 3) * this.end.x;
+        const y = Math.pow(1 - t, 3) * this.start.y + 3 * Math.pow(1 - t, 2) * t * this.control1.y + 3 * (1 - t) * Math.pow(t, 2) * this.control2.y + Math.pow(t, 3) * this.end.y;
+    return {x, y};
+  }
+
+  private initLengthArr(totalStep: number) {
+    this.lenArr = [];
+    let totalLength = 0;
+    this.lenArr.push(totalLength);
+    let lastPoint = this.point(0);
+    for (let i = 1; i <= totalStep; i++) {
+        const t = i / totalStep;
+        const currentPoint = this.point(t);
+        totalLength += distance(currentPoint, lastPoint);
+        this.lenArr.push(totalLength);
+        lastPoint = currentPoint;
+    }
+    return totalLength;
+  }
+
+  public particles(stepLength: number, totalStep: number): Point[] {
+    this.initLengthArr(totalStep);
+    const length = this.lenArr[this.lenArr.length - 1];
+
+    let points: Point[] = [this.point(0)];
+    let currentLength: number = 0;
+    let lastPoint: Point = points[0];
+    do {
+      let currentStep: number = 1;
+      while(currentLength + stepLength > this.lenArr[currentStep]) {
+        currentStep++;
+      }
+      const t = currentStep / totalStep;
+      const nextPoint: Point = this.point(t);
+      points.push(nextPoint);
+      currentLength += distance(nextPoint, lastPoint);
+      lastPoint = nextPoint;
+    } while(currentLength < length);
+    return points;
+  }
+
+  public path(path: Path2D) {
+    path.bezierCurveTo(this.control1.x, this.control1.y, this.control2.x, this.control2.y, this.end.x, this.end.y);
+  }
+
+
+}
+class Line {
+  start: Point;
+  end: Point;
+  constructor(start: Point, end: Point) {
+    this.start = start;
+    this.end = end;
+  }
+  public particles(stepLength: number): Point[] {
+    const arr: Point[]  = [];
+    const lineLength = distance(this.start, this.end);
+    const lineAngle = Math.atan((this.start.y - this.end.y) / (this.start.x - this.end.x));
+    for (let len = 0; len <= lineLength; len += stepLength) {
+      arr.push({
+        x: this.start.x + len * Math.cos(lineAngle),
+        y: this.start.y + len * Math.sin(lineAngle)
+      });
+    }
+    return arr;
+  }
+}
 export default class DynamicSymbolsAnimation extends Animate {
 
-  private endpointx: number = 0;
-  private endpointy: number = 0;
-  private contropointx: number = 0;
-  private contropointy: number = 0;
   private lineWidth: number = 1;
-  private startPoint: Point = {x: 0, y: 0};
-  private endPoint: Point = {x: 0, y: 0};
-  private controPoint1: Point = {x: 0, y: 0};
-  private controPoint2: Point = {x: 0, y: 0};
+  private bezierLines: BezierLine[] = [];
+  private lines: Line[] = [];
   private particles: Point[] = [];
 
   constructor(width: number, height: number) {
@@ -32,16 +111,28 @@ export default class DynamicSymbolsAnimation extends Animate {
   }
 
   initData() {
-    this.endpointx = this.width * 0.07;
-    this.endpointy = this.endpointx * OPTION.xRatio;
-    this.contropointx = this.endpointx * OPTION.yRatio;
-    this.contropointy = this.endpointy * OPTION.yRatio;
+    const endpointx = this.width * 0.07;
+    const endpointy = endpointx * OPTION.xRatio;
+    const contropointx = endpointx * OPTION.yRatio;
+    const contropointy = endpointy * OPTION.yRatio;
     this.lineWidth = this.width * 0.005;
     this.lineWidth = this.lineWidth < 2 ? this.lineWidth = 2 : this.lineWidth;
-    this.startPoint = {x: this.endpointx, y: this.endpointy};
-    this.endPoint = {x: this.endpointx, y: -this.endpointy};
-    this.controPoint1 = {x: this.contropointx, y: this.contropointy};
-    this.controPoint2 = {x: this.contropointx, y: -this.contropointy};
+    const startPoint1 = {x: endpointx, y: endpointy};
+    const endPoint1 = {x: endpointx, y: -endpointy};
+    const startPoint2 = {x: -endpointx, y: endpointy};
+    const endPoint2 = {x: -endpointx, y: -endpointy};
+    const controPoint11 = {x: contropointx, y: contropointy};
+    const controPoint12 = {x: contropointx, y: -contropointy};
+    const controPoint21 = {x: -contropointx, y: contropointy};
+    const controPoint22 = {x: -contropointx, y: -contropointy};
+    this.lines = [
+      new Line(endPoint2, startPoint1),
+      new Line(startPoint2, endPoint1)
+    ];
+    this.bezierLines = [
+      new BezierLine(startPoint1, controPoint11, controPoint12, endPoint1),
+      new BezierLine(startPoint2, controPoint21, controPoint22, endPoint2),
+    ];
     this.initParticles();
   }
 
@@ -63,26 +154,15 @@ export default class DynamicSymbolsAnimation extends Animate {
     }
     this.context.save();
     this.context.translate(this.width / 2, this.height / 2);
-    for (let i = 0; i < 2; i++) {
-      this.context.save();
-      if (i === 1) {
-        this.context.rotate(Math.PI);
-      }
-      this.context.beginPath();
-      this.context.strokeStyle = OPTION.showColor;
-      this.context.lineWidth = this.lineWidth;
-      this.context.moveTo(0, 0);
-      this.context.lineTo(this.startPoint.x, this.startPoint.y);
-      this.context.bezierCurveTo(this.controPoint1.x, this.controPoint1.y, this.controPoint2.x, this.controPoint2.y, this.endPoint.x, this.endPoint.y);
-      this.context.lineTo(0, 0);
-      this.context.stroke();
-      this.context.restore();
-    }
-    this.context.beginPath();
-    this.context.strokeStyle = '#000';
-    this.context.moveTo(this.startPoint.x, this.startPoint.y);
-    this.context.lineTo(this.endPoint.x, this.endPoint.y);
-    this.context.stroke();
+    this.context.strokeStyle = OPTION.showColor;
+    this.context.lineWidth = this.lineWidth;
+    const path = new Path2D();
+    path.moveTo(this.lines[0].end.x, this.lines[0].end.y);
+    this.bezierLines[0].path(path);
+    path.lineTo(this.lines[1].start.x, this.lines[1].start.y);
+    this.bezierLines[1].path(path);
+    path.closePath();
+    this.context.stroke(path);
     this.context.restore();
   }
 
@@ -108,26 +188,12 @@ export default class DynamicSymbolsAnimation extends Animate {
   private initParticles() {
     this.particles = [];
     const step = this.lineWidth / 2;
-    const lineLength = this.distance(0, 0, this.startPoint.x, this.startPoint.y);
-    const lineAngle = Math.atan(this.startPoint.y / this.startPoint.x);
-    for (let len = 0; len <= lineLength; len += step) {
-      this.particles.push({
-        x: len * Math.cos(lineAngle),
-        y: len * Math.sin(lineAngle)
-      });
-    }
-    debugger;
-    const arr = this.bezierParticles(step);
-    this.particles.push(...arr);
-    for (let i = 1; i < arr.length; i++) {
-      console.log('i', this.distance(arr[i].x, arr[i].y, arr[i - 1].x, arr[i - 1].y));
-    }
-
+    this.particles.push(...this.lines[0].particles(step));
+    this.particles.push(...this.bezierLines[0].particles(step, this.width * 2));
+    this.particles.push(...this.lines[1].particles(step));
+    this.particles.push(...this.bezierLines[1].particles(step, this.width * 2));
   }
 
-  private distance(x1: number, y1: number, x2: number, y2: number) {
-    return Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2));
-  }
 
   private drawBackground() {
     if (!this.context) {
@@ -149,50 +215,6 @@ export default class DynamicSymbolsAnimation extends Animate {
     this.context.fillStyle = grad;
     this.context.fillRect(0, 0, this.width, this.height);
   }
-
-  private bezierPoint( startPoint: Point, controlPoint1: Point, controlPoint2: Point, endPoint: Point, t : number): Point {
-        const x = Math.pow(1 - t, 3) * startPoint.x + 3 * Math.pow(1 - t, 2) * t * controlPoint1.x + 3 * (1 - t) * Math.pow(t, 2) * controlPoint2.x + Math.pow(t, 3) * endPoint.x;
-        const y = Math.pow(1 - t, 3) * startPoint.y + 3 * Math.pow(1 - t, 2) * t * controlPoint1.y + 3 * (1 - t) * Math.pow(t, 2) * controlPoint2.y + Math.pow(t, 3) * endPoint.y;
-    return {x, y};
-  }
-  private bezierLengthArr: number[] = [];
-  
-  private bezierLength(startPoint: Point, controlPoint1: Point, controlPoint2: Point, endPoint: Point, totalStep: number, steps: number) {
-    this.bezierLengthArr = [];
-    let totalLength = 0;
-    this.bezierLengthArr.push(totalLength);
-    let lastPoint = this.bezierPoint(startPoint, controlPoint1, controlPoint2, endPoint, 0);
-    for (let i = 1; i <= steps; i++) {
-        const t = i / totalStep;
-        const currentPoint = this.bezierPoint(startPoint, controlPoint1, controlPoint2, endPoint, t);
-        totalLength += this.distance(currentPoint.x, currentPoint.y, lastPoint.x, lastPoint.y);
-        this.bezierLengthArr.push(totalLength);
-        lastPoint = currentPoint;
-    }
-    return totalLength;
-  }
-
-  private bezierParticles(stepLength: number): Point[] {
-    const totalStep = this.width * 2;
-    const length = this.bezierLength(this.startPoint, this.controPoint1, this.controPoint2, this.endPoint, totalStep, totalStep);
-
-    let points: Point[] = [this.bezierPoint(this.startPoint, this.controPoint1, this.controPoint2, this.endPoint, 0)];
-    let currentLength: number = 0;
-    let lastPoint: Point = points[0];
-    do {
-      let currentStep: number = 1;
-      while(currentLength + stepLength > this.bezierLengthArr[currentStep]) {
-        currentStep++;
-      }
-      const t = currentStep / totalStep;
-      const nextPoint: Point = this.bezierPoint(this.startPoint, this.controPoint1, this.controPoint2, this.endPoint, t);
-      points.push(nextPoint);
-      currentLength += this.distance(nextPoint.x, nextPoint.y, lastPoint.x, lastPoint.y);
-      lastPoint = nextPoint;
-    } while(currentLength < length);
-    return points;
-  }
-
 
 
   public setRect(width: number, height: number) {
