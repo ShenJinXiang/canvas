@@ -100,9 +100,12 @@ class Line {
 export default class DynamicSymbolsAnimation extends Animate {
 
   private lineWidth: number = 1;
+  private step: number = 1;
   private bezierLines: BezierLine[] = [];
   private lines: Line[] = [];
   private particles: Point[] = [];
+  private currentIndex: number = 0;
+  private nodeLength: number = 0;
 
   constructor(width: number, height: number) {
     super();
@@ -134,6 +137,15 @@ export default class DynamicSymbolsAnimation extends Animate {
       new BezierLine(startPoint2, controPoint21, controPoint22, endPoint2),
     ];
     this.initParticles();
+    this.currentIndex = 187;
+    this.nodeLength = 100;
+  }
+
+  update(): void {
+    this.currentIndex++;
+    if (this.currentIndex >= this.particles.length) {
+      this.currentIndex = 0;
+    }
   }
 
   draw() {
@@ -143,8 +155,31 @@ export default class DynamicSymbolsAnimation extends Animate {
 
     this.context.save();
     this.drawBackground();
-    this.drawBaseline();
-    this.drawParticles();
+    // this.drawBaseline();
+    // this.drawParticles();
+    this.context.translate(this.width / 2, this.height / 2);
+    this.particles.forEach((item, index) => {
+      const endIndex = this.currentIndex + this.nodeLength;
+      if (index >= this.currentIndex && index < endIndex) {
+        console.log(index);
+        this.drawParticle(item);
+      } 
+      // if (this.currentIndex + this.nodeLength > this.particles.length && index > (this.currentIndex + this.nodeLength) % this.particles.length) {
+      //   this.drawParticle(item);
+      // }
+    });
+    this.context.restore();
+  }
+
+  drawParticle(p: Point) {
+    if (!this.context) {
+      return;
+    }
+    this.context.save();
+    this.context.beginPath();
+    this.context.fillStyle = OPTION.showColor;
+    this.context.arc(p.x, p.y, this.step, 0, 2 * Math.PI, false);
+    this.context.fill();
     this.context.restore();
   }
 
@@ -187,11 +222,12 @@ export default class DynamicSymbolsAnimation extends Animate {
 
   private initParticles() {
     this.particles = [];
-    const step = this.lineWidth / 2;
-    this.particles.push(...this.lines[0].particles(step));
-    this.particles.push(...this.bezierLines[0].particles(step, this.width * 2));
-    this.particles.push(...this.lines[1].particles(step));
-    this.particles.push(...this.bezierLines[1].particles(step, this.width * 2));
+    this.step = this.lineWidth / 2;
+    this.particles.push(...this.lines[0].particles(this.step));
+    this.particles.push(...this.bezierLines[0].particles(this.step, this.width * 2));
+    this.particles.push(...this.lines[1].particles(this.step));
+    this.particles.push(...this.bezierLines[1].particles(this.step, this.width * 2));
+    console.log(this.particles);
   }
 
 
