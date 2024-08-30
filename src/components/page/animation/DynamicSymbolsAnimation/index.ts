@@ -87,7 +87,10 @@ class Line {
   public particles(stepLength: number): Point[] {
     const arr: Point[]  = [];
     const lineLength = distance(this.start, this.end);
-    const lineAngle = Math.atan((this.start.y - this.end.y) / (this.start.x - this.end.x));
+    let lineAngle = Math.atan((this.end.y - this.start.y) / (this.end.x - this.start.x));
+    if (this.end.x < this.start.x) {
+      lineAngle = Math.PI + lineAngle;
+    }
     for (let len = 0; len <= lineLength; len += stepLength) {
       arr.push({
         x: this.start.x + len * Math.cos(lineAngle),
@@ -130,21 +133,23 @@ export default class DynamicSymbolsAnimation extends Animate {
     const controPoint22 = {x: -contropointx, y: -contropointy};
     this.lines = [
       new Line(endPoint2, startPoint1),
-      new Line(startPoint2, endPoint1)
+      new Line(endPoint1, startPoint2)
+      // new Line(startPoint1, endPoint2),
+      // new Line(endPoint1, startPoint2)
     ];
     this.bezierLines = [
       new BezierLine(startPoint1, controPoint11, controPoint12, endPoint1),
       new BezierLine(startPoint2, controPoint21, controPoint22, endPoint2),
     ];
     this.initParticles();
-    this.currentIndex = 187;
-    this.nodeLength = 100;
+    this.currentIndex = 250;
+    this.nodeLength = Math.floor(this.particles.length / 2);
   }
 
   update(): void {
-    this.currentIndex++;
+    this.currentIndex += 8;
     if (this.currentIndex >= this.particles.length) {
-      this.currentIndex = 0;
+      this.currentIndex = this.currentIndex % this.particles.length;
     }
   }
 
@@ -160,13 +165,13 @@ export default class DynamicSymbolsAnimation extends Animate {
     this.context.translate(this.width / 2, this.height / 2);
     this.particles.forEach((item, index) => {
       const endIndex = this.currentIndex + this.nodeLength;
+      const length = this.particles.length;
       if (index >= this.currentIndex && index < endIndex) {
-        console.log(index);
         this.drawParticle(item);
       } 
-      // if (this.currentIndex + this.nodeLength > this.particles.length && index > (this.currentIndex + this.nodeLength) % this.particles.length) {
-      //   this.drawParticle(item);
-      // }
+      if (endIndex > length && index < (endIndex % length)) {
+        this.drawParticle(item);
+      }
     });
     this.context.restore();
   }

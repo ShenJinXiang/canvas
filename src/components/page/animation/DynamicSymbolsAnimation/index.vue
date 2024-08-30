@@ -22,8 +22,8 @@ const canvasRef = ref();
 const canvas = new DynamicSymbolsAnimation(props.width, props.height);
 
 onMounted(() => {
-  // canvas.initCanvas(canvasRef.value).run();
-  canvas.initCanvas(canvasRef.value).draw();
+  canvas.initCanvas(canvasRef.value).run();
+  // canvas.initCanvas(canvasRef.value).draw();
 });
 
 watch(
