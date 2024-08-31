@@ -108,6 +108,7 @@ export default class DynamicSymbolsAnimation extends Animate {
   private lines: Line[] = [];
   private particles: Point[] = [];
   private currentIndex: number = 0;
+  private indexStep: number = 1;
   private nodeLength: number = 0;
 
   constructor(width: number, height: number) {
@@ -134,20 +135,19 @@ export default class DynamicSymbolsAnimation extends Animate {
     this.lines = [
       new Line(endPoint2, startPoint1),
       new Line(endPoint1, startPoint2)
-      // new Line(startPoint1, endPoint2),
-      // new Line(endPoint1, startPoint2)
     ];
     this.bezierLines = [
       new BezierLine(startPoint1, controPoint11, controPoint12, endPoint1),
       new BezierLine(startPoint2, controPoint21, controPoint22, endPoint2),
     ];
     this.initParticles();
-    this.currentIndex = 250;
-    this.nodeLength = Math.floor(this.particles.length / 2);
+    this.currentIndex = 0;
+    this.nodeLength = Math.floor(this.particles.length * 0.4);
+    this.indexStep = Math.ceil(this.step * 1.2);
   }
 
   update(): void {
-    this.currentIndex += 8;
+    this.currentIndex += this.indexStep;
     if (this.currentIndex >= this.particles.length) {
       this.currentIndex = this.currentIndex % this.particles.length;
     }
