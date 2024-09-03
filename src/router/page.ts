@@ -353,4 +353,10 @@ export default [
     name: 'DynamicSymbolsAnimation',
     component: () => import('@/views/page/animation/DynamicSymbolsAnimation.vue'),
   },
+  {
+    title: '静态背景图9',
+    path: 'stillness/Background9',
+    name: 'StaticBackground9',
+    component: () => import('@/views/page/stillness/Background9.vue'),
+  },
 ];
