@@ -24,15 +24,19 @@ class Element {
       return;
     }
 
+    const xRatio = 0.7;
+    const yRatio = 0.6;
+
     context.save();
     context.lineWidth = lineWidth;
     context.strokeStyle = showColor;
     context.translate(this.x, this.y);
     context.beginPath();
     context.moveTo(this.xr, 0);
-    context.lineTo(0, this.yr);
-    context.lineTo(-this.xr, 0);
-    context.lineTo(0, -this.yr);
+    context.bezierCurveTo(this.xr * xRatio, this.yr * yRatio, this.xr * (1- xRatio), this.yr * (1-yRatio), 0, this.yr);
+    context.bezierCurveTo(-this.xr * (1-xRatio), this.yr * (1-yRatio), -this.xr * xRatio, this.yr * yRatio, -this.xr, 0);
+    context.bezierCurveTo(-this.xr * xRatio, -this.yr * yRatio, -this.xr * (1-xRatio), -this.yr * (1-yRatio), 0, -this.yr);
+    context.bezierCurveTo(this.xr * (1-xRatio), -this.yr * (1-yRatio), this.xr * xRatio, -this.yr * yRatio, this.xr, 0);
     context.closePath();
     context.stroke();
     context.restore();
@@ -43,7 +47,7 @@ export default class Background extends BaseCanvas {
   private static OPTION: IOption = {
     backgroundColor: '#000',
     showColor: '#fff',
-    ratio: 1.2,
+    ratio: 1.4,
     minSize: 10
   };
   private element: Element;
@@ -52,7 +56,7 @@ export default class Background extends BaseCanvas {
     this.initRect(width, height);
     this.markCanvas.setStyle('rgba(250, 250, 250, 0.5)');
     this.initData();
-    this.element = new Element(this.width / 2, this.height / 2, 100, 120);
+    this.element = new Element(this.width / 2, this.height / 2, 100, 100 * Background.OPTION.ratio);
   }
 
   private initData() {
