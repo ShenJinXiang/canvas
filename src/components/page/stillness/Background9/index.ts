@@ -50,16 +50,23 @@ export default class Background extends BaseCanvas {
     ratio: 1.4,
     minSize: 10
   };
-  private element: Element;
+  private elements: Element[] = [];
   constructor(width: number, height: number) {
     super();
     this.initRect(width, height);
     this.markCanvas.setStyle('rgba(250, 250, 250, 0.5)');
     this.initData();
-    this.element = new Element(this.width / 2, this.height / 2, 100, 100 * Background.OPTION.ratio);
   }
 
   private initData() {
+    this.elements = [];
+    const base = this.width * 0.01;
+    const ratio = Background.OPTION.ratio;
+    for (let w = 0; w < this.width + base * 2; w += base * 2) {
+      for (let h = 0; h < this.height + base * ratio * 2; h += base * ratio * 2) {
+        this.elements.push(new Element(w, h, base, base * ratio));
+      }
+    }
 
   }
 
@@ -69,7 +76,7 @@ export default class Background extends BaseCanvas {
     }
     this.context.save();
     this.clear(Background.OPTION.backgroundColor);
-    this.element.draw(this.context, Background.OPTION.showColor, 2);
+    this.elements.forEach(item => item.draw(this.context, Background.OPTION.showColor, 1));
     this.context.restore();
   }
 
