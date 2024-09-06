@@ -39,6 +39,22 @@ class Element {
     context.bezierCurveTo(this.xr * (1-xRatio), -this.yr * (1-yRatio), this.xr * xRatio, -this.yr * yRatio, this.xr, 0);
     context.closePath();
     context.stroke();
+    const r = this.xr * 0.2;
+    this.arc(context, this.xr, 0, r, showColor);
+    this.arc(context, 0, this.yr, r, showColor);
+    this.arc(context, -this.xr, 0, r, showColor);
+    this.arc(context, 0, -this.yr, r, showColor);
+    context.restore();
+  }
+  private arc(context:CanvasRenderingContext2D, x: number, y: number, r: number, showColor: string) {
+    if (!context) {
+      return;
+    }
+    context.save();
+    context.fillStyle = showColor;
+    context.beginPath();
+    context.arc(x, y, r, 0, Math.PI * 2, false);
+    context.fill();
     context.restore();
   }
 }
@@ -78,6 +94,7 @@ export default class Background extends BaseCanvas {
     this.clear(Background.OPTION.backgroundColor);
     this.elements.forEach(item => item.draw(this.context, Background.OPTION.showColor, 1));
     this.context.restore();
+    this.drawMark();
   }
 
   public setRect(width: number, height: number) {
