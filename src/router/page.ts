@@ -359,4 +359,10 @@ export default [
     name: 'StaticBackground9',
     component: () => import('@/views/page/stillness/Background9.vue'),
   },
+  {
+    title: '静态背景图10',
+    path: 'stillness/Background10',
+    name: 'StaticBackground10',
+    component: () => import('@/views/page/stillness/Background10.vue'),
+  },
 ];
